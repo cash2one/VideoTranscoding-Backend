@@ -14,6 +14,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<springboot.version>1.5.7.RELEASE</springboot.version>
+		<spring.version>4.3.11.RELEASE</spring.version>
+		<jackson.version>2.9.0</jackson.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
@@ -26,6 +28,44 @@
 			<artifactId>spring-boot-starter</artifactId>
 			<version>${springboot.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mustache</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${springboot.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ================================ SPRING ============================== -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ================================ JACKSON ============================== -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 		<!-- ====================================================================== -->
 		<!-- ================================ JUNIT =============================== -->
 		<!-- ====================================================================== -->
@@ -35,6 +75,17 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ================================ PRUEBAS ============================= -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>org.red5</groupId>
+			<artifactId>red5-server</artifactId>
+			<version>1.0.10-M4</version>
+		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ============================ BUILD-PLUGINS =========================== -->
+		<!-- ====================================================================== -->
 	</dependencies>
 	<build>
 		<plugins>
