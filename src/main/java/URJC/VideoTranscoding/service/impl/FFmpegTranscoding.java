@@ -1,29 +1,36 @@
 package URJC.VideoTranscoding.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import URJC.VideoTranscoding.service.Transcoding;
+import URJC.VideoTranscoding.service.ITranscodingService;
 
 @Service
-class FfmpegTranscodingImpl implements Transcoding {
+class FFmpegTranscoding implements ITranscodingService {
 
-	public void Transcode(String pathFFMPEG, String fileInput, String folderOutput) {
+	public void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) {
+		if (StringUtils.isEmpty(pathFFMPEG)) {
+
+		}
+		Trans(pathFFMPEG, fileInput, folderOutput, conversionType);
+	}
+
+	private void Trans(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) {
 		try {
 			String sort = String.valueOf(System.currentTimeMillis());
-			
-			String[] commmand = new String[] { pathFFMPEG, "-i", fileInput, folderOutput + sort.substring(1,5) + ".mkv" };
-			ProcessBuilder builder = new ProcessBuilder(commmand);
-			builder.redirectErrorStream(true); // so we can ignore the error stream
-			Process process = builder.start();
+			String[] commmand = new String[] { pathFFMPEG, "-i", fileInput.toString(), folderOutput + "/"
+					+ FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + ".mkv" };
+			ProcessBuilder p = new ProcessBuilder(commmand);
+			p.redirectErrorStream(true);
+			Process process = p.start();
 			InputStream out = process.getInputStream();
 			OutputStream in = process.getOutputStream();
 
@@ -44,13 +51,15 @@ class FfmpegTranscodingImpl implements Transcoding {
 			}
 			System.out.println(process.exitValue());
 		} catch (IOException e) {
+			// TODO
 			e.printStackTrace();
 		} catch (InterruptedException e) {
+			// TODO
 			e.printStackTrace();
 		}
 	}
 
-	public boolean isAlive(Process p) {
+	private boolean isAlive(Process p) {
 		try {
 			p.exitValue();
 			return false;

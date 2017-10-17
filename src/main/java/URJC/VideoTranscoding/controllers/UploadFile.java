@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.service;
+package URJC.VideoTranscoding.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
