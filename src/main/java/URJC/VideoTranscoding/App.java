@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @SpringBootApplication
 public class App {
+
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
 	}
