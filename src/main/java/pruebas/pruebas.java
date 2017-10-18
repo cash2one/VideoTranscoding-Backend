@@ -1,51 +1,44 @@
 package pruebas;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
+@SuppressWarnings("unused")
 public class pruebas {
 
 	public static void main(String[] args) throws InterruptedException, IOException {
-		String command = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a libvorbis -c:v vp9 /Users/luisca/Documents/VideosPrueba/StarWars323.webm";
-		 String s = null;
+		String command2 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars2.mkv";
 
-	        try {
-	            
-		    // run the Unix "ps -ef" command
-	            // using the Runtime exec method:
-	            Process p = Runtime.getRuntime().exec(command);
-	            
-	            BufferedReader stdInput = new BufferedReader(new 
-	                 InputStreamReader(p.getInputStream()));
+		String hevc2160 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -s 3840x2160 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars2.mkv";
+		String hevc1440 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -s 2560×1440 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars22.mkv";
+		String hevc1080 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -s 1920x1080 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars222.mkv";
+		String hevc720 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -s 1280x720 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars2222.mkv";
+		String hevc480 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -b:v 2600k -s 640x480 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars222wd22.mkv";
+		String hevc360 = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i /Users/luisca/Documents/VideosPrueba/StarWars.mp4 -c:a copy -c:v libx265 -s 480x360 -crf 15 -preset slow /Users/luisca/Documents/VideosPrueba/StarWars222222.mkv";
 
-	            BufferedReader stdError = new BufferedReader(new 
-	                 InputStreamReader(p.getErrorStream()));
+		try {
+			Runtime rt = Runtime.getRuntime();
+			Process proc = rt.exec(hevc480);
 
-	            // read the output from the command
-	            System.out.println("Here is the standard output of the command:\n");
-	            while ((s = stdInput.readLine()) != null) {
-	                System.out.println(s);
-	            }
-	            
-	            // read any errors from the attempted command
-	            System.out.println("Here is the standard error of the command (if any):\n");
-	            while ((s = stdError.readLine()) != null) {
-	                System.out.println(s);
-	            }
-	            
-	            System.exit(0);
-	        }
-	        catch (IOException e) {
-	            System.out.println("exception happened - here's what I know: ");
-	            e.printStackTrace();
-	            System.exit(-1);
-	        }
-	    
-		
-		
-		//		Trans x= new Trans();
-//		x.transRuntime(command);
+			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			StreamGobbler inputGobbler = new StreamGobbler(proc.getInputStream(), "INPUT");
+			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+			inputGobbler.start();
+			errorGobbler.start();
+			outputGobbler.start();
+
+			int exitVal = proc.waitFor();
+			System.out.println("ExitValue: " + exitVal);
+
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+
+		// CommandLine command = new CommandLine("/bin/sh");
+		// command.addArguments(new String[] { "-c",command2 }, false);
+		// new DefaultExecutor().execute(command);
+
+		// Trans x= new Trans();
+		// x.transRuntime(command);
 	}
 
 }

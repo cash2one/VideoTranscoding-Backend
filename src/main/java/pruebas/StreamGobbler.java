@@ -1,21 +1,28 @@
 package pruebas;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.function.Consumer;
 
-public final class StreamGobbler implements Runnable {
-	private InputStream inputStream;
-	private Consumer<String> consumer;
+public class StreamGobbler extends Thread {
+	InputStream is;
+	String type;
 
-	public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-		this.inputStream = inputStream;
-		this.consumer = consumer;
+	public StreamGobbler(InputStream is, String type) {
+		this.is = is;
+		this.type = type;
 	}
 
-	@Override
 	public void run() {
-		new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+		try {
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			while ((line = br.readLine()) != null)
+				System.out.println(type + "> " + line);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 }

@@ -1,2 +1,8 @@
 /target
 /tmp
+./target
+target/
+*.class
+target
+.classpath
+.settings
