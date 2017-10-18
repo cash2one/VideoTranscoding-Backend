@@ -9,16 +9,18 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
+import URJC.VideoTranscoding.codecs.AudioCodec;
+import URJC.VideoTranscoding.codecs.VideoCodec;
 import URJC.VideoTranscoding.service.ITranscodingService;
 
 @Service
 class FFmpegTranscoding implements ITranscodingService {
 
 	public void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) {
-		if (StringUtils.isEmpty(pathFFMPEG)) {
-
+		if (!fileInput.exists()) {
+			// TODO throw Exception, PATHFFMPEG
+			System.out.println("Archivo no existe");
 		}
 		Trans(pathFFMPEG, fileInput, folderOutput, conversionType);
 	}
@@ -26,12 +28,18 @@ class FFmpegTranscoding implements ITranscodingService {
 	private void Trans(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) {
 		try {
 			String sort = String.valueOf(System.currentTimeMillis());
-			String[] commmand = new String[] { pathFFMPEG, "-i", fileInput.toString(), folderOutput + "/"
-					+ FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + ".mkv" };
+			String[] commmand = new String[] { pathFFMPEG, " -i ", fileInput.toString(),
+					" -c:a " + AudioCodec.LIBVORBIS, " -c:v " + VideoCodec.VP9, " " + folderOutput + "/"
+							+ FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + ".webm" };
+			for (String string : commmand) {
+				System.out.print(string);
+			}
 			ProcessBuilder p = new ProcessBuilder(commmand);
+
 			p.redirectErrorStream(true);
 			Process process = p.start();
 			InputStream out = process.getInputStream();
+			InputStream error = process.getErrorStream();
 			OutputStream in = process.getOutputStream();
 
 			byte[] buffer = new byte[4000];
@@ -39,6 +47,11 @@ class FFmpegTranscoding implements ITranscodingService {
 				int no = out.available();
 				if (no > 0) {
 					int n = out.read(buffer, 0, Math.min(no, buffer.length));
+					System.out.println(new String(buffer, 0, n));
+				}
+				int noe = error.available();
+				if (noe > 0) {
+					int n = error.read(buffer, 0, Math.min(noe, buffer.length));
 					System.out.println(new String(buffer, 0, n));
 				}
 				int ni = System.in.available();
