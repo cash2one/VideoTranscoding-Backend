@@ -5,25 +5,53 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
+
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import URJC.VideoTranscoding.codecs.AudioCodec;
 import URJC.VideoTranscoding.codecs.VideoCodec;
 import URJC.VideoTranscoding.exception.FFmpegException;
 import URJC.VideoTranscoding.service.ITranscodingService;
+import es.fujitsu.gestiondocs.wrapper.FjResourceBundleMessageSource;
 import pruebas.StreamGobbler;
 
 @Service
 class FFmpegTranscoding implements ITranscodingService {
+	private static final Logger logger = Logger.getLogger(FFmpegTranscoding.class);
+
+	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
+
+	@Resource
+	Properties propertiesGestionDocs;
+
+	@Autowired
+	private FjResourceBundleMessageSource trazasMessageSourceGenerarDocs;
+
+	@PostConstruct
+	void init() {
+		logger.setResourceBundle(trazasMessageSourceGenerarDocs
+				.getFjResourceBundle(propertiesGestionDocs.getProperty(FICH_TRAZAS), Locale.getDefault()));
+	}
 
 	public void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType)
 			throws FFmpegException {
-		// TODO throw PATHFFMPEG
-		if (!fileInput.exists()) {
+		if (StringUtils.isBlank(pathFFMPEG)) {
+			FFmpegException ex = new FFmpegException(FFmpegException.EX_FILE_INPUT_NOT_VALID);
+			throw ex;
+		}
+		if (!fileInput.exists() || fileInput.isDirectory()) {
 			FFmpegException ex = new FFmpegException(FFmpegException.EX_FILE_INPUT_NOT_VALID);
 			throw ex;
 		}
