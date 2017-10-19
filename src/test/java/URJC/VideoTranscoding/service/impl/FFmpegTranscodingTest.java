@@ -19,7 +19,7 @@ import URJC.VideoTranscoding.exception.FFmpegException;
 import URJC.VideoTranscoding.service.ITranscodingService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/xml/applicationContext.xml")
+@ContextConfiguration("classpath:/xml/ffmpeg-config-test.xml")
 public class FFmpegTranscodingTest {
 
 	private final String ffmpegMac = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i ";

@@ -13,7 +13,7 @@ public interface ITranscodingService {
 	 * @param fileInput
 	 * @param folderOutput
 	 * @param conversionType
-	 * @throws FFmpegException 
+	 * @throws FFmpegException
 	 */
 	void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) throws FFmpegException;
 

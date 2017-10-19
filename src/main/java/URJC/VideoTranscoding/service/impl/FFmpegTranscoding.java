@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import URJC.VideoTranscoding.codecs.AudioCodec;
 import URJC.VideoTranscoding.codecs.VideoCodec;
 import URJC.VideoTranscoding.exception.FFmpegException;
 import URJC.VideoTranscoding.service.ITranscodingService;
-import es.fujitsu.gestiondocs.wrapper.FjResourceBundleMessageSource;
+import URJC.VideoTranscoding.wrapper.FfmpegResourceBundleMessageSource;
 import pruebas.StreamGobbler;
 
 @Service
@@ -34,25 +35,35 @@ class FFmpegTranscoding implements ITranscodingService {
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
 
 	@Resource
-	Properties propertiesGestionDocs;
+	Properties propertiesFFmpeg;
 
 	@Autowired
-	private FjResourceBundleMessageSource trazasMessageSourceGenerarDocs;
+	private FfmpegResourceBundleMessageSource trazasMessageSourceFFmpeg;
 
 	@PostConstruct
 	void init() {
-		logger.setResourceBundle(trazasMessageSourceGenerarDocs
-				.getFjResourceBundle(propertiesGestionDocs.getProperty(FICH_TRAZAS), Locale.getDefault()));
+		logger.setResourceBundle(trazasMessageSourceFFmpeg
+				.getResourceBundleLog4j(propertiesFFmpeg.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
+	/**
+	 * 
+	 * @param pathFFMPEG
+	 * @param fileInput
+	 * @param folderOutput
+	 * @param conversionType
+	 * @throws FFmpegException
+	 */
 	public void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType)
 			throws FFmpegException {
 		if (StringUtils.isBlank(pathFFMPEG)) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FILE_INPUT_NOT_VALID);
+			FFmpegException ex = new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND);
+			logger.l7dlog(Level.ERROR, "", ex);
 			throw ex;
 		}
 		if (!fileInput.exists() || fileInput.isDirectory()) {
 			FFmpegException ex = new FFmpegException(FFmpegException.EX_FILE_INPUT_NOT_VALID);
+			logger.l7dlog(Level.ERROR, "", ex);
 			throw ex;
 		}
 		Trans2(pathFFMPEG, fileInput, folderOutput, conversionType);
@@ -60,21 +71,9 @@ class FFmpegTranscoding implements ITranscodingService {
 
 	private void Trans2(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) {
 		try {
-			String sort = String.valueOf(System.currentTimeMillis());
-			// String[] command = new String[] { " -c ", pathFFMPEG, " -i ",
-			// fileInput.toString(),
-			// " -c:a " + AudioCodec.LIBVORBIS, " -c:v " + VideoCodec.VP9, " " +
-			// folderOutput + "/"
-			// + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) +
-			// ".webm" };
-			// String[] command2 = new String[] { pathFFMPEG +" -i "+ fileInput.toString()+
-			// AudioCodec.LIBVORBIS+
-			// VideoCodec.VP9+ folderOutput + "/" +
-			// FilenameUtils.getBaseName(fileInput.getName())
-			// + sort.substring(4, 8) + ".webm" };
 
 			String commandF = pathFFMPEG + fileInput.toString() + AudioCodec.LIBVORBIS + VideoCodec.VP9 + folderOutput
-					+ "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + ".webm";
+					+ getFinalNameFile(fileInput);
 
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(commandF);
@@ -99,6 +98,12 @@ class FFmpegTranscoding implements ITranscodingService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getFinalNameFile(File fileInput) {
+		String sort = String.valueOf(System.currentTimeMillis());
+
+		return "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + ".webm";
 	}
 
 	@SuppressWarnings("unused")
@@ -157,5 +162,16 @@ class FFmpegTranscoding implements ITranscodingService {
 			return true;
 		}
 	}
+	// String[] command = new String[] { " -c ", pathFFMPEG, " -i ",
+	// fileInput.toString(),
+	// " -c:a " + AudioCodec.LIBVORBIS, " -c:v " + VideoCodec.VP9, " " +
+	// folderOutput + "/"
+	// + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) +
+	// ".webm" };
+	// String[] command2 = new String[] { pathFFMPEG +" -i "+ fileInput.toString()+
+	// AudioCodec.LIBVORBIS+
+	// VideoCodec.VP9+ folderOutput + "/" +
+	// FilenameUtils.getBaseName(fileInput.getName())
+	// + sort.substring(4, 8) + ".webm" };
 
 }
