@@ -111,18 +111,37 @@ class FFmpegTranscoding implements ITranscodingService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param pathFFMPEG
+	 * @param fileInput
+	 * @param folderOutput
+	 * @param conversionType
+	 * @return
+	 */
 	private String getCommand(String pathFFMPEG, File fileInput, Path folderOutput, ConversionType conversionType) {
 		return pathFFMPEG + fileInput.toString() + conversionType.getCodecAudioType()
 				+ conversionType.getCodecVideoType() + folderOutput
 				+ getFinalNameFile(fileInput, conversionType.getContainerType());
 	}
 
+	/**
+	 * 
+	 * @param fileInput
+	 * @param extension
+	 * @return
+	 */
 	private String getFinalNameFile(File fileInput, String extension) {
 		String sort = String.valueOf(System.currentTimeMillis());
 
 		return "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + extension;
 	}
 
+	/**
+	 * 
+	 * @param fileInput
+	 * @return
+	 */
 	private String getFinalNameFile(File fileInput) {
 		String sort = String.valueOf(System.currentTimeMillis());
 
