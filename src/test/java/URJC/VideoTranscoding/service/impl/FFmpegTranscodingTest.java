@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import URJC.VideoTranscoding.codecs.ConversionType;
 import URJC.VideoTranscoding.exception.FFmpegException;
 import URJC.VideoTranscoding.service.ITranscodingService;
 
@@ -23,9 +24,9 @@ import URJC.VideoTranscoding.service.ITranscodingService;
 public class FFmpegTranscodingTest {
 
 	private final String ffmpegMac = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i ";
-	private final File uriInput = new File("/Users/luisca/Documents/VideosPrueba/Starwars.mp4");
-	private final Path uriOutput = Paths.get("/Users/luisca/Documents/VideosPrueba/");
-	private List<Integer> params = new ArrayList<Integer>();
+	private final File fileInput = new File("/Users/luisca/Documents/VideosPrueba/Starwars.mp4");
+	private final Path folderOutput = Paths.get("/Users/luisca/Documents/VideosPrueba/");
+	private List<ConversionType> params = new ArrayList<ConversionType>();
 
 	@Autowired
 	private ITranscodingService transcoding;
@@ -33,7 +34,7 @@ public class FFmpegTranscodingTest {
 	@Test
 	public void Transcode_WithFailOnInputFile() {
 		try {
-			transcoding.Transcode(ffmpegMac, new File("/Users/luisca/Documents/VideosPrueba/Sta.mp4"), uriOutput,
+			transcoding.Transcode(ffmpegMac, new File("/Users/luisca/Documents/VideosPrueba/Sta.mp4"), folderOutput,
 					params);
 			fail("No deberia fallar");
 		} catch (FFmpegException e) {
@@ -43,7 +44,8 @@ public class FFmpegTranscodingTest {
 
 	@Test
 	public void Transcode_WithoutErrors() throws FFmpegException {
-		transcoding.Transcode(ffmpegMac, uriInput, uriOutput, params);
+		params.add(ConversionType.MKV_HEVC1080_COPY);
+		transcoding.Transcode(ffmpegMac, fileInput, folderOutput, params);
 	}
 
 }

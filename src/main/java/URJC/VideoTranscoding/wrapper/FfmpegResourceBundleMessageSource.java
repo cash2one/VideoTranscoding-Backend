@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
- * @author Fujitsu Technology Solutions S.A.
+ * @author luisca
  */
 public class FfmpegResourceBundleMessageSource extends ResourceBundleMessageSource implements Serializable {
 	private static final long serialVersionUID = -4830276323423550391L;

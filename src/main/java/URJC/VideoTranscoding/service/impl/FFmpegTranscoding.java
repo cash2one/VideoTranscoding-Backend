@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import URJC.VideoTranscoding.codecs.AudioCodec;
+import URJC.VideoTranscoding.codecs.ConversionType;
 import URJC.VideoTranscoding.codecs.VideoCodec;
 import URJC.VideoTranscoding.exception.FFmpegException;
 import URJC.VideoTranscoding.service.ITranscodingService;
@@ -54,7 +55,7 @@ class FFmpegTranscoding implements ITranscodingService {
 	 * @param conversionType
 	 * @throws FFmpegException
 	 */
-	public void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType)
+	public void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<ConversionType> conversionType)
 			throws FFmpegException {
 		if (StringUtils.isBlank(pathFFMPEG)) {
 			FFmpegException ex = new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND);
@@ -66,30 +67,40 @@ class FFmpegTranscoding implements ITranscodingService {
 			logger.l7dlog(Level.ERROR, "", ex);
 			throw ex;
 		}
-		Trans2(pathFFMPEG, fileInput, folderOutput, conversionType);
+		for (ConversionType iterator : conversionType) {
+			System.out.println(iterator);
+		}
+		System.out.println();
+		Trans3(pathFFMPEG, fileInput, folderOutput, conversionType);
 	}
 
-	private void Trans2(String pathFFMPEG, File fileInput, Path folderOutput, List<Integer> conversionType) {
+	/**
+	 * 
+	 * @param pathFFMPEG
+	 * @param fileInput
+	 * @param folderOutput
+	 * @param conversionType
+	 */
+	private void Trans3(String pathFFMPEG, File fileInput, Path folderOutput, List<ConversionType> conversionType) {
 		try {
+			String commandF;
+			for (ConversionType typeConversion : conversionType) {
+				commandF = getCommand(pathFFMPEG, fileInput, folderOutput, typeConversion);
+				System.out.println(commandF);
+				Runtime rt = Runtime.getRuntime();
+				Process proc = rt.exec(commandF);
 
-			String commandF = pathFFMPEG + fileInput.toString() + AudioCodec.LIBVORBIS + VideoCodec.VP9 + folderOutput
-					+ getFinalNameFile(fileInput);
+				StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+				StreamGobbler inputGobbler = new StreamGobbler(proc.getInputStream(), "INPUT");
+				StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+				inputGobbler.start();
+				errorGobbler.start();
+				outputGobbler.start();
 
-			Runtime rt = Runtime.getRuntime();
-			Process proc = rt.exec(commandF);
-
-			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
-			StreamGobbler inputGobbler = new StreamGobbler(proc.getInputStream(), "INPUT");
-			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
-			inputGobbler.start();
-			errorGobbler.start();
-			outputGobbler.start();
-
-			int exitVal;
-
-			exitVal = proc.waitFor();
-
-			System.out.println("ExitValue: " + exitVal);
+				int exitVal;
+				exitVal = proc.waitFor();
+				System.out.println("ExitValue: " + exitVal);
+			}
 
 		} catch (ExecuteException e) {
 			e.printStackTrace();
@@ -98,6 +109,18 @@ class FFmpegTranscoding implements ITranscodingService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getCommand(String pathFFMPEG, File fileInput, Path folderOutput, ConversionType conversionType) {
+		return pathFFMPEG + fileInput.toString() + conversionType.getCodecAudioType()
+				+ conversionType.getCodecVideoType() + folderOutput
+				+ getFinalNameFile(fileInput, conversionType.getContainerType());
+	}
+
+	private String getFinalNameFile(File fileInput, String extension) {
+		String sort = String.valueOf(System.currentTimeMillis());
+
+		return "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) + extension;
 	}
 
 	private String getFinalNameFile(File fileInput) {
@@ -162,16 +185,43 @@ class FFmpegTranscoding implements ITranscodingService {
 			return true;
 		}
 	}
-	// String[] command = new String[] { " -c ", pathFFMPEG, " -i ",
-	// fileInput.toString(),
-	// " -c:a " + AudioCodec.LIBVORBIS, " -c:v " + VideoCodec.VP9, " " +
-	// folderOutput + "/"
-	// + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(4, 8) +
-	// ".webm" };
-	// String[] command2 = new String[] { pathFFMPEG +" -i "+ fileInput.toString()+
-	// AudioCodec.LIBVORBIS+
-	// VideoCodec.VP9+ folderOutput + "/" +
-	// FilenameUtils.getBaseName(fileInput.getName())
-	// + sort.substring(4, 8) + ".webm" };
 
+	/**
+	 * 
+	 * @param pathFFMPEG
+	 * @param fileInput
+	 * @param folderOutput
+	 * @param conversionType
+	 */
+	@SuppressWarnings("unused")
+	private void Trans2(String pathFFMPEG, File fileInput, Path folderOutput, List<ConversionType> conversionType) {
+		try {
+
+			String commandF = pathFFMPEG + fileInput.toString() + AudioCodec.LIBVORBIS + VideoCodec.VP9 + folderOutput
+					+ getFinalNameFile(fileInput);
+
+			Runtime rt = Runtime.getRuntime();
+			Process proc = rt.exec(commandF);
+
+			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+			StreamGobbler inputGobbler = new StreamGobbler(proc.getInputStream(), "INPUT");
+			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+			inputGobbler.start();
+			errorGobbler.start();
+			outputGobbler.start();
+
+			int exitVal;
+
+			exitVal = proc.waitFor();
+
+			System.out.println("ExitValue: " + exitVal);
+
+		} catch (ExecuteException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
