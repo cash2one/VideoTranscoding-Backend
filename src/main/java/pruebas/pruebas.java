@@ -2,6 +2,8 @@ package pruebas;
 
 import java.io.IOException;
 
+import URJC.VideoTranscoding.service.StreamGobbler;
+
 @SuppressWarnings("unused")
 public class pruebas {
 

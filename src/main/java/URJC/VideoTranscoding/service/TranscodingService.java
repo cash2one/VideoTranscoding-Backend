@@ -7,16 +7,17 @@ import java.util.List;
 import URJC.VideoTranscoding.codecs.ConversionType;
 import URJC.VideoTranscoding.exception.FFmpegException;
 
-public interface ITranscodingService {
+/**
+ * @author luisca
+ */
+public interface TranscodingService{
 	/**
-	 * 
 	 * @param pathFFMPEG
 	 * @param fileInput
 	 * @param folderOutput
 	 * @param conversionType
 	 * @throws FFmpegException
 	 */
-	void Transcode(String pathFFMPEG, File fileInput, Path folderOutput, List<ConversionType> conversionType)
-			throws FFmpegException;
-
+	void transcode(String pathFFMPEG,File fileInput,Path folderOutput,List<ConversionType> conversionType)
+				throws FFmpegException;
 }

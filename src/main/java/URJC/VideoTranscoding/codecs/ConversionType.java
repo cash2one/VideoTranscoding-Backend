@@ -4,54 +4,63 @@ package URJC.VideoTranscoding.codecs;
  * Video file extension, CodecVideo and Resolucion, CodecAudio
  * 
  * @author luisca
- *
  */
-public enum ConversionType {
+public enum ConversionType{
 	/**
 	 * MKV file extension, VideoCodec h265 on 2160, AudioCodec copy
 	 */
-	MKV_HEVC2160_COPY(ContainerType.MKV, CodecVideoType.HEVC_2160, CodecAudioType.COPY),
+	MKV_HEVC2160_COPY(Container.MKV,CodecVideo.HEVC_2160,CodecAudio.COPY),
 	/**
 	 * MKV file extension, VideoCodec h265 on 1080, AudioCodec copy
 	 */
-	MKV_HEVC1080_COPY(ContainerType.MKV, CodecVideoType.HEVC_1080, CodecAudioType.COPY),
+	MKV_HEVC1080_COPY(Container.MKV,CodecVideo.HEVC_1080,CodecAudio.COPY),
 	/**
 	 * MKV file extension, VideoCodec h265 on 720, AudioCodec copy
 	 */
-	MKV_HEVC720_COPY(ContainerType.MKV, CodecVideoType.HEVC_720, CodecAudioType.COPY),
+	MKV_HEVC720_COPY(Container.MKV,CodecVideo.HEVC_720,CodecAudio.COPY),
 	/**
 	 * MKV file extension, VideoCodec h265 on 480, AudioCodec copy
 	 */
-	MKV_HEVC480_COPY(ContainerType.MKV, CodecVideoType.HEVC_480, CodecAudioType.COPY),
+	MKV_HEVC480_COPY(Container.MKV,CodecVideo.HEVC_480,CodecAudio.COPY),
 	/**
 	 * MKV file extension, VideoCodec h265 on 360, AudioCodec copy
 	 */
-	MKV_HEVC360_COPY(ContainerType.MKV, CodecVideoType.HEVC_360, CodecAudioType.COPY),
+	MKV_HEVC360_COPY(Container.MKV,CodecVideo.HEVC_360,CodecAudio.COPY),
 	/**
-	 * MKV file extension, VideoCodec h265 on 360, AudioCodec copy
+	 * WEBM file extension, VideoCodec VP9 on 1080, AudioCodec LIVBORVIS
 	 */
-	WEBM_VP91080_VORBIS(ContainerType.WEBM, CodecVideoType.HEVC_360, CodecAudioType.COPY);
+	WEBM_VP91080_VORBIS(Container.WEBM,CodecVideo.VP9_1080,CodecAudio.LIBVORVIS),
+	/**
+	 * WEBM file extension, VideoCodec VP9 on 720, AudioCodec LIVBORVIS
+	 */
+	WEBM_VP9720_VORBIS(Container.WEBM,CodecVideo.VP9_720,CodecAudio.LIBVORVIS),
+	/**
+	 * WEBM file extension, VideoCodec VP9 on 480, AudioCodec LIVBORVIS
+	 */
+	WEBM_VP9480_VORBIS(Container.WEBM,CodecVideo.VP9_480,CodecAudio.LIBVORVIS),
+	/**
+	 * WEBM file extension, VideoCodec VP9 on 360, AudioCodec LIVBORVIS
+	 */
+	WEBM_VP9360_VORBIS(Container.WEBM,CodecVideo.VP9_360,CodecAudio.LIBVORVIS);
+	private final Container containerType;
+	private final CodecVideo codecVideoType;
+	private final CodecAudio codecAudioType;
 
-	private final ContainerType containerType;
-	private final CodecVideoType codecVideoType;
-	private final CodecAudioType codecAudioType;
-
-	private ConversionType(ContainerType x, CodecVideoType y, CodecAudioType z) {
+	private ConversionType(Container x,CodecVideo y,CodecAudio z){
 		this.containerType = x;
 		this.codecVideoType = y;
 		this.codecAudioType = z;
 	}
 
-	public String getContainerType() {
+	public String getContainerType(){
 		return containerType.getContainerType();
 	}
 
-	public String getCodecVideoType() {
+	public String getCodecVideoType(){
 		return codecVideoType.getCodecVideoType();
 	}
 
-	public String getCodecAudioType() {
+	public String getCodecAudioType(){
 		return codecAudioType.getCodecAudioType();
 	}
-
 }
