@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
@@ -107,6 +108,12 @@ class FFmpegTranscoding implements TranscodingService{
 				System.out.println(commandF);
 				Runtime rt = Runtime.getRuntime();
 				Process proc = rt.exec(commandF);
+
+				
+				
+				
+				
+				
 				StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(),"ERROR");
 				StreamGobbler inputGobbler = new StreamGobbler(proc.getInputStream(),"INPUT");
 				StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(),"OUTPUT");
