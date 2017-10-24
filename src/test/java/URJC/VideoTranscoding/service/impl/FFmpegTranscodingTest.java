@@ -114,10 +114,9 @@ public class FFmpegTranscodingTest{
 	}
 
 	@Test
-	
 	public void transcodeSucess() throws FFmpegException{
-		params.add(ConversionType.MKV_HEVC1080_COPY);
-		params.add(ConversionType.WEBM_VP91080_VORBIS);
+		params.add(ConversionType.MKV_HEVC360_COPY);
+		// params.add(ConversionType.WEBM_VP91080_VORBIS);
 		transcoding.transcode(FFMPEG_PATH,FILE_INPUT_REAL,FOLDER_OUTPUT_REAL,params);
 	}
 }
