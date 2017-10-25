@@ -7,7 +7,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,7 +28,7 @@ import URJC.VideoTranscoding.service.TranscodingService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/xml/ffmpeg-config-test.xml")
 public class FFmpegTranscodingTest{
-	// TODO cambiar mensaje de fail
+	// TODO Cambiar mensaje de fail
 	private final String FFMPEG_PATH = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i ";
 	private final File FILE_INPUT_REAL = new File("/Users/luisca/Documents/VideosPrueba/Starwars.mp4");
 	private final File FILE_INPUT_FAKE = new File("/Users/luisca/Documents/VideosPrueba/Starwa.mp4");
@@ -34,6 +36,7 @@ public class FFmpegTranscodingTest{
 	private final Path FOLDER_OUTPUT_FAKE = Paths.get("/Users/XXXX/YYYYY");
 	private final List<ConversionType> params_empty = new ArrayList<ConversionType>();
 	private final List<ConversionType> params = new ArrayList<ConversionType>();
+	private Map<ConversionType,Boolean> conversionFinished = new HashMap<>();
 	@Autowired
 	private TranscodingService transcoding;
 
@@ -117,6 +120,9 @@ public class FFmpegTranscodingTest{
 	public void transcodeSucess() throws FFmpegException{
 		params.add(ConversionType.MKV_HEVC360_COPY);
 		// params.add(ConversionType.WEBM_VP91080_VORBIS);
-		transcoding.transcode(FFMPEG_PATH,FILE_INPUT_REAL,FOLDER_OUTPUT_REAL,params);
+		conversionFinished = transcoding.transcode(FFMPEG_PATH,FILE_INPUT_REAL,FOLDER_OUTPUT_REAL,params);
+		if(conversionFinished.containsValue(false)){
+			fail("Algo ha ido mal");
+		}
 	}
 }

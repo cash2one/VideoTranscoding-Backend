@@ -6,10 +6,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
-
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -52,11 +53,12 @@ class FFmpegTranscoding implements TranscodingService{
 	 * @param fileInput
 	 * @param folderOutput
 	 * @param conversionType
+	 * @return
 	 * @throws FFmpegException
 	 */
 	@Override
-	public void transcode(String ffmpegPath,File fileInput,Path folderOutput,List<ConversionType> conversionType)
-				throws FFmpegException{
+	public Map<ConversionType,Boolean> transcode(String ffmpegPath,File fileInput,Path folderOutput,
+				List<ConversionType> conversionType) throws FFmpegException{
 		if(StringUtils.isBlank(ffmpegPath)){
 			FFmpegException ex = new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND);
 			logger.l7dlog(Level.ERROR,"",ex);
@@ -90,7 +92,7 @@ class FFmpegTranscoding implements TranscodingService{
 		for(ConversionType iterator:conversionType){
 			System.out.println(iterator);
 		}
-		transcodeFinalVersion(ffmpegPath,fileInput,folderOutput,conversionType);
+		return transcodeFinalVersion(ffmpegPath,fileInput,folderOutput,conversionType);
 	}
 
 	/**
@@ -98,9 +100,11 @@ class FFmpegTranscoding implements TranscodingService{
 	 * @param fileInput
 	 * @param folderOutput
 	 * @param conversionType
+	 * @return
 	 */
-	private void transcodeFinalVersion(String ffmpegPath,File fileInput,Path folderOutput,
+	private Map<ConversionType,Boolean> transcodeFinalVersion(String ffmpegPath,File fileInput,Path folderOutput,
 				List<ConversionType> conversionType){
+		Map<ConversionType,Boolean> conversionFinished = new HashMap<>();
 		try{
 			String commandF;
 			for(ConversionType typeConversion:conversionType){
@@ -108,31 +112,32 @@ class FFmpegTranscoding implements TranscodingService{
 				System.out.println(commandF);
 				Runtime rt = Runtime.getRuntime();
 				Process proc = rt.exec(commandF);
-
-				
-				
-				
-				
-				
 				StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(),"ERROR");
 				StreamGobbler inputGobbler = new StreamGobbler(proc.getInputStream(),"INPUT");
 				StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(),"OUTPUT");
 				inputGobbler.start();
 				errorGobbler.start();
 				outputGobbler.start();
-				int exitVal;
-				exitVal = proc.waitFor();
+				int exitVal = proc.waitFor();
+				if(exitVal == 0)
+					conversionFinished.put(typeConversion,true);
+				else
+					conversionFinished.put(typeConversion,false);
 				System.out.println("ExitValue: " + exitVal);
 			}
+			return conversionFinished;
 		}catch(ExecuteException e){
-			// TODO
+			// TODO Exception
 			e.printStackTrace();
+			return conversionFinished;
 		}catch(IOException e){
-			// TODO
+			// TODO Exception
 			e.printStackTrace();
+			return conversionFinished;
 		}catch(InterruptedException e){
-			// TODO
+			// TODO Exception
 			e.printStackTrace();
+			return conversionFinished;
 		}
 	}
 

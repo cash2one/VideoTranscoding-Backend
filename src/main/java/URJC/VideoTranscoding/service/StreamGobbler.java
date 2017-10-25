@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("unused")
 public class StreamGobbler extends Thread{
-	// TOODO JAVADOC
+	// TODO JAVADOC
 	private static final Logger logger = Logger.getLogger(StreamGobbler.class);
 	public static double percentajeConversion;
 	private Date dateFinal;
@@ -40,7 +40,59 @@ public class StreamGobbler extends Thread{
 		this.type = type;
 	}
 
-	void x(){
+	/**
+	 * 
+	 */
+	@Override
+	public void run(){
+		try{
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			Pattern durationVideoPattern = Pattern.compile("(?<=Duration: )[^,]*");
+			Pattern progreesVideoPattern = Pattern.compile("(?<=time=)[\\d:.]*");
+			Pattern generalPattern = Pattern.compile(
+						".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits/s *speed= *(\\d+.\\d+)x.*");
+			String line = null;
+			while((line = br.readLine()) != null){
+				// System.out.println("CommandLineOutput" + "> " + line);
+				Matcher progressMatcher = progreesVideoPattern.matcher(line);
+				Matcher generalMatcher = generalPattern.matcher(line);
+				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);
+				while(progressMatcher.find()){
+					// System.out.println(timeVariable.group(0));
+					double diference = getDifference(finalTime,progressMatcher.group(0));
+					System.out.print("Progress conversion: " + String.format("%.2f",diference) + "%");
+				}
+				while(durationVideoMatcher.find()){
+					System.out.println(durationVideoMatcher.group(0));
+					finalTime = getDuration(durationVideoMatcher.group(0));
+					System.out.println("Duration time Video : " + finalTime + " Secs");
+				}
+				while(generalMatcher.find()){
+					System.out.print(" // File Size: " + generalMatcher.group(1) + "kB");
+					System.out.print(" // Speed: " + generalMatcher.group(6) + "x");
+					System.out.println(" // Bitrate: " + generalMatcher.group(5) + "kbits/s");
+				}
+				line = "";
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	private double getDifference(Double finalTime2,String timeVariable){
+		String matchSplit[] = timeVariable.split(":");
+		return ((Integer.parseInt(matchSplit[0]) * 3600 + Integer.parseInt(matchSplit[1]) * 60
+					+ Double.parseDouble(matchSplit[2])) / finalTime2) * 100;
+	}
+
+	private double getDuration(String group){
+		String[] hms = group.split(":");
+		return Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60 + Double.parseDouble(hms[2]);
+	}
+
+	// TODO DELETE
+	private void toDelete(){
 		Scanner sc = new Scanner(is);
 		Pattern durPattern = Pattern.compile("(?<=Duration: )[^,]*");
 		String dur = sc.findWithinHorizon(durPattern,0);
@@ -103,55 +155,5 @@ public class StreamGobbler extends Thread{
 			}
 			sc.close();
 		}
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public void run(){
-		try{
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			Pattern durPattern = Pattern.compile("(?<=Duration: )[^,]*");
-			Pattern timePattern = Pattern.compile("(?<=time=)[\\d:.]*");
-			Pattern generalPattern = Pattern.compile(
-						".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits/s *speed= *(\\d+.\\d+)x.*");
-			String line = null;
-			while((line = br.readLine()) != null){
-				System.out.println("CommandLineOutput" + "> " + line);
-				Matcher timeVariable = timePattern.matcher(line);
-				Matcher generalMather = generalPattern.matcher(line);
-				Matcher durationVideoMatcher = durPattern.matcher(line);
-				while(timeVariable.find()){
-					// System.out.println(timeVariable.group(0));
-					System.out.println(getDifference(finalTime,timeVariable.group(0)));
-				}
-				while(durationVideoMatcher.find()){
-					System.out.println(durationVideoMatcher.group(0));
-					finalTime = getDuration(durationVideoMatcher.group(0));
-					System.out.println("Duracion Del video : " + finalTime);
-				}
-				// while(generalMather.find()){
-				// System.out.println(generalMather.group(1));
-				// System.out.println(getDifference(finalTime,
-				// generalMather.group(2) + ":" + generalMather.group(3) + ":" + generalMather.group(4)));
-				// }
-				line = "";
-			}
-		}catch(IOException ioe){
-			ioe.printStackTrace();
-		}
-	}
-
-	private double getDifference(Double finalTime2,String timeVariable){
-		String matchSplit[] = timeVariable.split(":");
-		return ((Integer.parseInt(matchSplit[0]) * 3600 + Integer.parseInt(matchSplit[1]) * 60
-					+ Double.parseDouble(matchSplit[2])) / finalTime2) * 100;
-	}
-
-	private double getDuration(String group){
-		String[] hms = group.split(":");
-		return Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60 + Double.parseDouble(hms[2]);
 	}
 }
