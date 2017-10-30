@@ -11,21 +11,21 @@ Mac has built-in human behaivor so you only have to worry about the functions yo
 _This needs **Python 3.5**_
 
 # Setup:
-1. Clone this repository (with submodules since it uses tgalal's yowsup library)
+1. Clone th)
 ```sh
-> git clone https://github.com/danielcardeenas/whatsapp-framework.git
+> git clone
 ```
-2. Run setup.sh (Most likely on sudo since its going to install some libraries)
+2. Run setup.sh (Mosts)
 ```sh
 > sudo ./setup.sh
 ```
 
-3. Register your phone and get a password with like this:
+3. Replace:
 ```sh
-# Replace CC with your country code (See http://www.ipipi.com/help/telephone-country-codes.htm)
-> yowsup-cli registration --requestcode sms --phone CCXXXXXXXX--cc CC -E android
-# After getting the sms code (in this example: 123456)
-> yowsup-cli registration --register 123456 --phone CCXXXXXXXX --cc CC -E android
+# Replace 
+> XXXXXXXXX
+# Replace
+> XXXXXXXXX
 ```
 
 
@@ -37,19 +37,19 @@ _This needs **Python 3.5**_
 ```
 
 # Quickstart
-Create your own module inside [`modules/`](https://github.com/danielcardeenas/whatsapp-framework/tree/master/modules) directory
+Create  inside [`modules/`](https://gr/modules) directory
 ```python
-# modules/hi_module.py
+# mode.py
 
 from app.mac import mac, signals
 
 @signals.message_received.connect
 def handle(message):
-    #message.log() to see message object properties
+    #messaroperties
     if message.text == "hi":
         mac.send_message("Hello", message.conversation)
 ```
-Now you should only add it into [`modules/__init__.py`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/__init__.py) to enable the module
+Now you should only add it into [`modules/__init__.py`](https://gi_.py) to enable the module
 ```python
 # modules/__init__.py
 ...
@@ -58,9 +58,8 @@ from modules import hi_module
 ```
 And that's it! You are ready to go.
 
-###### If your module needs libraries from pip you should add them into a `requirements.txt` and run `sudo ./setup.sh` to download the dependencies
-
-###### _You can take [`hihelp module`](https://github.com/danielcardeenas/whatsapp-framework/blob/master/modules/hihelp/hihelp.py) as an example._
+###### If your module 
+###### _You can take [`hihelp module`](https://gp.py) as an example._
 
 
 # Updates
@@ -74,11 +73,11 @@ The project is not submoduling yowsup now due to a lot of the modifications made
 - [ ] Add pickle support to remember the messages when mac its turned off(_TODO_)
 
 # Example screenshots:
-![](https://i.imgur.com/ZRlk5Uj.png)
-![](https://i.imgur.com/JmPbPXB.png)
-![](https://i.imgur.com/L4ebZql.png)
-<img src="https://i.imgur.com/pLiwAm5.png" width="253px" height="450px">
-<img src="https://i.imgur.com/poLpmAR.png" width="253px" height="450px">
-<img src="https://i.imgur.com/CRNKfHj.png" width="253px" height="450px">
+![](https://xxxxxxxxxxxxxxxx.png)
+![](https://xxxxxxxxxxxxxxxx.png)
+![](https://xxxxxxxxxxxxxxxx.png)
+<img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
+<img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
+<img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
 
 ###### **BTC**: 3FSCxDHnRKQvRJWPv4fcbLm37RemauTXRF

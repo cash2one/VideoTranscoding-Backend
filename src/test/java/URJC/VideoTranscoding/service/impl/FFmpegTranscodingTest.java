@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,7 +33,8 @@ import URJC.VideoTranscoding.service.TranscodingService;
 @ContextConfiguration("classpath:/xml/ffmpeg-config-test.xml")
 public class FFmpegTranscodingTest{
 	// TODO Cambiar mensaje de fail
-	private final String FFMPEG_PATH = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg -i ";
+	private File FFMPEG_PATH;
+	private final File FFMPEG_PATH_FAKE = new File("installation/fail");
 	private final File FILE_INPUT_REAL = new File("/Users/luisca/Documents/VideosPrueba/Starwars.mp4");
 	private final File FILE_INPUT_FAKE = new File("/Users/luisca/Documents/VideosPrueba/Starwa.mp4");
 	private final Path FOLDER_OUTPUT_REAL = Paths.get("/Users/luisca/Documents/VideosPrueba/");
@@ -38,11 +42,22 @@ public class FFmpegTranscodingTest{
 	private final List<ConversionType> params_empty = new ArrayList<ConversionType>();
 	private final List<ConversionType> params = new ArrayList<ConversionType>();
 	private Map<ConversionType,Boolean> conversionFinished = new HashMap<>();
+	private final String FFMPEG_INSTALLATION_MACOSX = "ffmpeg_installation_location_macosx";
+	private final String FFMPEG_INSTALLATION_CENTOS7 = "ffmpeg_installation_location_centos7";
+	private final String OS_MAC = "Mac OS X";
 	@Autowired
 	private TranscodingService transcoding;
+	@Resource
+	Properties propertiesFFmpegTest;
 
 	@Before
-	public void before(){
+	public void setUp(){
+		System.out.println("*" + System.getProperty("os.name") + "*");
+		if(System.getProperty("os.name").equals(OS_MAC)){
+			FFMPEG_PATH = new File(propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_MACOSX));
+		}else{
+			FFMPEG_PATH = new File(propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_CENTOS7));
+		}
 	}
 
 	@BeforeClass
@@ -58,7 +73,27 @@ public class FFmpegTranscodingTest{
 	}
 
 	@Test
-	public void transcodeFailOnInputFile(){
+	public void transcodeFailOnFakeFFMPEGFile(){
+		try{
+			transcoding.transcode(FFMPEG_PATH_FAKE,null,null,null);
+			fail("No should fail");
+		}catch(FFmpegException e){
+			assertEquals(FFmpegException.EX_FFMPEG_NOT_FOUND,e.getMessage());
+		}
+	}
+
+	@Test
+	public void transcodeFailOnNullFFMPEGFile(){
+		try{
+			transcoding.transcode(null,null,null,null);
+			fail("No should fail");
+		}catch(FFmpegException e){
+			assertEquals(FFmpegException.EX_FFMPEG_NOT_FOUND,e.getMessage());
+		}
+	}
+
+	@Test
+	public void transcodeFailOnFakeInputFile(){
 		try{
 			transcoding.transcode(FFMPEG_PATH,FILE_INPUT_FAKE,FOLDER_OUTPUT_REAL,params);
 			fail("No should fail");
@@ -78,7 +113,7 @@ public class FFmpegTranscodingTest{
 	}
 
 	@Test
-	public void transcodeFailOnFolderOuput(){
+	public void transcodeFailOnFakeFolderOuput(){
 		try{
 			transcoding.transcode(FFMPEG_PATH,FILE_INPUT_REAL,FOLDER_OUTPUT_FAKE,params);
 			fail("No deberia fallar");
@@ -121,7 +156,7 @@ public class FFmpegTranscodingTest{
 	@Test
 	public void transcodeSucess() throws FFmpegException{
 		// params.add(ConversionType.MKV_HEVC360_COPY);
-		// params.add(ConversionType.WEBM_VP91080_VORBIS);
+		params.add(ConversionType.WEBM_VP91080_VORBIS);
 		params.add(ConversionType.MKV_H2641080_COPY);
 		conversionFinished = transcoding.transcode(FFMPEG_PATH,FILE_INPUT_REAL,FOLDER_OUTPUT_REAL,params);
 		if(conversionFinished.containsValue(false)){

@@ -19,6 +19,6 @@ public interface TranscodingService{
 	 * @param conversionType
 	 * @throws FFmpegException
 	 */
-	Map<ConversionType,Boolean> transcode(String pathFFMPEG,File fileInput,Path folderOutput,
+	Map<ConversionType,Boolean> transcode(File pathFFMPEG,File fileInput,Path folderOutput,
 				List<ConversionType> conversionType) throws FFmpegException;
 }
