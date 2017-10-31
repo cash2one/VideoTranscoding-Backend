@@ -6,6 +6,6 @@ jdk:
 install:
   - sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
   - sudo apt update -y && sudo apt install -y ffmpeg libav-tools x264 x265
-  - sudo find / -type f -name ffmpeg
+  - sudo find / -name ffmpeg
   - mvn install -Dgpg.skip
 script: mvn clean compile
