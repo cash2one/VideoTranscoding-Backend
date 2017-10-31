@@ -1,24 +1,11 @@
 sudo: required
-
 language: java
 jdk:
   - oraclejdk8
 
-services:
-  - docker
-
-env:
-  - OS_VERSION=7
-
-before_install:
-  - sudo docker pull centos:${OS_VERSION}
-
 install:
-  - sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/yum-plugin-priorities:ro --name centos-${OS_VERSION} centos:${OS_VERSION} sleep 300
-  - sudo docker exec centos-${OS_VERSION} yum -y install epel-release
-  - sudo docker exec centos-${OS_VERSION} yum -y update 
-  - sudo docker exec centos-${OS_VERSION} rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
-  - sudo docker exec centos-${OS_VERSION} rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
-  - sudo docker exec centos-${OS_VERSION} yum install ffmpeg ffmpeg-devel -y
-  - sudo docker exec centos-${OS_VERSION} mvn install -Dgpg.skip
+  - sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
+  - sudo apt update -y && sudo apt install -y ffmpeg libav-tools x264 x265
+  - sudo find / -name ffmpeg
+  - mvn install -Dgpg.skip
 script: mvn clean compile
