@@ -28,6 +28,7 @@ install:
   - sudo docker exec centos-${OS_VERSION} ln -s apache-maven-3.5.2  maven
   - sudo docker exec centos-${OS_VERSION} touch /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION} chmod +rwx "/etc/profile.d/maven.sh"
+  - sudo docker exec centos-${OS_VERSION} ls -a "/etc/profile.d/maven.sh"
   - sudo docker exec centos-${OS_VERSION} echo "export M2_HOME=/opt/maven" >> /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION} echo "export PATH=${M2_HOME}/bin:${PATH}" >> /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION} source /etc/profile.d/maven.sh
