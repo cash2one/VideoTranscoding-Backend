@@ -29,8 +29,9 @@ install:
   - sudo docker exec centos-${OS_VERSION} touch /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION} chmod +rwx "/etc/profile.d/maven.sh"
   - sudo docker exec centos-${OS_VERSION} la "/etc/profile.d/maven.sh"
-  - sudo docker exec centos-${OS_VERSION} echo "export M2_HOME=/opt/maven" >> /etc/profile.d/maven.sh
-  - sudo docker exec centos-${OS_VERSION} echo "export PATH=${M2_HOME}/bin:${PATH}" >> /etc/profile.d/maven.sh
+  - sudo docker exec centos-${OS_VERSION} cd /etc/profile.d/
+  - sudo docker exec centos-${OS_VERSION} echo "export M2_HOME=/opt/maven" >> maven.sh
+  - sudo docker exec centos-${OS_VERSION} echo "export PATH=${M2_HOME}/bin:${PATH}" >> maven.sh
   - sudo docker exec centos-${OS_VERSION} source /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION} mvn install -Dgpg.skip
 script: mvn clean compile
