@@ -20,5 +20,5 @@ install:
   - sudo docker exec centos-${OS_VERSION} rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
   - sudo docker exec centos-${OS_VERSION} rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
   - sudo docker exec centos-${OS_VERSION} yum install ffmpeg ffmpeg-devel -y
-  - sudo docker exec centos-${OS_VERSION} mvn install -Dgpg.skip
+  - mvn install -Dgpg.skip
 script: mvn clean compile
