@@ -20,13 +20,10 @@ public class UploadFile {
 	@PostMapping("/upload")
 	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model m) {
 
-		if (file.isEmpty()) {
-			m.addAttribute("message", "Please select a file to upload");
-			return "redirect:/uploadFile";
-		}
 		try {
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(DEFAULT_IMG_FOLDER + file.getOriginalFilename());
+			System.out.println(path);
 			Files.write(path, bytes);
 
 			m.addAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
@@ -35,7 +32,7 @@ public class UploadFile {
 			e.printStackTrace();
 		}
 
-		return "redirect:/uploadFile";
+		return "fileUploaded";
 	}
 
 }
