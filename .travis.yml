@@ -22,6 +22,7 @@ install:
   - sudo docker exec centos-${OS_VERSION} yum install ffmpeg ffmpeg-devel -y
   - sudo docker exec centos-${OS_VERSION} yum -y install java-1.8.0-openjdk
   - sudo docker exec centos-${OS_VERSION} cd /opt
+  - sudo docker exec centos-${OS_VERSION} yum -y install wget
   - sudo docker exec centos-${OS_VERSION} wget http://www-eu.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
   - sudo docker exec centos-${OS_VERSION} sudo tar xzf apache-maven-3.5.0-bin.tar.gz
   - sudo docker exec centos-${OS_VERSION} sudo ln -s apache-maven-3.5.0  maven
