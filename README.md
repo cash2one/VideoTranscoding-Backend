@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.com/luiscajl/VideoTranscoding.svg?token=pmaXrqcdKzZPYdpspVgq&branch=master)](https://travis-ci.com/luiscajl/VideoTranscoding)
 ![Version](https://img.shields.io/badge/version-0.1-brightgreen.svg?style=flat)
 
+This application transcode a video that you send on all formats what you want and diferent resolutions.
+
 
 ###### Everything seems to be working nice now
 Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom bot easily.
@@ -10,7 +12,7 @@ Mac has built-in human behaivor so you only have to worry about the functions yo
 
 _This needs **Python 3.5**_
 
-# Setup:
+## Develop it:
 1. Clone th)
 ```sh
 > git clone
@@ -36,7 +38,7 @@ _This needs **Python 3.5**_
 > ./start.sh
 ```
 
-# Quickstart
+## Run it
 Create  inside [`modules/`](https://gr/modules) directory
 ```python
 # mode.py
@@ -62,7 +64,7 @@ And that's it! You are ready to go.
 ###### _You can take [`hihelp module`](https://gp.py) as an example._
 
 
-# Updates
+## Next Fixes
 The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
 - [x] Add support for @tag messages
 - [x] Add support for reply messages
@@ -72,7 +74,7 @@ The project is not submoduling yowsup now due to a lot of the modifications made
 - [ ] Add support for encrypting images in chunks (_TODO_)
 - [ ] Add pickle support to remember the messages when mac its turned off(_TODO_)
 
-# Example screenshots:
+## Example screenshots:
 ![](https://xxxxxxxxxxxxxxxx.png)
 ![](https://xxxxxxxxxxxxxxxx.png)
 ![](https://xxxxxxxxxxxxxxxx.png)
@@ -80,4 +82,4 @@ The project is not submoduling yowsup now due to a lot of the modifications made
 <img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
 <img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
 
-###### **BTC**: 3FSCxDHnRKQvRJWPv4fcbLm37RemauTXRF
+###### **BTC**: 
