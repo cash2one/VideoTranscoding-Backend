@@ -23,9 +23,9 @@ install:
   - sudo docker exec centos-${OS_VERSION} yum -y install java-1.8.0-openjdk
   - sudo docker exec centos-${OS_VERSION} cd /opt
   - sudo docker exec centos-${OS_VERSION} yum -y install wget
-  - sudo docker exec centos-${OS_VERSION} wget http://www-eu.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
-  - sudo docker exec centos-${OS_VERSION} sudo tar xzf apache-maven-3.5.0-bin.tar.gz
-  - sudo docker exec centos-${OS_VERSION} sudo ln -s apache-maven-3.5.0  maven
+  - sudo docker exec centos-${OS_VERSION} wget http://apache.rediris.es/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz
+  - sudo docker exec centos-${OS_VERSION} sudo tar xzf apache-maven-3.5.2-bin.tar.gz
+  - sudo docker exec centos-${OS_VERSION} sudo ln -s apache-maven-3.5.2  maven
   - sudo docker exec centos-${OS_VERSION} touch /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION}echo "export M2_HOME=/opt/maven" >> /etc/profile.d/maven.sh
   - sudo docker exec centos-${OS_VERSION} echo "export PATH=${M2_HOME}/bin:${PATH}" >> /etc/profile.d/maven.sh
