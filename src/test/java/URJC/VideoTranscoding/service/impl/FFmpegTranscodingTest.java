@@ -59,6 +59,7 @@ public class FFmpegTranscodingTest {
 		} else {
 			FFMPEG_PATH = new File(propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_CENTOS7));
 		}
+		//if (FOLDER_OUTPUT_REAL
 	}
 
 	@BeforeClass
