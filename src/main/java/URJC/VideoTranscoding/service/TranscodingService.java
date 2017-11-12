@@ -13,12 +13,14 @@ import URJC.VideoTranscoding.exception.FFmpegException;
  */
 public interface TranscodingService{
 	/**
+	 * 
 	 * @param pathFFMPEG
 	 * @param fileInput
 	 * @param folderOutput
 	 * @param conversionType
+	 * @return
 	 * @throws FFmpegException
 	 */
-	Map<ConversionType,Boolean> transcode(File pathFFMPEG,File fileInput,Path folderOutput,
+	public Map<ConversionType,Boolean> transcode(File pathFFMPEG,File fileInput,Path folderOutput,
 				List<ConversionType> conversionType) throws FFmpegException;
 }
