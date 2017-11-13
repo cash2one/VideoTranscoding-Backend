@@ -39,15 +39,15 @@ public class FFmpegTranscodingTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 	private final File FFMPEG_PATH_FAKE = new File("installation/fail");
 	private final File FILE_INPUT_REAL = new File("src/test/resources/static/RedLettuce.mp4");
-	private final File FILE_INPUT_FAKE = new File("/Users/luisca/Documents/VideosPrueba/Starwa.mp4");
+	private final File FILE_INPUT_FAKE = new File("VideosPrueba/Starwa.mp4");
 	private final Path FOLDER_OUTPUT_FAKE = Paths.get("/Users/XXXX/YYYYY");
-	private final List<ConversionType> params_empty = new ArrayList<ConversionType>();
+	private final List<ConversionType> PARAMS_EMPTY = new ArrayList<ConversionType>();
 	private final List<ConversionType> params = new ArrayList<ConversionType>();
 	private final String FFMPEG_INSTALLATION_MACOSX = "ffmpeg_installation_location_macosx";
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "ffmpeg_installation_location_centos7";
 	private final String OS_MAC = "Mac OS X";
 	private Map<ConversionType, Boolean> conversionFinished = new HashMap<>();
-	private File FFMPEG_PATH;
+	private static File FFMPEG_PATH;
 	private File FOLDER_OUTPUT_REAL;
 	@Autowired
 	private TranscodingService transcoding;
@@ -61,15 +61,18 @@ public class FFmpegTranscodingTest {
 		} else {
 			FFMPEG_PATH = new File(propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_CENTOS7));
 		}
+		FOLDER_OUTPUT_REAL = folder.newFolder("temp");
 
 	}
 
 	@BeforeClass
 	public static void beforeClass() {
+
 	}
 
 	@After
 	public void setDown() {
+
 	}
 
 	@AfterClass
@@ -151,7 +154,7 @@ public class FFmpegTranscodingTest {
 	@Test
 	public void transcodeFailOnEmptyParams() {
 		try {
-			transcoding.transcode(FFMPEG_PATH, FILE_INPUT_REAL, Paths.get(FOLDER_OUTPUT_REAL.toString()), params_empty);
+			transcoding.transcode(FFMPEG_PATH, FILE_INPUT_REAL, Paths.get(FOLDER_OUTPUT_REAL.toString()), PARAMS_EMPTY);
 			fail("No deberia fallar");
 		} catch (FFmpegException e) {
 			assertEquals(FFmpegException.EX_CONVERSION_TYPE_EMPTY, e.getMessage());
