@@ -19,7 +19,11 @@ public enum Container{
 	/**
 	 * 
 	 */
-	AVI(".avi");
+	AVI(".avi"),
+	/**
+	 * 
+	 */
+	FLV(".flv");
 	final String containerType;
 
 	Container(String x){

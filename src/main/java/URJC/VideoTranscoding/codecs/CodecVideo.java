@@ -24,7 +24,7 @@ public enum CodecVideo{
 	/**
 	 * 
 	 */
-	VP9_1080(" -c:v libvpx-vp9 -s 1920x1080 -crf 30 -b:v 0 "),
+	VP9_1080(" -c:v libvpx-vp9 -s 1920x1080 -threads 4 -crf 30 -b:v 0 "),
 	/**
 	 * 
 	 */

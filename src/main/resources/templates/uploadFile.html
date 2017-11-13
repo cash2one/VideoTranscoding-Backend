@@ -1,5 +1,13 @@
-<h3>Upload your File</h3>
-<form id="uploadbanner" enctype="multipart/form-data" method="post" action="/upload">
-   <input id="fileupload" name="fileupload" type="file" />
-   <input type="submit" value="submit" id="submit" />
+<h3>Upload your File and select all conversion type that you wants</h3>
+<form id="uploadbanner" enctype="multipart/form-data" method="post"
+	action="/upload">
+	<input id="fileupload" name="fileupload" type="file" /> <input
+		type="submit" value="Send" id="submit" /> <br />
+	<br />
+	<div>
+		{{#conversionType}} <input type="checkbox" name="conversionType"
+			id="categoria" value="{{.}}"> {{.}}<br />
+		{{/conversionType}}
+	</div>
+
 </form>
