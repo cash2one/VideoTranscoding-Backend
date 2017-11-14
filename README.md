@@ -13,30 +13,30 @@ Mac has built-in human behaivor so you only have to worry about the functions yo
 ## Run it:
 1. Clone respository:
 ```sh
-> git clone https://github.com/luiscajl/VideoTranscoding.git 
+git clone https://github.com/luiscajl/VideoTranscoding.git 
 ```
 2. Run this script to install ffmpeg on your mac.
 ```sh
-> sh /scripts/install_ffmpeg_macosx.sh
+sh /scripts/install_ffmpeg_macosx.sh
 ```
 or this for linux
 ```sh
-> sh /scripts/install_ffmpeg_linux.sh
+sh /scripts/install_ffmpeg_linux.sh
 ```
 3. Install maven
 
 ## Develop it:
 1. Clone respository:
 ```sh
-> git clone https://github.com/luiscajl/VideoTranscoding.git 
+git clone https://github.com/luiscajl/VideoTranscoding.git 
 ```
 2. Run this script to install ffmpeg on your mac.
 ```sh
-> sh /scripts/install_ffmpeg_macosx.sh
+sh /scripts/install_ffmpeg_macosx.sh
 ```
 or this for linux
 ```sh
-> sh /scripts/install_ffmpeg_linux.sh
+sh /scripts/install_ffmpeg_linux.sh
 ```
 
 
