@@ -10,69 +10,42 @@ Mac is a whatsapp bot/framework I made as a weekend project. The project itself 
 
 Mac has built-in human behaivor so you only have to worry about the functions you make. Every module works completely separated from the core, this means that you can erease every module and mac will keep working
 
-_This needs **Python 3.5**_
+## Run it:
+1. Clone respository:
+```sh
+> git clone https://github.com/luiscajl/VideoTranscoding.git 
+```
+2. Run this script to install ffmpeg on your mac.
+```sh
+> sh /scripts/install_ffmpeg_macosx.sh
+```
+or this for linux
+```sh
+> sh /scripts/install_ffmpeg_linux.sh
+```
+3. Install maven
 
 ## Develop it:
-1. Clone th)
+1. Clone respository:
 ```sh
-> git clone
+> git clone https://github.com/luiscajl/VideoTranscoding.git 
 ```
-2. Run setup.sh (Mosts)
+2. Run this script to install ffmpeg on your mac.
 ```sh
-> sudo ./setup.sh
+> sh /scripts/install_ffmpeg_macosx.sh
 ```
-
-3. Replace:
+or this for linux
 ```sh
-# Replace 
-> XXXXXXXXX
-# Replace
-> XXXXXXXXX
+> sh /scripts/install_ffmpeg_linux.sh
 ```
 
 
-4. Open **config.py** and add set your credentials
 
-5. Ready to go! (Now you can add your own whatsapp modules)
-```sh
-> ./start.sh
-```
-
-## Run it
-Create  inside [`modules/`](https://gr/modules) directory
-```python
-# mode.py
-
-from app.mac import mac, signals
-
-@signals.message_received.connect
-def handle(message):
-    #messaroperties
-    if message.text == "hi":
-        mac.send_message("Hello", message.conversation)
-```
-Now you should only add it into [`modules/__init__.py`](https://gi_.py) to enable the module
-```python
-# modules/__init__.py
-...
-from modules import hi_module
-...
-```
-And that's it! You are ready to go.
-
-###### If your module 
-###### _You can take [`hihelp module`](https://gp.py) as an example._
-
-
-## Next Fixes
+## Next objectives:
 The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
 - [x] Add support for @tag messages
 - [x] Add support for reply messages
-- [x] Add support for receiving files
-- [x] Add support for big receiving big files (downloading and decryption done in chunks)
-- [x] Add support for sending images
-- [ ] Add support for encrypting images in chunks (_TODO_)
-- [ ] Add pickle support to remember the messages when mac its turned off(_TODO_)
+
 
 ## Example screenshots:
 ![](https://xxxxxxxxxxxxxxxx.png)
