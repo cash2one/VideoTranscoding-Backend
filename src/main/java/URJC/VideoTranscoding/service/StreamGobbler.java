@@ -19,7 +19,7 @@ public class StreamGobbler extends Thread {
 	private final String GENERAL_PATTERN = ".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits/s *speed= *(\\d+.\\d+)x.*";
 	private final String PROGRESS_VIDEO_PATTERN = "(?<=time=)[\\d:.]*";
 	private final String DURATION_VIDEO_PATTERN = "(?<=Duration: )[^,]*";
-	private InputStream is;
+	private final InputStream is;
 	String type;
 
 	/**

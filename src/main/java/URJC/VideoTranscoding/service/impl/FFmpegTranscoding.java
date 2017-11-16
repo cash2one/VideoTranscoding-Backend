@@ -140,9 +140,10 @@ class FFmpegTranscoding implements TranscodingService{
 	 * @return String with the Command ready for send it.
 	 */
 	private String getCommand(File pathFFMPEG,File fileInput,Path folderOutput,ConversionType conversionType){
-		return pathFFMPEG + " -i " + fileInput.toString() + conversionType.getCodecAudioType()
+		String command = pathFFMPEG + " -i " + fileInput.toString() + conversionType.getCodecAudioType()
 					+ conversionType.getCodecVideoType() + folderOutput
 					+ getFinalNameFile(fileInput,conversionType.getContainerType());
+		return command;
 	}
 
 	/**
