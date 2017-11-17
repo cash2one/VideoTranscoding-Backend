@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.service;
+package URJC.VideoTranscoding.ffmpeg;
 
 import java.io.File;
 import java.nio.file.Path;

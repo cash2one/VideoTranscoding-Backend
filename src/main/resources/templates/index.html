@@ -1,23 +1,46 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>VideoTranscoding</title>
-<meta name="description" content="XXXXXXXXXXXXXXXXx" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Codeply">
-<link rel="stylesheet" href="css/bootstrap.min.css" />
-<link rel="stylesheet" href="css/animate.min.css" />
-<link rel="stylesheet" href="css/ionicons.min.css" />
-<link rel="stylesheet" href="css/styles.css" />
+	<meta charset="utf-8">
+	<title>VideoTranscoding</title>
+	<meta name="description" content="XXXXXXXXXXXXXXXXx" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="generator" content="Codeply">
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/animate.min.css" />
+	<link rel="stylesheet" href="css/ionicons.min.css" />
+	<link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
 
 	<h1>VideoTranscoding</h1>
+
+	<h3>Upload your File and select all conversion type that you wants</h3>
+	<div class="container">
+		<div class="col-md-12">
+			<form id="uploadbanner" enctype="multipart/form-data" method="post" action="/uploadFile">
+				<input id="fileupload" name="fileupload" type="file" />
+				<input style="color: black;" type="submit" value="Send" id="submit" />
+				<br />
+				<br />
+				<div>
+					{{#conversionType}}
+					<input type="checkbox" name="conversionType" id="conversionTypes" value="{{.}}"> {{.}}
+					<br /> {{/conversionType}}
+				</div>
+
+			</form>
+		</div>
+	</div>
+
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.easing.min.js"></script>
 	<script src="js/wow.js"></script>
 	<script src="js/scripts.js"></script>
+
 </body>
+
 </html>

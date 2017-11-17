@@ -14,13 +14,4 @@
 	<util:properties id="propertiesFFmpeg"
 		location="classpath:/properties/ffmpeg.properties" />
 
-	<bean id="trazasMessageSourceFFmpeg"
-		class="URJC.VideoTranscoding.wrapper.FfmpegResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<value>file:#{propertiesFFmpeg['fichero.mensajes.trazas']}
-				</value>
-			</list>
-		</property>
-	</bean>
 </beans>

@@ -7,9 +7,10 @@ This application transcode a video that you send on all formats what you want an
 
 
 ###### Everything seems to be working nice now
-Mac is a whatsapp bot/framework I made as a weekend project. The project itself has all you need to make your own custom bot easily.
 
-Mac has built-in human behaivor so you only have to worry about the functions you make. Every module works completely separated from the core, this means that you can erease every module and mac will keep working
+VideoTranscoding need a JDK1.8(JAVA) on your enviroment machine. 
+
+
 <!---
 ## Run it:
 1. Clone respository:
@@ -39,21 +40,20 @@ or this for linux
 ```sh
 sh /scripts/install_ffmpeg_linux.sh
 ```
-
+3. Now you can import the project on your ide and start SpringBoot Application.
 
 
 ## Next objectives:
-The project is not submoduling yowsup now due to a lot of the modifications made are focused for this project only and to make things simpler.
-- [x] Add support for @tag messages
-- [x] Add support for reply messages
+- [x] Add communication with the web interface and the transcode process.
+- [x] Add a beautiful web interface for the service.
+- [x] Add support for more audio languages and subtitles.
+
+The project is my final project of my degree. I hope to finish it on May´18. 
+
+## Screenshots:
+![logo](https://github.com/luiscajl/VideoTranscoding/screens/screenIndex.png)
+![logo](https://github.com/luiscajl/VideoTranscoding/screens/screenTranscode.png)
 
 
-## Example screenshots:
-![](https://xxxxxxxxxxxxxxxx.png)
-![](https://xxxxxxxxxxxxxxxx.png)
-![](https://xxxxxxxxxxxxxxxx.png)
-<img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
-<img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
-<img src="https://xxxxxxxxxxxxxxxx.png" width="253px" height="450px">
 
-###### **BTC**: 
+

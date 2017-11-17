@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.service.impl;
+package URJC.VideoTranscoding.ffmpeg;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,44 +6,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import URJC.VideoTranscoding.codecs.ConversionType;
 import URJC.VideoTranscoding.exception.FFmpegException;
-import URJC.VideoTranscoding.service.StreamGobbler;
-import URJC.VideoTranscoding.service.TranscodingService;
-import URJC.VideoTranscoding.wrapper.FfmpegResourceBundleMessageSource;
 
 /**
  * @author luisca
  */
 @Service
-class FFmpegTranscoding implements TranscodingService{
-	private static final Logger logger = Logger.getLogger(FFmpegTranscoding.class);
-	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
+class FFmpegTranscodingImpl implements TranscodingService{
+	private static final Logger logger = Logger.getLogger(FFmpegTranscodingImpl.class);
 	private final String TRACE_CONVERSION_TYPE_NOT_FOUND = "Conversion Type: ";
 	@Resource
 	Properties propertiesFFmpeg;
-	@Autowired
-	private FfmpegResourceBundleMessageSource trazasMessageSourceFFmpeg;
-
-	@PostConstruct
-	void init(){
-		logger.setResourceBundle(trazasMessageSourceFFmpeg
-					.getResourceBundleLog4j(propertiesFFmpeg.getProperty(FICH_TRAZAS),Locale.getDefault()));
-	}
+	
 
 	/**
 	 * @param pathFFMPEG

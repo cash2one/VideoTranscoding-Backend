@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Properties;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,58 +22,68 @@ import org.springframework.web.multipart.MultipartFile;
 
 import URJC.VideoTranscoding.codecs.ConversionType;
 import URJC.VideoTranscoding.exception.FFmpegException;
-import URJC.VideoTranscoding.service.MainControllerService;
-import URJC.VideoTranscoding.service.TranscodingService;
+import URJC.VideoTranscoding.ffmpeg.TranscodingService;
+import URJC.VideoTranscoding.services.MainControllerService;
 
 @Controller
-public class MainController{
-	public static final String DEFAULT_UPLOAD_FILES = "/Users/luisca/Documents/";
-	private final String FFMPEG_INSTALLATION_CENTOS7 = "/usr/bin/ffmpeg";
-	private final String FFMPEG_INSTALLATION_MACOSX = "/usr/local/Cellar/ffmpeg/3.4/bin/ffmpeg";
-	public String fileInput = "/Users/luisca/Desktop";
+public class MainController {
+	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
+	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
+	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	@Autowired
 	private TranscodingService ffmpegTranscoding;
 	@Autowired
 	private MainControllerService mainControllerService;
+	@Resource
+	private Properties propertiesFFmpeg;
 
+	/**
+	 * 
+	 * @param m
+	 * @return
+	 */
 	@GetMapping(value = "/")
-	public String getIndex(){
+	public String getIndex(Model m) {
+		EnumSet<ConversionType> conversionType = EnumSet.allOf(ConversionType.class);
+		m.addAttribute("conversionType", conversionType);
 		return "index";
 	}
 
-	@GetMapping(value = "/upload")
-	public String getUploadFile(Model m){
-		EnumSet<ConversionType> conversionType = EnumSet.allOf(ConversionType.class);
-		m.addAttribute("conversionType",conversionType);
-		return "uploadFile";
-	}
-
+	/**
+	 * 
+	 * @param file
+	 * @param model
+	 * @param conversionType
+	 * @return
+	 * @throws IOException
+	 */
 	@PostMapping(value = "/uploadFile")
-	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file,Model m,String conversionType)
-				throws IOException{
+	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType)
+			throws IOException {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
+		// TODO ConvesionTYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
-		Path pathToReturn = mainControllerService.saveFile(file,DEFAULT_UPLOAD_FILES);
+		Path pathToReturn = mainControllerService.saveFile(file, propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 		String FFMPEG_PATH;
-		if((System.getProperty("os.name").equals("Mac OS X"))){
-			FFMPEG_PATH = FFMPEG_INSTALLATION_MACOSX;
-		}else{
-			FFMPEG_PATH = FFMPEG_INSTALLATION_CENTOS7;
+		if ((System.getProperty("os.name").equals("Mac OS X"))) {
+			FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
+		} else {
+			FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
 		}
-		Thread one = new Thread(){
+		Thread one = new Thread() {
 			@Override
-			public void run(){
-				try{
-					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)),pathToReturn.toFile(),
-								Paths.get(pathToReturn.getParent().toString()),conversionTypes);
-				}catch(FFmpegException e){
+			public void run() {
+				try {
+					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)), pathToReturn.toFile(),
+							Paths.get(pathToReturn.getParent().toString()), conversionTypes);
+				} catch (FFmpegException e) {
 					e.printStackTrace();
 				}
 			}
 		};
 		one.start();
-		m.addAttribute("message",
-					"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being processed");
+		model.addAttribute("message",
+				"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");
 		return "fileUploaded";
 	}
 }

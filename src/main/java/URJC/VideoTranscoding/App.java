@@ -18,6 +18,7 @@ public class App {
 	private static final Logger logger = Logger.getLogger(App.class);
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(App.class, args);
 		logger.l7dlog(Level.INFO, " --------- App SpringBoot Started ------- ", null);
 		System.out.println("App SpringBoot Started ");

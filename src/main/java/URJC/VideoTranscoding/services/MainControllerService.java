@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.service;
+package URJC.VideoTranscoding.services;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MainControllerService{
+	/**
+	 * 
+	 * @param file
+	 * @param folderOutput
+	 * @return
+	 */
 	public Path saveFile(MultipartFile file,String folderOutput){
 		try{
 			byte[] bytes = file.getBytes();
