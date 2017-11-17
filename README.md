@@ -1,6 +1,7 @@
 # VideoTranscoding
 [![Build Status](https://travis-ci.org/luiscajl/VideoTranscoding.svg?branch=master)](https://travis-ci.org/luiscajl/VideoTranscoding)
 ![Version](https://img.shields.io/badge/version-0.1-brightgreen.svg?style=flat)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This application transcode a video that you send on all formats what you want and diferent resolutions.
 
