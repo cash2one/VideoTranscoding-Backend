@@ -51,9 +51,12 @@ sh /scripts/install_ffmpeg_linux.sh
 The project is my final project of my degree. I hope to finish it on May´18. 
 
 ## Screenshots:
-![Screen1](https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenIndex.png)
-![Screen2](https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenTranscode.png)
-
+<p align="center">
+  <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenIndex.png"/>
+</p>
+<p align="center">
+  <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenTranscode.png"/>
+</p>
 
 
 
