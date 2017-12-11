@@ -13,33 +13,32 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-@ImportResource({ "classpath*:xml/ffmpeg-config.xml" })
-public class App {
+@ImportResource({"classpath*:xml/ffmpeg-config.xml"})
+public class App{
 	private static final Logger logger = Logger.getLogger(App.class);
 
-	public static void main(String[] args) {
-
-		SpringApplication.run(App.class, args);
-		logger.l7dlog(Level.INFO, " --------- App SpringBoot Started ------- ", null);
+	public static void main(String[] args){
+		SpringApplication.run(App.class,args);
+		logger.l7dlog(Level.INFO," --------- App SpringBoot Started ------- ",null);
 		System.out.println("App SpringBoot Started ");
 	}
 
 	@Bean
-	public WebMvcConfigurerAdapter corsConfigurer() {
-		return new WebMvcConfigurerAdapter() {
+	public WebMvcConfigurerAdapter corsConfigurer(){
+		return new WebMvcConfigurerAdapter(){
 			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "OPTIONS", "PUT", "DELETE")
-						.allowedHeaders("Content-Type", "X-Requested-With", "accept", "Origin",
-								"Access-Control-Request-Method", "Access-Control-Request-Headers")
-						.exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
-						.allowCredentials(true).maxAge(3600);
+			public void addCorsMappings(CorsRegistry registry){
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET","POST","OPTIONS","PUT","DELETE")
+							.allowedHeaders("Content-Type","X-Requested-With","accept","Origin",
+										"Access-Control-Request-Method","Access-Control-Request-Headers")
+							.exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials")
+							.allowCredentials(true).maxAge(3600);
 			}
 		};
 	}
 
 	@Bean
-	public MultipartConfigElement multipartConfigElement() {
+	public MultipartConfigElement multipartConfigElement(){
 		MultipartConfigFactory factory = new MultipartConfigFactory();
 		factory.setMaxFileSize("1024MB");
 		factory.setMaxRequestSize("1024MB");
