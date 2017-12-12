@@ -2,8 +2,8 @@ package URJC.VideoTranscoding;
 
 import javax.servlet.MultipartConfigElement;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
@@ -15,12 +15,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication
 @ImportResource({ "classpath*:xml/ffmpeg-config.xml" })
 public class App {
-	private static final Logger logger = Logger.getLogger(App.class);
+	private static final Logger logger = LogManager.getLogger(App.class);
 
 	public static void main(String[] args) {
 
 		SpringApplication.run(App.class, args);
-		logger.l7dlog(Level.INFO, " --------- App SpringBoot Started ------- ", null);
+		logger.info(" --------- App SpringBoot Started ------- ");
 		System.out.println("App SpringBoot Started ");
 	}
 
