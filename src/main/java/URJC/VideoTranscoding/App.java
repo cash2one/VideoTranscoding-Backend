@@ -21,7 +21,6 @@ public class App {
 
 		SpringApplication.run(App.class, args);
 		logger.info(" --------- App SpringBoot Started ------- ");
-		System.out.println("App SpringBoot Started ");
 	}
 
 	@Bean
