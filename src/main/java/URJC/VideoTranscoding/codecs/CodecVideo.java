@@ -1,6 +1,6 @@
 package URJC.VideoTranscoding.codecs;
 
-public enum CodecVideo{
+public enum CodecVideo {
 	/**
 	 * 
 	 */
@@ -55,11 +55,12 @@ public enum CodecVideo{
 	H264_360(" -c:v libx264 -s 480x360 -crf 18 -preset slow ");
 	private final String codecVideoType;
 
-	CodecVideo(String x){
+	CodecVideo(String x) {
 		this.codecVideoType = x;
 	}
 
-	public String getCodecVideoType(){
+	@Override
+	public String toString() {
 		return codecVideoType;
 	}
 }

@@ -61,7 +61,7 @@ public class MainController {
 	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType)
 			throws IOException {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
-		// TODO ConvesionTYPE NOT NULL
+		// TODO Convesion TYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
 		Path pathToReturn = mainControllerService.saveFile(file, propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 		String FFMPEG_PATH;

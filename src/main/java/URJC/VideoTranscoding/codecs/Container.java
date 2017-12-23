@@ -30,7 +30,7 @@ public enum Container{
 		this.containerType = x;
 	}
 
-	public String getContainerType(){
+	public String toString(){
 		return containerType;
 	}
 }

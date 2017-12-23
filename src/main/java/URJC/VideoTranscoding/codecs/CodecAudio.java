@@ -1,8 +1,8 @@
 package URJC.VideoTranscoding.codecs;
 
-public enum CodecAudio{
+public enum CodecAudio {
 	/**
-	 * 
+	 * Audio AAC
 	 */
 	AAC(" -c:a libfdk_aac "),
 	/**
@@ -10,24 +10,24 @@ public enum CodecAudio{
 	 */
 	OGG(""),
 	/**
-	 * 
+	 * Audio LibVorbis
 	 */
 	LIBVORVIS(" -codec:a libvorbis "),
 	/**
-	 * 
+	 * Audio LivOpus
 	 */
 	LIVOPUS(" -codec:a libopus "),
 	/*
-	 * 
+	 * Copy Audio
 	 */
 	COPY(" -c:a copy ");
 	private final String codecAudioType;
 
-	CodecAudio(String x){
+	CodecAudio(String x) {
 		this.codecAudioType = x;
 	}
 
-	public String getCodecAudioType(){
+	public String toString() {
 		return codecAudioType;
 	}
 }

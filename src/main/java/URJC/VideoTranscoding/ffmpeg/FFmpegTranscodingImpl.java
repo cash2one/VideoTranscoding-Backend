@@ -84,7 +84,6 @@ class FFmpegTranscodingImpl implements TranscodingService {
 		for (ConversionType typeConversion : conversionType) {
 			try {
 				commandF = getCommand(ffmpegPath, fileInput, folderOutput, typeConversion);
-				System.out.println(commandF);
 				Runtime rt = Runtime.getRuntime();
 				Process proc = rt.exec(commandF);
 				StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
@@ -123,6 +122,7 @@ class FFmpegTranscodingImpl implements TranscodingService {
 		String command = pathFFMPEG + " -i " + fileInput.toString() + conversionType.getCodecAudioType()
 				+ conversionType.getCodecVideoType() + folderOutput
 				+ getFinalNameFile(fileInput, conversionType.getContainerType());
+		logger.debug("El Comando que se va a enviar es :" + command);
 		return command;
 	}
 
