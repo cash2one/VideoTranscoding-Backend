@@ -9,10 +9,14 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import UJRC.VideoTranscoding.models.Transcode;
 
 /**
  * @author luisca
  */
+@Service
 public class StreamGobbler extends Thread {
 	private final Logger logger = LogManager.getLogger(StreamGobbler.class);
 	private static Double finalTime;
@@ -20,6 +24,7 @@ public class StreamGobbler extends Thread {
 	private final String PROGRESS_VIDEO_PATTERN = "(?<=time=)[\\d:.]*";
 	private final String DURATION_VIDEO_PATTERN = "(?<=Duration: )[^,]*";
 	private final InputStream is;
+	public static Transcode transcode;
 	String type;
 
 	/**
@@ -50,6 +55,7 @@ public class StreamGobbler extends Thread {
 				while (progressMatcher.find()) {
 					double diference = getDifference(finalTime, progressMatcher.group(0));
 					System.out.print("Progress conversion: " + String.format("%.2f", diference) + "%");
+					transcode.setProgress(String.format("%.2f", diference));
 				}
 				while (durationVideoMatcher.find()) {
 					System.out.println(durationVideoMatcher.group(0));
