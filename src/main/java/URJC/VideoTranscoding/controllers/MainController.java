@@ -27,7 +27,7 @@ import URJC.VideoTranscoding.ffmpeg.TranscodingService;
 import URJC.VideoTranscoding.services.MainControllerService;
 
 @Controller
-public class MainController {
+public class MainController{
 	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
 	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
@@ -35,25 +35,22 @@ public class MainController {
 	private TranscodingService ffmpegTranscoding;
 	@Autowired
 	private MainControllerService mainControllerService;
-	@Autowired 
 	private StreamGobbler streamGobbler;
 	@Resource
 	private Properties propertiesFFmpeg;
 
 	/**
-	 * 
 	 * @param m
 	 * @return
 	 */
 	@GetMapping(value = "/")
-	public String getIndex(Model m) {
+	public String getIndex(Model m){
 		EnumSet<ConversionType> conversionType = EnumSet.allOf(ConversionType.class);
-		m.addAttribute("conversionType", conversionType);
+		m.addAttribute("conversionType",conversionType);
 		return "index";
 	}
 
 	/**
-	 * 
 	 * @param file
 	 * @param model
 	 * @param conversionType
@@ -61,33 +58,33 @@ public class MainController {
 	 * @throws IOException
 	 */
 	@PostMapping(value = "/uploadFile")
-	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType)
-			throws IOException {
+	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file,Model model,String conversionType)
+				throws IOException{
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
 		// TODO Convesion TYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
-		Path pathToReturn = mainControllerService.saveFile(file, propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
+		Path pathToReturn = mainControllerService.saveFile(file,propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 		String FFMPEG_PATH;
-		if ((System.getProperty("os.name").equals("Mac OS X"))) {
+		if((System.getProperty("os.name").equals("Mac OS X"))){
 			FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
-		} else {
+		}else{
 			FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
 		}
-		Thread one = new Thread() {
+		Thread one = new Thread(){
 			@Override
-			public void run() {
-				try {
-					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)), pathToReturn.toFile(),
-							Paths.get(pathToReturn.getParent().toString()), conversionTypes);
-					streamGobbler.transcode.getProgress();
-				} catch (FFmpegException e) {
+			public void run(){
+				try{
+					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)),pathToReturn.toFile(),
+								Paths.get(pathToReturn.getParent().toString()),conversionTypes);
+					 System.out.println(streamGobbler.transcode.getProgress());
+				}catch(FFmpegException e){
 					e.printStackTrace();
 				}
 			}
 		};
 		one.start();
 		model.addAttribute("message",
-				"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");
+					"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");
 		return "fileUploaded";
 	}
 }
