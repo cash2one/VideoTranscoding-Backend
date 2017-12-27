@@ -10,8 +10,6 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import URJC.VideoTranscoding.models.Transcode;
-
 /**
  * @author luisca
  */
@@ -22,8 +20,19 @@ public class StreamGobbler extends Thread{
 	private final String PROGRESS_VIDEO_PATTERN = "(?<=time=)[\\d:.]*";
 	private final String DURATION_VIDEO_PATTERN = "(?<=Duration: )[^,]*";
 	private final InputStream is;
-	public static Transcode transcode = new Transcode();
+	private volatile String progress;
+	private volatile String duration;
+	private volatile String fileSize;
+	private volatile String speed;
+	private volatile String bitrate;
 	String type;
+
+	/**
+	 * 
+	 */
+	public StreamGobbler(){
+		this.is = null;
+	}
 
 	/**
 	 * @param is
@@ -39,6 +48,9 @@ public class StreamGobbler extends Thread{
 	 */
 	@Override
 	public void run(){
+		// TODO Try resource-->
+		// https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+		// https://stackoverflow.com/questions/17739362/java7-try-with-resources-statement-advantage
 		try{
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
@@ -52,19 +64,23 @@ public class StreamGobbler extends Thread{
 				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);
 				while(progressMatcher.find()){
 					double diference = getDifference(finalTime,progressMatcher.group(0));
-					System.out.print("Progress conversion: " + String.format("%.2f",diference) + "%");
+					// System.out.print("Progress conversion: " + String.format("%.2f",diference) + "%");
+					setProgress(String.format("%.2f",diference));
 				}
 				while(durationVideoMatcher.find()){
-					System.out.println(durationVideoMatcher.group(0));
+					// System.out.println(durationVideoMatcher.group(0));
 					finalTime = getDuration(durationVideoMatcher.group(0));
-					System.out.println("Duration time Video : " + finalTime + " Secs");
+					// System.out.println("Duration time Video : " + finalTime + " Secs");
+					setDuration(String.valueOf(finalTime));
 				}
 				while(generalMatcher.find()){
-					System.out.print(" // File Size: " + generalMatcher.group(1) + "kB");
-					System.out.print(" // Speed: " + generalMatcher.group(6) + "x");
-					System.out.println(" // Bitrate: " + generalMatcher.group(5) + "kbits/s");
+					setFileSize(generalMatcher.group(1));
+					setSpeed(generalMatcher.group(6));
+					setBitrate(generalMatcher.group(5));
+					// System.out.print(" // File Size: " + generalMatcher.group(1) + "kB");
+					// System.out.print(" // Speed: " + generalMatcher.group(6) + "x");
+					// System.out.println(" // Bitrate: " + generalMatcher.group(5) + "kbits/s");
 				}
-				line = "";
 			}
 		}catch(IOException e){
 			logger.warn("IO Exception",e);
@@ -89,5 +105,45 @@ public class StreamGobbler extends Thread{
 	private double getDuration(String group){
 		String[] hms = group.split(":");
 		return Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60 + Double.parseDouble(hms[2]);
+	}
+
+	public String getProgress(){
+		return progress;
+	}
+
+	private void setProgress(String progress){
+		this.progress = progress;
+	}
+
+	public String getDuration(){
+		return duration;
+	}
+
+	private void setDuration(String duration){
+		this.duration = duration;
+	}
+
+	public String getFileSize(){
+		return fileSize;
+	}
+
+	private void setFileSize(String fileSize){
+		this.fileSize = fileSize;
+	}
+
+	public String getSpeed(){
+		return speed;
+	}
+
+	private void setSpeed(String speed){
+		this.speed = speed;
+	}
+
+	public String getBitrate(){
+		return bitrate;
+	}
+
+	private void setBitrate(String bitrate){
+		this.bitrate = bitrate;
 	}
 }

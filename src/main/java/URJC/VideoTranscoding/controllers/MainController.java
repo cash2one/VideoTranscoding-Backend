@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import URJC.VideoTranscoding.codecs.ConversionType;
 import URJC.VideoTranscoding.exception.FFmpegException;
-import URJC.VideoTranscoding.ffmpeg.StreamGobbler;
 import URJC.VideoTranscoding.ffmpeg.TranscodingService;
 import URJC.VideoTranscoding.services.MainControllerService;
 
@@ -35,7 +34,6 @@ public class MainController{
 	private TranscodingService ffmpegTranscoding;
 	@Autowired
 	private MainControllerService mainControllerService;
-	private StreamGobbler streamGobbler;
 	@Resource
 	private Properties propertiesFFmpeg;
 
@@ -76,7 +74,6 @@ public class MainController{
 				try{
 					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)),pathToReturn.toFile(),
 								Paths.get(pathToReturn.getParent().toString()),conversionTypes);
-					 System.out.println(streamGobbler.transcode.getProgress());
 				}catch(FFmpegException e){
 					e.printStackTrace();
 				}
