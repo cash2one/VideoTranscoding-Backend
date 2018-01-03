@@ -7,12 +7,17 @@ import org.springframework.web.bind.annotation.RestController;
 import URJC.VideoTranscoding.ffmpeg.TranscodingService;
 
 @RestController
-public class MainRestController{
+public class MainRestController {
 	@Autowired
 	private TranscodingService ffmpegTranscoding;
 
-	@GetMapping(value = "/progress")
-	public String getProgress(){
-		return ffmpegTranscoding.getErrorGobbler().getProgress();
+	@GetMapping(value = "/ajaxCall")
+	public String getStatusAjax() {
+		try {
+			String progress = ffmpegTranscoding.getErrorGobbler().getProgress().replace(",", ".");
+			return progress;
+		} catch (NullPointerException e) {
+			return "Vacio";
+		}
 	}
 }
