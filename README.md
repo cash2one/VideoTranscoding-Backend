@@ -10,24 +10,18 @@ This application transcode a video that you send on all formats what you want an
 ###### Everything seems to be working nice now
 
 VideoTranscoding need a JDK1.8(JAVA) on your enviroment machine. 
-
-
-<!---
 ## Run it:
-1. Clone respository:
+1. Install [docker](https://docs.docker.com/engine/installation/) for your machine
+
+2. Run this command on your terminal
 ```sh
-git clone https://github.com/luiscajl/VideoTranscoding.git 
+docker run -d -p 8080:8080 --name videotranscoding luiscajl/videotranscoding:Release-0.1
 ```
-2. Run this script to install ffmpeg on your mac.
+3. Stop docker container when you finished
 ```sh
-sh /scripts/install_ffmpeg_macosx.sh
+docker stop videotranscoding
 ```
-or this for linux
-```sh
-sh /scripts/install_ffmpeg_linux.sh
-```
-3. Install maven
--->
+
 ## Develop it:
 1. Clone respository:
 ```sh
@@ -41,7 +35,7 @@ or this for linux
 ```sh
 sh /scripts/install_ffmpeg_linux.sh
 ```
-3. Now you can import the project on your ide and start SpringBoot Application.
+3. Now you can import the project on your ide and start SpringBoot Application or develop the project.
 
 
 ## Next objectives:
