@@ -118,31 +118,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>1.0.0</version>
-				<configuration>
-					<skipDockerBuild>false</skipDockerBuild>
-				</configuration>
-			</plugin>
-
-			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<fork>true</fork>
-					<mainClass>com.basaki.example.docker.boot.BookApplication</mainClass>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
-
-
 		</plugins>
 	</build>
 </project>

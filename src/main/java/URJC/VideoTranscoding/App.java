@@ -13,6 +13,12 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+/**
+ * Main APP with beans and import xml config
+ * 
+ * @author luisca
+ *
+ */
 @SpringBootApplication
 @ImportResource({ "classpath*:xml/ffmpeg-config.xml" })
 public class App {
@@ -23,6 +29,10 @@ public class App {
 		logger.info(" --------- App SpringBoot Started ------- ");
 	}
 
+	/**
+	 * CORS Config.
+	 * 
+	 */
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {
@@ -37,6 +47,11 @@ public class App {
 		};
 	}
 
+	/**
+	 * Configure the Max File Size that you can upload
+	 * 
+	 * @return
+	 */
 	@Bean
 	public MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
