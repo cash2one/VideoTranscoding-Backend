@@ -4,12 +4,10 @@
 ![Version](https://img.shields.io/badge/version-0.1-brightgreen.svg?style=flat)
 [![License badge](https://img.shields.io/badge/license-Apache2-orange.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-This application transcode a video that you send on all formats what you want and diferent resolutions.
+This application transcode a video that you send on all formats what you want and diferent resolutions. It´s build on a docker container to simplify the installation.
+#### Known errors:
+1. You can´t save your transcoded videos on your machine.
 
-
-###### Everything seems to be working nice now
-
-VideoTranscoding need a JDK1.8(JAVA) on your enviroment machine. 
 ## Run it:
 1. Install [docker](https://docs.docker.com/engine/installation/) for your machine
 
@@ -17,7 +15,8 @@ VideoTranscoding need a JDK1.8(JAVA) on your enviroment machine.
 ```sh
 docker run -d -p 8080:8080 --name videotranscoding luiscajl/videotranscoding:Release-0.1
 ```
-3. Stop docker container when you finished
+3. Visit [localhost](http://localhost:8080/) on your web browser
+4. Stop docker container when you finished
 ```sh
 docker stop videotranscoding
 ```
@@ -38,12 +37,11 @@ sh /scripts/install_ffmpeg_linux.sh
 3. Now you can import the project on your ide and start SpringBoot Application or develop the project.
 
 
-## Next objectives:
-- [x] Add communication with the web interface and the transcode process.
-- [x] Add a beautiful web interface for the service.
+## Next objectives (Release 0.5):
 - [x] Add support for more audio languages and subtitles.
+- [x] Create a full Api Rest for all transcode service.
 
-The project is my final project of my degree. I hope to finish it on May´18. 
+The project is my final project of my degree. I hope to finish it on Jun´18. 
 
 ## Screenshots:
 <p align="center">
