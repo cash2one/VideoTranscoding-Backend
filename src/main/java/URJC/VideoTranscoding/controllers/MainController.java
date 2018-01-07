@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.controllers;
+package urjc.VideoTranscoding.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import URJC.VideoTranscoding.codecs.ConversionType;
-import URJC.VideoTranscoding.exception.FFmpegException;
-import URJC.VideoTranscoding.ffmpeg.TranscodingService;
-import URJC.VideoTranscoding.services.MainControllerService;
+import urjc.VideoTranscoding.codecs.ConversionType;
+import urjc.VideoTranscoding.exception.FFmpegException;
+import urjc.VideoTranscoding.ffmpeg.TranscodingService;
+import urjc.VideoTranscoding.services.MainControllerService;
 
 @Controller
 public class MainController {
@@ -68,8 +68,7 @@ public class MainController {
 	 * @throws IOException
 	 */
 	@PostMapping(value = "/uploadFile")
-	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType)
-			throws IOException {
+	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType) {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
 		// TODO Convesion TYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
@@ -87,6 +86,7 @@ public class MainController {
 					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)), pathToReturn.toFile(),
 							Paths.get(pathToReturn.getParent().toString()), conversionTypes);
 				} catch (FFmpegException e) {
+					// TODO EXCEPTION
 					e.printStackTrace();
 				}
 			}

@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.ffmpeg;
+package urjc.VideoTranscoding.ffmpeg;
 
 import java.io.BufferedReader;
 import java.io.IOException;

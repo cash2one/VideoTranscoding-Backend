@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.codecs;
+package urjc.VideoTranscoding.codecs;
 
 /**
  * Video file extension, CodecVideo and Resolution, CodecAudio

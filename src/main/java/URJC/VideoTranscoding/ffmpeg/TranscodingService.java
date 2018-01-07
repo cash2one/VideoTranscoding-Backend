@@ -1,12 +1,12 @@
-package URJC.VideoTranscoding.ffmpeg;
+package urjc.VideoTranscoding.ffmpeg;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import URJC.VideoTranscoding.codecs.ConversionType;
-import URJC.VideoTranscoding.exception.FFmpegException;
+import urjc.VideoTranscoding.codecs.ConversionType;
+import urjc.VideoTranscoding.exception.FFmpegException;
 
 /**
  * @author luisca

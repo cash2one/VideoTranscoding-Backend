@@ -19,6 +19,9 @@ RUN yum -y install ffmpeg ffmpeg-devel -y
 #Config LOGS
 RUN mkdir -p /tmp/logs/VideoTranscoding
 RUN chmod -R 777 /tmp/logs/VideoTranscoding
+#Config PATH to save Videos
+RUN mkdir -p /tmp/videos/transcoded
+RUN chmod -R 777 /tmp/videos/transcoded
 
 #Config APP
 ADD target/VideoTranscoding--BETA-0.1.jar app.jar

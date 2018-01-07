@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.ffmpeg;
+package urjc.VideoTranscoding.ffmpeg;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import URJC.VideoTranscoding.codecs.ConversionType;
-import URJC.VideoTranscoding.exception.FFmpegException;
+import urjc.VideoTranscoding.codecs.ConversionType;
+import urjc.VideoTranscoding.exception.FFmpegException;
 
 /**
  * @author luisca

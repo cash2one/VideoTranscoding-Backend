@@ -1,4 +1,4 @@
-package URJC.VideoTranscoding.service.impl;
+package urjc.VideoTranscoding.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -26,9 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import URJC.VideoTranscoding.codecs.ConversionType;
-import URJC.VideoTranscoding.exception.FFmpegException;
-import URJC.VideoTranscoding.ffmpeg.TranscodingService;
+import urjc.VideoTranscoding.codecs.ConversionType;
+import urjc.VideoTranscoding.exception.FFmpegException;
+import urjc.VideoTranscoding.ffmpeg.TranscodingService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/xml/ffmpeg-config-test.xml")
