@@ -1,4 +1,4 @@
-package urjc.VideoTranscoding;
+package urjc.videotranscoding;
 
 import javax.servlet.MultipartConfigElement;
 

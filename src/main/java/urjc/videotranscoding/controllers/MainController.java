@@ -1,4 +1,4 @@
-package urjc.VideoTranscoding.controllers;
+package urjc.videotranscoding.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import urjc.VideoTranscoding.codecs.ConversionType;
-import urjc.VideoTranscoding.exception.FFmpegException;
-import urjc.VideoTranscoding.ffmpeg.TranscodingService;
-import urjc.VideoTranscoding.services.MainControllerService;
+import urjc.videotranscoding.codecs.ConversionType;
+import urjc.videotranscoding.exception.FFmpegException;
+import urjc.videotranscoding.ffmpeg.TranscodingService;
+import urjc.videotranscoding.services.MainControllerService;
 
 @Controller
 public class MainController {

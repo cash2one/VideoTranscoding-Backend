@@ -1,4 +1,4 @@
-package urjc.VideoTranscoding.exception;
+package urjc.videotranscoding.exception;
 
 /**
  * @author luisca

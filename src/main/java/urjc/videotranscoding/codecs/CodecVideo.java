@@ -1,4 +1,4 @@
-package urjc.VideoTranscoding.codecs;
+package urjc.videotranscoding.codecs;
 
 public enum CodecVideo {
 	/**
