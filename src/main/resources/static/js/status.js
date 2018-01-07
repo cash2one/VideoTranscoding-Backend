@@ -1,7 +1,7 @@
 $(function callAjax() {
-	var bar = $('.bar');
-	var percent = $('.percent');
-	var status = $('#status');
+	var bar = $(".bar");
+	var percent = $(".percent");
+	var status = $("#status");
 
 	$.ajax({
 		type : "GET",
@@ -10,7 +10,7 @@ $(function callAjax() {
 		cache : false,
 		success : function(data) {
 			if (data != "Vacio") {
-				var percentVal = data + '%';
+				var percentVal = data + "%";
 				bar.width(percentVal);
 				percent.html(percentVal);
 				var millisecondsToWait = 2000;

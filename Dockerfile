@@ -1,4 +1,5 @@
 FROM centos
+MAINTAINER luisca_jl@hotmail.com
 	
 ENV JAVA_VERSION 8u144
 ENV BUILD_VERSION b01
@@ -24,6 +25,6 @@ RUN mkdir -p /tmp/videos/transcoded
 RUN chmod -R 777 /tmp/videos/transcoded
 
 #Config APP
-ADD target/VideoTranscoding--BETA-0.1.jar app.jar
+COPY target/VideoTranscoding--BETA-0.1.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

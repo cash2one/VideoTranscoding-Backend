@@ -31,7 +31,7 @@ public class FFmpegTranscodingImpl implements TranscodingService{
 	private StreamGobbler inputGobbler;
 	private StreamGobbler outputGobbler;
 	@Resource
-	Properties propertiesFFmpeg;
+	private Properties propertiesFFmpeg;
 
 	/**
 	 * 

@@ -30,10 +30,18 @@ public class SimpleCORSFilter implements Filter {
 		chain.doFilter(req, res);
 	}
 
-	public void init(FilterConfig filterConfig) {
+	/**
+	 * 
+	 */
+	@Override
+	public void destroy() {
 	}
 
-	public void destroy() {
+	/**
+	 * 
+	 */
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {
 	}
 
 }

@@ -25,7 +25,7 @@ public class StreamGobbler extends Thread{
 	private volatile String fileSize;
 	private volatile String speed;
 	private volatile String bitrate;
-	String type;
+	private String type;
 
 	/**
 	 * 
@@ -43,6 +43,9 @@ public class StreamGobbler extends Thread{
 		this.type = type;
 	}
 
+	public String getType() {
+		return type;
+	}
 	/**
 	 * 
 	 */
