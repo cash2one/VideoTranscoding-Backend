@@ -39,7 +39,7 @@ sh /scripts/install_ffmpeg_linux.sh
 
 ## Next objectives (Release 0.5):
 - [x] Add support for more audio languages and subtitles.
-- [x] Create a full Api Rest for all transcode service.
+- [x] Create a full Api Rest for transcode service.
 
 The project is my final project of my degree. I hope to finish it on Jun´18. 
 
