@@ -35,6 +35,7 @@ public class SimpleCORSFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
+		//NOT USED
 	}
 
 	/**
@@ -42,6 +43,7 @@ public class SimpleCORSFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
+		//NOT USED
 	}
 
 }
