@@ -1,4 +1,4 @@
-package urjc.videotranscoding.services;
+package urjc.videotranscoding.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class MainControllerService{
+public class FileService{
 	/**
-	 * 
 	 * @param file
 	 * @param folderOutput
 	 * @return

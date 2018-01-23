@@ -1,4 +1,4 @@
-package urjc.videotranscoding.controllers;
+package urjc.videotranscoding.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import urjc.videotranscoding.codecs.ConversionType;
 import urjc.videotranscoding.exception.FFmpegException;
 import urjc.videotranscoding.ffmpeg.TranscodingService;
-import urjc.videotranscoding.services.MainControllerService;
+import urjc.videotranscoding.service.FileService;
 
 @Controller
 public class MainController {
@@ -33,7 +33,7 @@ public class MainController {
 	@Autowired
 	private TranscodingService ffmpegTranscoding;
 	@Autowired
-	private MainControllerService mainControllerService;
+	private FileService fileService;
 	@Resource
 	private Properties propertiesFFmpeg;
 
@@ -72,7 +72,7 @@ public class MainController {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
 		// TODO Convesion TYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
-		Path pathToReturn = mainControllerService.saveFile(file, propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
+		Path pathToReturn = fileService.saveFile(file, propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 		String FFMPEG_PATH;
 		if ((System.getProperty("os.name").equals("Mac OS X"))) {
 			FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
