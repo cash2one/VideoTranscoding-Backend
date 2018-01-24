@@ -24,6 +24,9 @@
 		<junit.version>4.12</junit.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<springfox.version>2.7.0</springfox.version>
+		<mysql-connector-java.version>5.1.44</mysql-connector-java.version>
+		<jasypt-spring-boot.version>1.17</jasypt-spring-boot.version>
 	</properties>
 	<dependencies>
 		<!-- ====================================================================== -->
@@ -55,6 +58,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<!-- ====================================================================== -->
 		<!-- ================================ SPRING ============================== -->
@@ -96,6 +107,41 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
 		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ======================== ENCRIPT PROPERTIES ========================== -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>${jasypt-spring-boot.version}</version>
+		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ============================= MYSQL ============================= -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ============================= HIBERNATE ============================= -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
+		<!-- ====================================================================== -->
+		<!-- ============================= SWAGGER2 ============================= -->
+		<!-- ====================================================================== -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>	
 		<!-- ====================================================================== -->
 		<!-- ================================ LOG4J =============================== -->
 		<!-- ====================================================================== -->
