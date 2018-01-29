@@ -22,11 +22,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "USER")
-public class User {
-	public interface Basic {
+public class User{
+	// TODO 1) Debería de implementar usuarios para que tengan un control de los videos que han subido y de los que
+	// pueden acceder? Y que así cada usuario tuviera sus videos ?
+	public interface Basic{
 	}
 
-	public interface Details {
+	public interface Details{
 	}
 
 	private final int WORKLOAD = 12;
@@ -37,109 +39,104 @@ public class User {
 	@JsonView(Basic.class)
 	@Column(unique = true)
 	private String email;
-	
 	@JsonView(Basic.class)
 	@Column(unique = true)
-	private String nick ;
-	
+	private String nick;
 	@JsonIgnore
-	public String userPassword ;
-	
+	public String userPassword;
 	@JsonView(Basic.class)
 	private String photo = "https://placeimg.com/180/180/any";
-	
 	@JsonView(Details.class)
 	@ElementCollection(fetch = FetchType.EAGER)
 	private final Set<UserRoles> roles = new HashSet<>();
-	
 	@JsonView(Details.class)
 	@ElementCollection
 	public Set<String> favouriteCategories = new HashSet<>();
 
-	protected User() {
+	protected User(){
 	}
 
-	public User(String email, String nick, String userPassword, String photo, UserRoles... roles) {
+	public User(String email,String nick,String userPassword,String photo,UserRoles...roles){
 		this.email = email;
 		this.nick = nick;
 		String salt = BCrypt.gensalt(WORKLOAD);
-		this.userPassword = BCrypt.hashpw(userPassword, salt);
+		this.userPassword = BCrypt.hashpw(userPassword,salt);
 		this.photo = (photo != null && photo != "") ? photo : this.photo;
 		this.roles.addAll(Arrays.asList(roles));
 	}
 
-	public long getUserId() {
+	public long getUserId(){
 		return userId;
 	}
 
-	public String getEmail() {
+	public String getEmail(){
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email){
 		this.email = email;
 	}
 
-	public String getNick() {
+	public String getNick(){
 		return nick;
 	}
 
-	public String getHashedPassword() {
+	public String getHashedPassword(){
 		return userPassword;
 	}
 
-	public void setNick(String nick) {
+	public void setNick(String nick){
 		this.nick = nick;
 	}
 
-	public String getPhoto() {
+	public String getPhoto(){
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(String photo){
 		this.photo = photo;
 	}
 
-	public void addRole(UserRoles rol) {
+	public void addRole(UserRoles rol){
 		this.roles.add(rol);
 	}
 
-	public void removeRole(UserRoles rol) {
+	public void removeRole(UserRoles rol){
 		this.roles.remove(rol);
 	}
 
-	public Collection<UserRoles> getRoles() {
+	public Collection<UserRoles> getRoles(){
 		return new ArrayList<>(this.roles);
 	}
 
-	public boolean isAdmin() {
+	public boolean isAdmin(){
 		return this.roles.contains(UserRoles.ADMIN);
 	}
 
-	public boolean isUser() {
+	public boolean isUser(){
 		return this.roles.contains(UserRoles.USER);
 	}
 
-	public boolean isValidPassword(String password) {
-		return BCrypt.checkpw(password, userPassword);
+	public boolean isValidPassword(String password){
+		return BCrypt.checkpw(password,userPassword);
 	}
 
-	public void changePassword(String newPassword) {
-		userPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(WORKLOAD));
+	public void changePassword(String newPassword){
+		userPassword = BCrypt.hashpw(newPassword,BCrypt.gensalt(WORKLOAD));
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
+	public boolean equals(Object o){
+		if(this == o)
 			return true;
-		if (!(o instanceof User))
+		if(!(o instanceof User))
 			return false;
-		User user = (User) o;
+		User user = (User)o;
 		return userId == user.userId;
 	}
 
 	@Override
-	public int hashCode() {
-		return (int) (userId ^ (userId >>> 32));
+	public int hashCode(){
+		return (int)(userId ^ (userId >>> 32));
 	}
 }
