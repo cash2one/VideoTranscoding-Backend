@@ -9,15 +9,16 @@ import urjc.videotranscoding.entities.UserRoles;
 import urjc.videotranscoding.repository.UserRepository;
 
 @Component
-public class DataLoader implements CommandLineRunner{
+public class DataLoader implements CommandLineRunner {
 	@Autowired
 	private UserRepository users;
 
 	@Override
-	public void run(String...strings) throws Exception{
-		User u1 = new User("patio@gmail.com","admin","pass","",UserRoles.ADMIN,UserRoles.USER);
+	public void run(String... strings) throws Exception {
+		User u1 = new User("patio@gmail.com", "admin", "pass", "",
+				UserRoles.ADMIN, UserRoles.USER);
 
 		users.save(u1);
-		
+
 	}
 }

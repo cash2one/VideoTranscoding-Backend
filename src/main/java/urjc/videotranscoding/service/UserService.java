@@ -12,70 +12,70 @@ import org.springframework.ui.Model;
 import urjc.videotranscoding.entities.User;
 import urjc.videotranscoding.repository.UserRepository;
 
-
 @Service
-public class UserService{
+public class UserService {
 	@Autowired
 	UserRepository users;
 
-
-	public User findByEmail(String email){
+	public User findByEmail(String email) {
 		return users.findByEmail(email);
 	}
 
-	public List<User> findAllUsers(){
+	public List<User> findAllUsers() {
 		return users.findAll();
 	}
 
-	public Page<User> findAllUsersPage(Pageable page){
+	public Page<User> findAllUsersPage(Pageable page) {
 		return users.findAll(page);
 	}
 
-	public User findOneUser(long id){
+	public User findOneUser(long id) {
 		return users.findOne(id);
 	}
+
 	public User findOneUser(String nombreUsuario) {
-		return  users.findByNick(nombreUsuario);
+		return users.findByNick(nombreUsuario);
 	}
 
-	public void deleteUsers(long id){
+	public void deleteUsers(long id) {
 		users.delete(id);
 	}
 
-	public boolean exists(long id){
+	public boolean exists(long id) {
 		return users.exists(id);
 	}
 
-	public void isAdminVisitorLogged(Principal principal,Model m){
+	public void isAdminVisitorLogged(Principal principal, Model m) {
 		boolean isLogged = principal != null;
-		User visitor = (isLogged) ? users.findByEmail(principal.getName()) : null;
-		m.addAttribute("visitor",visitor);
-		m.addAttribute("isLogged",isLogged);
-		m.addAttribute("isAdmin",(visitor != null && visitor.isAdmin()));
+		User visitor = (isLogged)
+				? users.findByEmail(principal.getName())
+				: null;
+		m.addAttribute("visitor", visitor);
+		m.addAttribute("isLogged", isLogged);
+		m.addAttribute("isAdmin", (visitor != null && visitor.isAdmin()));
 	}
 
-	public User save(User u){
+	public User save(User u) {
 		return users.save(u);
 	}
 
-	public User userVisitor(Principal principal){
+	public User userVisitor(Principal principal) {
 		User user = users.findByEmail(principal.getName());
 		return user;
 	}
 
-	public boolean isLogged(Principal principal){
-		if(principal == null)
+	public boolean isLogged(Principal principal) {
+		if (principal == null)
 			return false;
 		return !(users.findByEmail(principal.getName()) == null);
 	}
 
-	public boolean isAdmin(Principal principal){
-		if(principal == null)
+	public boolean isAdmin(Principal principal) {
+		if (principal == null)
 			return false;
 		User u = users.findByEmail(principal.getName());
-		if(u == null)
+		if (u == null)
 			return false;
 		return u.isAdmin();
 	}
-
 }

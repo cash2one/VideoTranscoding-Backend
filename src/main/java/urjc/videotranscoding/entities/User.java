@@ -22,121 +22,170 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "USER")
-public class User{
-	// TODO 1) Debería de implementar usuarios para que tengan un control de los videos que han subido y de los que
-	// pueden acceder? Y que así cada usuario tuviera sus videos ?
-	public interface Basic{
-	}
+public class User
+{
+    // TODO 1) Debería de implementar usuarios para que tengan un control de los
+    // videos que han subido y de los que
+    // pueden acceder? Y que así cada usuario tuviera sus videos ?
+    public interface Basic
+    {
+    }
 
-	public interface Details{
-	}
+    public interface Details
+    {
+    }
 
-	private final int WORKLOAD = 12;
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonView(Basic.class)
-	private long userId;
-	@JsonView(Basic.class)
-	@Column(unique = true)
-	private String email;
-	@JsonView(Basic.class)
-	@Column(unique = true)
-	private String nick;
-	@JsonIgnore
-	public String userPassword;
-	@JsonView(Basic.class)
-	private String photo = "https://placeimg.com/180/180/any";
-	@JsonView(Details.class)
-	@ElementCollection(fetch = FetchType.EAGER)
-	private final Set<UserRoles> roles = new HashSet<>();
-	@JsonView(Details.class)
-	@ElementCollection
-	public Set<String> favouriteCategories = new HashSet<>();
+    private final int WORKLOAD = 12;
 
-	protected User(){
-	}
+    /**
+     * User id
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Basic.class)
+    private long userId;
 
-	public User(String email,String nick,String userPassword,String photo,UserRoles...roles){
-		this.email = email;
-		this.nick = nick;
-		String salt = BCrypt.gensalt(WORKLOAD);
-		this.userPassword = BCrypt.hashpw(userPassword,salt);
-		this.photo = (photo != null && photo != "") ? photo : this.photo;
-		this.roles.addAll(Arrays.asList(roles));
-	}
+    /**
+     * User email
+     */
+    @JsonView(Basic.class)
+    @Column(unique = true)
+    private String email;
 
-	public long getUserId(){
-		return userId;
-	}
+    /**
+     * User nick
+     */
+    @JsonView(Basic.class)
+    @Column(unique = true)
+    private String nick;
 
-	public String getEmail(){
-		return email;
-	}
+    /**
+     * User Password
+     */
+    @JsonIgnore
+    private String userPassword;
 
-	public void setEmail(String email){
-		this.email = email;
-	}
+    /**
+     * User photo
+     */
+    @JsonView(Basic.class)
+    private String photo = "https://placeimg.com/180/180/any";
 
-	public String getNick(){
-		return nick;
-	}
+    /**
+     * User Roles
+     */
+    @JsonView(Details.class)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private final Set<UserRoles> roles = new HashSet<>();
 
-	public String getHashedPassword(){
-		return userPassword;
-	}
+    @JsonView(Details.class)
+    @ElementCollection
+    @Column(name = "Favourite Categories")
+    private final Set<String> favouriteCategories = new HashSet<>();
 
-	public void setNick(String nick){
-		this.nick = nick;
-	}
+    protected User()
+    {
+    }
 
-	public String getPhoto(){
-		return photo;
-	}
+    public User(String email, String nick, String userPassword, String photo, UserRoles... roles)
+    {
+        this.email = email;
+        this.nick = nick;
+        String salt = BCrypt.gensalt(WORKLOAD);
+        this.userPassword = BCrypt.hashpw(userPassword, salt);
+        this.photo = (photo != null && photo != "") ? photo : this.photo;
+        this.roles.addAll(Arrays.asList(roles));
+    }
 
-	public void setPhoto(String photo){
-		this.photo = photo;
-	}
+    public long getUserId()
+    {
+        return userId;
+    }
 
-	public void addRole(UserRoles rol){
-		this.roles.add(rol);
-	}
+    public String getEmail()
+    {
+        return email;
+    }
 
-	public void removeRole(UserRoles rol){
-		this.roles.remove(rol);
-	}
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
 
-	public Collection<UserRoles> getRoles(){
-		return new ArrayList<>(this.roles);
-	}
+    public String getNick()
+    {
+        return nick;
+    }
 
-	public boolean isAdmin(){
-		return this.roles.contains(UserRoles.ADMIN);
-	}
+    public String getHashedPassword()
+    {
+        return userPassword;
+    }
 
-	public boolean isUser(){
-		return this.roles.contains(UserRoles.USER);
-	}
+    public void setNick(String nick)
+    {
+        this.nick = nick;
+    }
 
-	public boolean isValidPassword(String password){
-		return BCrypt.checkpw(password,userPassword);
-	}
+    public String getPhoto()
+    {
+        return photo;
+    }
 
-	public void changePassword(String newPassword){
-		userPassword = BCrypt.hashpw(newPassword,BCrypt.gensalt(WORKLOAD));
-	}
+    public void setPhoto(String photo)
+    {
+        this.photo = photo;
+    }
 
-	@Override
-	public boolean equals(Object o){
-		if(this == o)
-			return true;
-		if(!(o instanceof User))
-			return false;
-		User user = (User)o;
-		return userId == user.userId;
-	}
+    public void addRole(UserRoles rol)
+    {
+        this.roles.add(rol);
+    }
 
-	@Override
-	public int hashCode(){
-		return (int)(userId ^ (userId >>> 32));
-	}
+    public void removeRole(UserRoles rol)
+    {
+        this.roles.remove(rol);
+    }
+
+    public Collection<UserRoles> getRoles()
+    {
+        return new ArrayList<>(this.roles);
+    }
+
+    public boolean isAdmin()
+    {
+        return this.roles.contains(UserRoles.ADMIN);
+    }
+
+    public boolean isUser()
+    {
+        return this.roles.contains(UserRoles.USER);
+    }
+
+    public boolean isValidPassword(String password)
+    {
+        return BCrypt.checkpw(password, userPassword);
+    }
+
+    public void changePassword(String newPassword)
+    {
+        userPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(WORKLOAD));
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (!(o instanceof User))
+            return false;
+        User user = (User) o;
+        return userId == user.userId;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return (int) (userId ^ (userId >>> 32));
+    }
 }
