@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -78,10 +81,18 @@ public class User
     @ElementCollection(fetch = FetchType.EAGER)
     private final Set<UserRoles> roles = new HashSet<>();
 
+//    @JsonView(Details.class)
+//    @ElementCollection
+//    @Column(name = "Favourite Categories")
+//    private final Set<String> favouriteCategories = new HashSet<>();
+    
     @JsonView(Details.class)
-    @ElementCollection
-    @Column(name = "Favourite Categories")
-    private final Set<String> favouriteCategories = new HashSet<>();
+    @Column(name = "List Videos")
+    @OneToMany(cascade = CascadeType.ALL, 
+            orphanRemoval = true)    
+    private  Map<String,OriginalVideo> listVideos ;
+    
+    
 
     protected User()
     {
@@ -183,9 +194,20 @@ public class User
         return userId == user.userId;
     }
 
-    @Override
+    
+
+	@Override
     public int hashCode()
     {
         return (int) (userId ^ (userId >>> 32));
     }
+
+	
+	public void addVideo(OriginalVideo newVideo) {
+		this.listVideos.put(newVideo.getOriginalVideo(), newVideo);
+	}
+	
+
+	
+    
 }

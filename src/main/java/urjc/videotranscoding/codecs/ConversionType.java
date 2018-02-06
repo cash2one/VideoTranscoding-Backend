@@ -1,5 +1,9 @@
 package urjc.videotranscoding.codecs;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Video file extension, CodecVideo and Resolution, CodecAudio
  * 
@@ -65,6 +69,9 @@ public enum ConversionType {
 	private final Container containerType;
 	private final CodecVideo codecVideoType;
 	private final CodecAudio codecAudioType;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long idConversionType;
 
 	private ConversionType(Container x, CodecVideo y, CodecAudio z) {
 		this.containerType = x;

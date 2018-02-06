@@ -1,5 +1,9 @@
 package urjc.videotranscoding.codecs;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @author luisca
  */
@@ -25,6 +29,9 @@ public enum Container{
 	 */
 	FLV(".flv");
 	final String containerType;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long idContainer;
 
 	Container(String x){
 		this.containerType = x;

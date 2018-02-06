@@ -1,5 +1,9 @@
 package urjc.videotranscoding.codecs;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 public enum CodecVideo {
 	/**
 	 * 
@@ -54,6 +58,9 @@ public enum CodecVideo {
 	 */
 	H264_360(" -c:v libx264 -s 480x360 -crf 18 -preset slow ");
 	private final String codecVideoType;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long idVideo;
 
 	CodecVideo(String x) {
 		this.codecVideoType = x;

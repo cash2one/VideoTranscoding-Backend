@@ -13,29 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import urjc.videotranscoding.entities.User;
-import urjc.videotranscoding.entities.VideoConversion;
-import urjc.videotranscoding.service.FFmpegService;
+import urjc.videotranscoding.entities.VideoConversionExpert;
 import urjc.videotranscoding.service.UserService;
+import urjc.videotranscoding.service.VideoConversionService;
 
 @RestController
-@RequestMapping(value = "/api")
-@Api(tags = "FFmpeg RestController")
-public class FFmpegRestController {
+@RequestMapping(value = "/api/expert")
+@Api(tags = "VideoConversion Expert RestController")
+public class VideoConversionRestControllerExpert {
 	// TODO JAVADOC
 	@Autowired
-	private FFmpegService ffmpegService;
+	private VideoConversionService ffmpegService;
 	@Autowired
 	private UserService userService;
+
 	@ApiOperation(value = "Devuelve las conversiones que tiene")
 	@GetMapping(value = "/")
-	public ResponseEntity<List<VideoConversion>> getAllVideoConversions(
-			Principal principal) {
+	public ResponseEntity<List<VideoConversionExpert>> getAllVideoConversions(Principal principal) {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity<List<VideoConversion>>(
-				ffmpegService.getAllConversions(), HttpStatus.OK);
-
+		return new ResponseEntity<List<VideoConversionExpert>>( HttpStatus.OK);
+		//ffmpegService.getAllConversions()
 	}
+
 }

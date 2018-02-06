@@ -26,7 +26,6 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<springfox.version>2.7.0</springfox.version>
 		<mysql-connector-java.version>5.1.44</mysql-connector-java.version>
-		<jasypt-spring-boot.version>1.17</jasypt-spring-boot.version>
 	</properties>
 	<dependencies>
 		<!-- ====================================================================== -->
@@ -106,14 +105,6 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
-		</dependency>
-		<!-- ====================================================================== -->
-		<!-- ======================== ENCRIPT PROPERTIES ========================== -->
-		<!-- ====================================================================== -->
-		<dependency>
-			<groupId>com.github.ulisesbocchio</groupId>
-			<artifactId>jasypt-spring-boot-starter</artifactId>
-			<version>${jasypt-spring-boot.version}</version>
 		</dependency>
 		<!-- ====================================================================== -->
 		<!-- ============================= MYSQL ============================= -->
