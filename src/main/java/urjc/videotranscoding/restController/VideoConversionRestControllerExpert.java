@@ -15,15 +15,14 @@ import io.swagger.annotations.ApiOperation;
 import urjc.videotranscoding.entities.User;
 import urjc.videotranscoding.entities.VideoConversionExpert;
 import urjc.videotranscoding.service.UserService;
-import urjc.videotranscoding.service.VideoConversionService;
 
 @RestController
 @RequestMapping(value = "/api/expert")
 @Api(tags = "VideoConversion Expert RestController")
 public class VideoConversionRestControllerExpert {
 	// TODO JAVADOC
-	@Autowired
-	private VideoConversionService ffmpegService;
+	// @Autowired
+	// private VideoConversionService videoConversionService;
 	@Autowired
 	private UserService userService;
 

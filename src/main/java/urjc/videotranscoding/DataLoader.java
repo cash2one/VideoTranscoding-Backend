@@ -19,12 +19,13 @@ public class DataLoader implements CommandLineRunner {
 	public void run(String... strings) throws Exception {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "",
 				UserRoles.ADMIN, UserRoles.USER);
-		OriginalVideo video= new OriginalVideo("NUEVO VIDEO");
-	
-		video.setListAllConversions(ConversionType.MKV_H264360_COPY);
+		OriginalVideo video = new OriginalVideo("NUEVO VIDEO", Boolean.FALSE);
+
+		video.addConversion(ConversionType.MKV_H264360_COPY);
+		video.addConversion(ConversionType.MKV_H2641080_COPY);
+
 		u1.addVideo(video);
 		users.save(u1);
-		
 
 	}
 }

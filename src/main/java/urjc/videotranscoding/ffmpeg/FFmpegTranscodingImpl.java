@@ -32,6 +32,7 @@ public class FFmpegTranscodingImpl implements TranscodingService{
 	private StreamGobbler outputGobbler;
 	@Resource
 	private Properties propertiesFFmpeg;
+	//TODO JAVADOC, LOGGER
 
 	/**
 	 * 

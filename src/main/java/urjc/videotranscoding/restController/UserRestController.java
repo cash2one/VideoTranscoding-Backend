@@ -13,19 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.entities.User;
 import urjc.videotranscoding.service.UserService;
 
 @RestController
 @RequestMapping(value = "/user")
 public class UserRestController{
-	public interface Basic extends User.Basic{
+	public interface Details extends User.Basic, User.Details,OriginalVideo.Basic,OriginalVideo.Details{
 	}
 
 	@Autowired
 	private UserService userService;
 
-	@JsonView(Basic.class)
+	@JsonView(User.Basic.class)
 	@RequestMapping(value = "/",method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<List<User>> getUsers(){
@@ -33,7 +34,7 @@ public class UserRestController{
 		return new ResponseEntity<>(users,HttpStatus.OK);
 	}
 
-	@JsonView(Basic.class)
+	@JsonView(Details.class)
 	@RequestMapping(value = "/{id:.*}",method = RequestMethod.GET)
 	public ResponseEntity<User> getSingleUser(@PathVariable String id){
 		boolean isEmail = false;
