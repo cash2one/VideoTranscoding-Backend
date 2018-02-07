@@ -3,9 +3,8 @@ package urjc.videotranscoding.entities;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -83,7 +82,7 @@ public class User {
 	@JsonView(Details.class)
 	@Column(name = "List Videos")
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private final Map<String, OriginalVideo> listVideos = new HashMap<>();
+	private final List< OriginalVideo> listVideos = new ArrayList<>();
 
 	protected User() {
 	}
@@ -174,7 +173,7 @@ public class User {
 	}
 
 	public void addVideo(OriginalVideo newVideo) {
-		this.listVideos.put(newVideo.getOriginalVideo(), newVideo);
+		this.listVideos.add(newVideo);
 	}
 
 }

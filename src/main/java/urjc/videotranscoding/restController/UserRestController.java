@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.entities.User;
 import urjc.videotranscoding.service.UserService;
@@ -20,7 +21,7 @@ import urjc.videotranscoding.service.UserService;
 @RestController
 @RequestMapping(value = "/user")
 public class UserRestController{
-	public interface Details extends User.Basic, User.Details,OriginalVideo.Basic,OriginalVideo.Details{
+	public interface Details extends User.Basic, User.Details,OriginalVideo.Basic,OriginalVideo.Details,ConversionVideo.Basic,ConversionVideo.Details{
 	}
 
 	@Autowired
