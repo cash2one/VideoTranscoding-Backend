@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,10 +20,14 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import urjc.videotranscoding.App;
 import urjc.videotranscoding.codecs.ConversionType;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
@@ -33,9 +36,14 @@ import urjc.videotranscoding.persistentffmpeg.TranscodingServicePersistent;
 import urjc.videotranscoding.service.ConversionVideoService;
 import urjc.videotranscoding.service.OriginalVideoService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { JpaConfig.class }, loader = AnnotationConfigContextLoader.class)
-@Transactional
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(classes = { JpaConfig.class }, loader = AnnotationConfigContextLoader.class)
+//@Transactional
+@RunWith(SpringRunner.class)
+@DataJpaTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = App.class)
+@AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class FFmpegTranscodingPersistentTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
@@ -62,9 +70,11 @@ public class FFmpegTranscodingPersistentTest {
 	@Before
 	public void setUp() throws IOException {
 		if (System.getProperty("os.name").equals(OS_MAC)) {
-			FFMPEG_PATH = new File(propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_MACOSX));
+			FFMPEG_PATH = new File(propertiesFFmpegTest
+					.getProperty(FFMPEG_INSTALLATION_MACOSX));
 		} else {
-			FFMPEG_PATH = new File(propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_CENTOS7));
+			FFMPEG_PATH = new File(propertiesFFmpegTest
+					.getProperty(FFMPEG_INSTALLATION_CENTOS7));
 		}
 		FOLDER_OUTPUT_REAL = folder.newFolder("temp");
 	}
@@ -101,7 +111,8 @@ public class FFmpegTranscodingPersistentTest {
 			transcoding.transcode(FFMPEG_PATH, new File("FAKE"), null, null);
 			fail("No should fail for fake input file");
 		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FILE_INPUT_NOT_VALID, e.getMessage());
+			assertEquals(FFmpegException.EX_FILE_INPUT_NOT_VALID,
+					e.getMessage());
 		}
 	}
 
@@ -111,25 +122,30 @@ public class FFmpegTranscodingPersistentTest {
 			transcoding.transcode(FFMPEG_PATH, null, null, null);
 			fail("No should fail for null input file");
 		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FILE_INPUT_NOT_VALID, e.getMessage());
+			assertEquals(FFmpegException.EX_FILE_INPUT_NOT_VALID,
+					e.getMessage());
 		}
 	}
 
 	@Test
 	public void transcodeFailOnFakeFolderOuput() {
 		try {
-			transcoding.transcode(FFMPEG_PATH, new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
+			transcoding.transcode(FFMPEG_PATH,
+					new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
 					Paths.get("FAKE"), null);
 			fail("No should fail for fake folder output");
 		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_NOT_FOUND, e.getMessage());
+			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_NOT_FOUND,
+					e.getMessage());
 		}
 	}
 
 	@Test
 	public void transcodeFailOnNullFolderOuput() {
 		try {
-			transcoding.transcode(FFMPEG_PATH, new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)), null, null);
+			transcoding.transcode(FFMPEG_PATH,
+					new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
+					null, null);
 			fail("No should fail for null folder ouput");
 		} catch (FFmpegException e) {
 			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_NULL, e.getMessage());
@@ -139,22 +155,27 @@ public class FFmpegTranscodingPersistentTest {
 	@Test
 	public void transcodeFailOnNullParams() {
 		try {
-			transcoding.transcode(FFMPEG_PATH, new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
+			transcoding.transcode(FFMPEG_PATH,
+					new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
 					Paths.get(FOLDER_OUTPUT_REAL.toString()), null);
 			fail("No should fail for null params");
 		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND, e.getMessage());
+			assertEquals(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND,
+					e.getMessage());
 		}
 	}
 
 	@Test
 	public void transcodeFailOnEmptyParams() {
 		try {
-			transcoding.transcode(FFMPEG_PATH, new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
-					Paths.get(FOLDER_OUTPUT_REAL.toString()), new OriginalVideo("", false));
+			transcoding.transcode(FFMPEG_PATH,
+					new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
+					Paths.get(FOLDER_OUTPUT_REAL.toString()),
+					new OriginalVideo("", false));
 			fail("No should empty params");
 		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_CONVERSION_TYPE_EMPTY, e.getMessage());
+			assertEquals(FFmpegException.EX_CONVERSION_TYPE_EMPTY,
+					e.getMessage());
 		}
 	}
 
@@ -162,15 +183,18 @@ public class FFmpegTranscodingPersistentTest {
 	@Test
 	public void transcodeSucess() {
 		OriginalVideo toSend = new OriginalVideo("VIDEO", false);
-		ConversionVideo x1 = new ConversionVideo("x1", ConversionType.MKV_H264360_COPY, toSend);
-		ConversionVideo x2 = new ConversionVideo("x2", ConversionType.MKV_H264360_COPY, toSend);
+		ConversionVideo x1 = new ConversionVideo("x1",
+				ConversionType.MKV_H264360_COPY, toSend);
+		ConversionVideo x2 = new ConversionVideo("x2",
+				ConversionType.MKV_H264360_COPY, toSend);
 		toSend.setAllConversions(Arrays.asList(x1, x2));
 		conversionVideoService.save(x1);
 		conversionVideoService.save(x2);
 		originalVideoService.save(toSend);
 		try {
 
-			transcoding.transcode(FFMPEG_PATH, new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
+			transcoding.transcode(FFMPEG_PATH,
+					new File(propertiesFFmpegTest.getProperty(VIDEO_DEMO)),
 					Paths.get(FOLDER_OUTPUT_REAL.toString()), toSend);
 		} catch (FFmpegException e) {
 			e.printStackTrace();
