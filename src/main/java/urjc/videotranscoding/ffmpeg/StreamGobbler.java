@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author luisca
  */
+
 public class StreamGobbler extends Thread{
 	private final Logger logger = LogManager.getLogger(StreamGobbler.class);
 	private static Double finalTime;
@@ -25,14 +26,10 @@ public class StreamGobbler extends Thread{
 	private volatile String fileSize;
 	private volatile String speed;
 	private volatile String bitrate;
-	private String type;
+	private final String type;
+	
 
-	/**
-	 * 
-	 */
-	public StreamGobbler(){
-		this.is = null;
-	}
+	
 
 	/**
 	 * @param is
@@ -55,6 +52,7 @@ public class StreamGobbler extends Thread{
 		// https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
 		// https://stackoverflow.com/questions/17739362/java7-try-with-resources-statement-advantage
 		try{
+			logger.info("Se va a convertir un video");
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 			Pattern durationVideoPattern = Pattern.compile(DURATION_VIDEO_PATTERN);
@@ -85,6 +83,8 @@ public class StreamGobbler extends Thread{
 					// System.out.println(" // Bitrate: " + generalMatcher.group(5) + "kbits/s");
 				}
 			}
+			logger.info("Se ha terminado de convertir el video");
+
 		}catch(IOException e){
 			logger.warn("IO Exception",e);
 		}

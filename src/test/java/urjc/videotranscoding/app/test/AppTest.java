@@ -1,4 +1,4 @@
-package urjc.videotranscoding;
+package urjc.videotranscoding.app.test;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -10,7 +10,6 @@ import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -22,13 +21,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @SpringBootApplication
 @Configuration
-@EnableScheduling
-@ImportResource({"classpath*:xml/ffmpeg-config.xml"})
-public class App{
-	private static final Logger logger = LogManager.getLogger(App.class);
+@ImportResource({"classpath*:xml/ffmpeg-config-test2.xml"})
+public class AppTest{
+	private static final Logger logger = LogManager.getLogger(AppTest.class);
 
 	public static void main(String[] args){
-		SpringApplication.run(App.class,args);
+		SpringApplication.run(AppTest.class,args);
 		logger.info(" --------- App SpringBoot Started ------- ");
 		System.out.println(" --------- App SpringBoot Started ------- ");
 	}

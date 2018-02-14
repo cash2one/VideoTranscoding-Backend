@@ -5,7 +5,6 @@ import java.nio.file.Path;
 
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.exception.FFmpegException;
-import urjc.videotranscoding.ffmpeg.StreamGobbler;
 
 /**
  * 
@@ -14,13 +13,13 @@ import urjc.videotranscoding.ffmpeg.StreamGobbler;
  */
 public interface TranscodingServicePersistent {
 
-	void transcode(File pathFFMPEG, File fileInput, Path folderOutput, OriginalVideo originalVideo)
+	void transcode(File pathFFMPEG, Path folderOutput, OriginalVideo originalVideo)
 			throws FFmpegException;
 
-	public StreamGobbler getErrorGobbler();
+	public StreamGobblerPersistent getErrorGobbler();
 
-	public StreamGobbler getInputGobbler();
+	public StreamGobblerPersistent getInputGobbler();
 
-	public StreamGobbler getOutputGobbler();
+	public StreamGobblerPersistent getOutputGobbler();
 
 }

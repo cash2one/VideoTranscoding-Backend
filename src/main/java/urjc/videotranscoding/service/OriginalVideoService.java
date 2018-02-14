@@ -1,5 +1,7 @@
 package urjc.videotranscoding.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +23,10 @@ public class OriginalVideoService {
 
 	public void delete(long id) {
 		originalVideoRepository.delete(id);
+	}
+
+	public List<OriginalVideo> findAllVideos() {
+		// TODO Auto-generated method stub
+		return originalVideoRepository.findAll();
 	}
 }

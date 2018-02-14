@@ -1,9 +1,11 @@
 package urjc.videotranscoding.entities;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,12 +15,14 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
-@Table(name="Original_Video")
+@Table(name = "ORIGINAL_VIDEO")
 public class OriginalVideo {
 	public interface Basic {
 	}
 
 	public interface Details {
+	}
+	public interface None {
 	}
 
 	/**
@@ -36,6 +40,13 @@ public class OriginalVideo {
 	/**
 	 * 
 	 */
+	//@JsonView(None.class)
+	//@ManyToOne
+	//private User userVideo;
+
+	/**
+	 * 
+	 */
 	// @JsonView(Details.class)
 	// @ElementCollection(targetClass = ConversionType.class)
 	// @Column(name = "listAllConversions")
@@ -45,9 +56,10 @@ public class OriginalVideo {
 	/**
 	 * 
 	 */
-	@JsonView(Details.class)
-	@OneToMany(mappedBy = "originalVideo", cascade = CascadeType.ALL)
-	private List<ConversionVideo> allConversions ;
+
+	//@JsonView(Details.class)
+	@OneToMany(mappedBy = "originalVideo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ConversionVideo> allConversions = new HashSet<>();
 	/**
 	 * If is complete true, EOC false
 	 */
@@ -57,7 +69,7 @@ public class OriginalVideo {
 	protected OriginalVideo() {
 	}
 
-	public OriginalVideo(String video, boolean complete) {
+	public OriginalVideo(String video, boolean complete, User u) {
 		this.originalVideo = video;
 		this.complete = complete;
 	}
@@ -82,22 +94,28 @@ public class OriginalVideo {
 	// this.listAllConversions.add(conversion);
 	// }
 
-	
-
 	public boolean isComplete() {
 		return complete;
 	}
 
-	public List<ConversionVideo> getAllConversions() {
+	public Set<ConversionVideo> getAllConversions() {
 		return allConversions;
 	}
 
-	public void setAllConversions(List<ConversionVideo> allConversions) {
+	public void setAllConversions(Set<ConversionVideo> allConversions) {
 		this.allConversions = allConversions;
 	}
 
 	public void setComplete(boolean complete) {
 		this.complete = complete;
 	}
+
+//	public User getUserVideo() {
+//		return userVideo;
+//	}
+//
+//	public void setUserVideo(User userVideo) {
+//		this.userVideo = userVideo;
+//	}
 
 }

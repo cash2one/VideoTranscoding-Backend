@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
@@ -19,46 +21,55 @@ import urjc.videotranscoding.codecs.ConversionType;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.exception.FFmpegException;
-import urjc.videotranscoding.ffmpeg.StreamGobbler;
 import urjc.videotranscoding.service.ConversionVideoService;
-import urjc.videotranscoding.service.OriginalVideoService;
 
 @Service
-public class FFmpegTranscondingPersistentImpl implements TranscodingServicePersistent {
-	private static final Logger logger = LogManager.getLogger(FFmpegTranscondingPersistentImpl.class);
-	private final String TRACE_CONVERSION_TYPE_NOT_FOUND = "Conversion Type: ";
-	private StreamGobbler errorGobbler;
-	private StreamGobbler inputGobbler;
-	private StreamGobbler outputGobbler;
+public class FFmpegTranscondingPersistentImpl
+		implements
+			TranscodingServicePersistent {
+	private static final Logger logger = LogManager
+			.getLogger(FFmpegTranscondingPersistentImpl.class);
+	private StreamGobblerPersistent errorGobbler;
+	private StreamGobblerPersistent inputGobbler;
+	private StreamGobblerPersistent outputGobbler;
+    ExecutorService executorService = Executors.newFixedThreadPool(1);
 	@Resource
 	private Properties propertiesFFmpeg;
-	// TODO JAVADOC, LOGGER
-	@Autowired
-	private OriginalVideoService originalVideoService;
+	// TODO JAVADOC, LOGGER, EXCEPTS
+	// @Autowired
+	// private OriginalVideoService originalVideoService;
 	@Autowired
 	private ConversionVideoService conversionVideoService;
 
+	@Autowired
+	private StreamGobblerPersistentFactory streamGobblerPersistentFactory;
+	
 	@Override
-	public void transcode(File pathFFMPEG, File fileInput, Path folderOutput, OriginalVideo originalVideo)
-			throws FFmpegException {
+	public void transcode(File pathFFMPEG, Path folderOutput,
+			OriginalVideo originalVideo) throws FFmpegException {
 		if (pathFFMPEG == null || !pathFFMPEG.exists()) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND);
+			FFmpegException ex = new FFmpegException(
+					FFmpegException.EX_FFMPEG_NOT_FOUND);
 			// TODO
 			logger.error("", ex);
 			throw ex;
 		}
-		if (fileInput == null || !fileInput.exists() || fileInput.isDirectory()) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FILE_INPUT_NOT_VALID);
+		if (originalVideo == null
+				|| !new File(originalVideo.getOriginalVideo()).exists()) {
+			FFmpegException ex = new FFmpegException(
+					FFmpegException.EX_FILE_INPUT_NOT_VALID);
 			logger.error("", ex);
 			throw ex;
 		}
 		if (folderOutput == null) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NULL);
+			FFmpegException ex = new FFmpegException(
+					FFmpegException.EX_FOLDER_OUTPUT_NULL);
 			logger.error("", ex);
 			throw ex;
 		}
 		if (!Files.exists(folderOutput)) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_FOUND);
+			FFmpegException ex = new FFmpegException(
+					FFmpegException.EX_FOLDER_OUTPUT_NOT_FOUND);
 			logger.error("", ex);
 			throw ex;
 		}
@@ -76,33 +87,41 @@ public class FFmpegTranscondingPersistentImpl implements TranscodingServicePersi
 		// throw ex;
 		// }
 
-		Thread conversion = new Thread() {
-			public void run() {
-				for (ConversionVideo video : originalVideo.getAllConversions()) {
-					try {
-						conversionFinal(getCommand(pathFFMPEG, new File(video.getTitle()), folderOutput,
-								video.getConversionType()), video);
-					} catch (FFmpegException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				originalVideoService.save(originalVideo);
+		// Thread conversion = new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		for (ConversionVideo video : originalVideo.getAllConversions()) {
+			try {
+				System.out.println("Se va a realizar una conversion");
+				conversionFinal(getCommand(pathFFMPEG,
+						new File(video.getOriginalVideo().getOriginalVideo()),
+						folderOutput, video.getConversionType()), video);
+			} catch (FFmpegException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		};
-		conversion.start();
+			conversionVideoService.save(video);
+		}
+		// originalVideoService.save(originalVideo);
 	}
+	// });
+	// conversion.start();
+	// }
 
-	protected void conversionFinal(String command, ConversionVideo video) throws FFmpegException {
+	protected void conversionFinal(String command, ConversionVideo video)
+			throws FFmpegException {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
-			errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
-			inputGobbler = new StreamGobbler(proc.getInputStream(), "INPUT");
-			outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
-			inputGobbler.start();
-			errorGobbler.start();
-			outputGobbler.start();
+			errorGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getErrorStream(),
+					"ERROR", video);
+			inputGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getInputStream(),
+					"INPUT", video);
+			outputGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getInputStream(),
+					"OUTPUT", video);
+			executorService.execute(errorGobbler);
+			executorService.execute(inputGobbler);
+			executorService.execute(outputGobbler);
 			int exitVal = proc.waitFor();
 			if (exitVal == 0) {
 				video.setFinished(true);
@@ -135,10 +154,13 @@ public class FFmpegTranscondingPersistentImpl implements TranscodingServicePersi
 	 * @param conversionType
 	 * @return String with the Command ready for send it.
 	 */
-	private String getCommand(File pathFFMPEG, File fileInput, Path folderOutput, ConversionType conversionType) {
-		String command = pathFFMPEG + " -i " + fileInput.toString() + conversionType.getCodecAudioType()
+	private String getCommand(File pathFFMPEG, File fileInput,
+			Path folderOutput, ConversionType conversionType) {
+		String command = pathFFMPEG + " -i " + fileInput.toString()
+				+ conversionType.getCodecAudioType()
 				+ conversionType.getCodecVideoType() + folderOutput
-				+ getFinalNameFile(fileInput, conversionType.getContainerType());
+				+ getFinalNameFile(fileInput,
+						conversionType.getContainerType());
 		logger.debug("El Comando que se va a enviar es :" + command);
 		return command;
 	}
@@ -152,18 +174,19 @@ public class FFmpegTranscondingPersistentImpl implements TranscodingServicePersi
 	 */
 	private String getFinalNameFile(File fileInput, String extension) {
 		String sort = String.valueOf(System.currentTimeMillis());
-		return "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(3, 9) + extension;
+		return "/" + FilenameUtils.getBaseName(fileInput.getName())
+				+ sort.substring(3, 9) + extension;
 	}
 
-	public StreamGobbler getErrorGobbler() {
+	public StreamGobblerPersistent getErrorGobbler() {
 		return errorGobbler;
 	}
 
-	public StreamGobbler getInputGobbler() {
+	public StreamGobblerPersistent getInputGobbler() {
 		return inputGobbler;
 	}
 
-	public StreamGobbler getOutputGobbler() {
+	public StreamGobblerPersistent getOutputGobbler() {
 		return outputGobbler;
 	}
 

@@ -14,5 +14,7 @@
 
 	<util:properties id="propertiesFFmpeg"
 		location="classpath:/properties/ffmpeg.properties" />
+	<util:properties id="propertiesFFmpegTest"
+		location="classpath:/properties/ffmpeg-test.properties" />
 
 </beans>

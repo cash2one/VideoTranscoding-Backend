@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -80,9 +79,8 @@ public class User {
 	// private final Set<String> favouriteCategories = new HashSet<>();
 
 	@JsonView(Details.class)
-	@Column(name = "List Videos")
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private final List< OriginalVideo> listVideos = new ArrayList<>();
+	@OneToMany(fetch = FetchType.EAGER/*, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "userVideo"*/)
+	List<OriginalVideo> listVideos = new ArrayList<>();
 
 	protected User() {
 	}
@@ -157,6 +155,14 @@ public class User {
 		userPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(WORKLOAD));
 	}
 
+	public void addVideo(OriginalVideo newVideo) {
+		this.listVideos.add(newVideo);
+	}
+
+	public List<OriginalVideo> getListVideos() {
+		return listVideos;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -170,10 +176,6 @@ public class User {
 	@Override
 	public int hashCode() {
 		return (int) (userId ^ (userId >>> 32));
-	}
-
-	public void addVideo(OriginalVideo newVideo) {
-		this.listVideos.add(newVideo);
 	}
 
 }
