@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -71,7 +73,8 @@ public class User {
 	 */
 	@JsonView(Details.class)
 	@ElementCollection(fetch = FetchType.EAGER)
-	private final Set<UserRoles> roles = new HashSet<>();
+	@Fetch (FetchMode.SELECT)
+	 Set<UserRoles> roles = new HashSet<>();
 
 	// @JsonView(Details.class)
 	// @ElementCollection
@@ -80,7 +83,7 @@ public class User {
 
 	@JsonView(Details.class)
 	@OneToMany(fetch = FetchType.EAGER/*, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "userVideo"*/)
-	List<OriginalVideo> listVideos = new ArrayList<>();
+	private final List<OriginalVideo> listVideos = new ArrayList<>();
 
 	protected User() {
 	}

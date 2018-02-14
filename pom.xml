@@ -13,19 +13,18 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.9.RELEASE</version>
+		<version>1.5.10.RELEASE</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<springboot.version>1.5.9.RELEASE</springboot.version>
-		<spring.version>4.3.13.RELEASE</spring.version>
-		<jackson.version>2.9.3</jackson.version>
+		<spring.version>4.3.14.RELEASE</spring.version>
+		<jackson.version>2.9.0</jackson.version>
 		<junit.version>4.12</junit.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<springfox.version>2.7.0</springfox.version>
 		<mysql-connector-java.version>5.1.44</mysql-connector-java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<!-- ====================================================================== -->
