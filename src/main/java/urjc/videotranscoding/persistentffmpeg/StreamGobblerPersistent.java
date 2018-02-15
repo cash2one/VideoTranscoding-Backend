@@ -103,11 +103,13 @@ public class StreamGobblerPersistent implements Runnable {
 				conversionVideoService.save(conversionVideo);
 
 			}
+			conversionVideo.setProgress("100");
 			conversionVideo.setFinished(true);
 			conversionVideoService.save(conversionVideo);
 			logger.info("Se ha terminado de convertir el video");
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			logger.warn("IO Exception", e);
 		}
 	}

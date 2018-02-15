@@ -1,7 +1,7 @@
 package urjc.videotranscoding.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,8 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -22,6 +26,7 @@ public class OriginalVideo {
 
 	public interface Details {
 	}
+
 	public interface None {
 	}
 
@@ -40,9 +45,9 @@ public class OriginalVideo {
 	/**
 	 * 
 	 */
-	//@JsonView(None.class)
-	//@ManyToOne
-	//private User userVideo;
+	@JsonView(None.class)
+	@ManyToOne
+	private User userVideo;
 
 	/**
 	 * 
@@ -57,14 +62,21 @@ public class OriginalVideo {
 	 * 
 	 */
 
-	//@JsonView(Details.class)
-	@OneToMany(mappedBy = "originalVideo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<ConversionVideo> allConversions = new HashSet<>();
+	@JsonView(Details.class)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private List<ConversionVideo> allConversions = new ArrayList<>();
+
 	/**
 	 * If is complete true, EOC false
 	 */
 	@JsonView(Details.class)
 	private boolean complete;
+	/**
+	 * If any conversion is active this is active;
+	 */
+	@JsonView(Details.class)
+	private boolean active;
 
 	protected OriginalVideo() {
 	}
@@ -72,6 +84,7 @@ public class OriginalVideo {
 	public OriginalVideo(String video, boolean complete, User u) {
 		this.originalVideo = video;
 		this.complete = complete;
+		this.userVideo = u;
 	}
 
 	public String getOriginalVideo() {
@@ -82,27 +95,15 @@ public class OriginalVideo {
 		this.originalVideo = originalVideo;
 	}
 
-	// public Collection<ConversionType> getListAllConversions() {
-	// return listAllConversions;
-	// }
-	//
-	// public void setListAllConversions(
-	// Collection<ConversionType> allConversions) {
-	// this.listAllConversions = allConversions;
-	// }
-	// public void addConversion(ConversionType conversion) {
-	// this.listAllConversions.add(conversion);
-	// }
-
 	public boolean isComplete() {
 		return complete;
 	}
 
-	public Set<ConversionVideo> getAllConversions() {
+	public List<ConversionVideo> getAllConversions() {
 		return allConversions;
 	}
 
-	public void setAllConversions(Set<ConversionVideo> allConversions) {
+	public void setAllConversions(List<ConversionVideo> allConversions) {
 		this.allConversions = allConversions;
 	}
 
@@ -110,12 +111,21 @@ public class OriginalVideo {
 		this.complete = complete;
 	}
 
-//	public User getUserVideo() {
-//		return userVideo;
-//	}
-//
-//	public void setUserVideo(User userVideo) {
-//		this.userVideo = userVideo;
-//	}
+	public User getUserVideo() {
+		return userVideo;
+	}
+
+	public void setUserVideo(User userVideo) {
+		this.userVideo = userVideo;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
 
 }

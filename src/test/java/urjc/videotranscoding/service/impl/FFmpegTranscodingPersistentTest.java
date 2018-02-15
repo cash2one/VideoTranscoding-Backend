@@ -6,9 +6,9 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -171,7 +171,7 @@ public class FFmpegTranscodingPersistentTest {
 				ConversionType.MKV_H264360_COPY, toSend);
 		ConversionVideo x2 = new ConversionVideo("x2",
 				ConversionType.MKV_H264360_COPY, toSend);
-		Set<ConversionVideo> setConversion = new HashSet<>();
+		List<ConversionVideo> setConversion = new ArrayList<>();
 		setConversion.add(x2);
 		setConversion.add(x1);
 

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -82,7 +83,7 @@ public class User {
 	// private final Set<String> favouriteCategories = new HashSet<>();
 
 	@JsonView(Details.class)
-	@OneToMany(fetch = FetchType.EAGER/*, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "userVideo"*/)
+	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "userVideo")
 	private final List<OriginalVideo> listVideos = new ArrayList<>();
 
 	protected User() {

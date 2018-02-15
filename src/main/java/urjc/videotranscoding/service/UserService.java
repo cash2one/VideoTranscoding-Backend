@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,7 +24,6 @@ import urjc.videotranscoding.repository.UserRepository;
 @Service
 public class UserService {
 	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
-
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
 	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	@Autowired
@@ -65,9 +65,7 @@ public class UserService {
 
 	public void isAdminVisitorLogged(Principal principal, Model m) {
 		boolean isLogged = principal != null;
-		User visitor = (isLogged)
-				? users.findByEmail(principal.getName())
-				: null;
+		User visitor = (isLogged) ? users.findByEmail(principal.getName()) : null;
 		m.addAttribute("visitor", visitor);
 		m.addAttribute("isLogged", isLogged);
 		m.addAttribute("isAdmin", (visitor != null && visitor.isAdmin()));
@@ -97,34 +95,30 @@ public class UserService {
 		return u.isAdmin();
 	}
 
-	//@Scheduled(cron = "*/10 * * * * *")
+	@Scheduled(cron = "*/10 * * * * *")
 	void callTranscodeIfChargeIsDown() {
 		users.findAll().forEach(x -> {
-			for (OriginalVideo iterator : x.getListVideos()) {
-				if (!iterator.isComplete()) {
+			for (OriginalVideo originalVideo : x.getListVideos()) {
+				if (!originalVideo.isActive()) {
 					String FFMPEG_PATH;
 					if ((System.getProperty("os.name").equals("Mac OS X"))) {
-						FFMPEG_PATH = propertiesFFmpeg
-								.getProperty(FFMPEG_INSTALLATION_MACOSX);
+						FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
 					} else {
-						FFMPEG_PATH = propertiesFFmpeg
-								.getProperty(FFMPEG_INSTALLATION_CENTOS7);
+						FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
 					}
 					// Path pathToReturn = fileService.saveFile(file,
 					// propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 					try {
-						transcode.transcode(new File(FFMPEG_PATH),
-								Paths.get(
-										"/Users/luisca/Documents/VideosPrueba"),
-								iterator);
+						transcode.transcode(new File(FFMPEG_PATH), Paths.get("/Users/luisca/Documents/VideosPrueba"),
+								originalVideo);
 					} catch (FFmpegException e) {
-						// TODO Auto-generated catch block
+						// TODO LANZA EXCEPCION GENERICA POR FALLO DEL SISTEMA 
 						e.printStackTrace();
 					}
 
 				}
-
 			}
+
 		});
 
 	}
