@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import urjc.videotranscoding.App;
+import urjc.videotranscoding.app.test.AppTest;
 import urjc.videotranscoding.codecs.ConversionType;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
@@ -36,12 +36,10 @@ import urjc.videotranscoding.persistentffmpeg.TranscodingServicePersistent;
 import urjc.videotranscoding.service.ConversionVideoService;
 import urjc.videotranscoding.service.OriginalVideoService;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = { JpaConfig.class }, loader = AnnotationConfigContextLoader.class)
-//@Transactional
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = AppTest.class)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class FFmpegTranscodingPersistentTest {

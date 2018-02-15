@@ -34,15 +34,15 @@ public class StreamGobblerPersistent implements Runnable {
 	private final String type;
 	private final ConversionVideo conversionVideo;
 	
-	private final ConversionVideoRepository conversionVideoService;	
+	private final ConversionVideoRepository conversionVideoRepository;	
 
 	public StreamGobblerPersistent(InputStream is, String type,
 			ConversionVideo conversionVideo,
-			ConversionVideoRepository conversionVideoService) {
+			ConversionVideoRepository conversionVideoRepository) {
 		this.is = is;
 		this.type = type;
 		this.conversionVideo = conversionVideo;
-		this.conversionVideoService = conversionVideoService;
+		this.conversionVideoRepository = conversionVideoRepository;
 	}
 
 
@@ -100,12 +100,12 @@ public class StreamGobblerPersistent implements Runnable {
 					// System.out.println(" // Bitrate: " +
 					// generalMatcher.group(5) + "kbits/s");
 				}
-				conversionVideoService.save(conversionVideo);
+				conversionVideoRepository.save(conversionVideo);
 
 			}
 			conversionVideo.setProgress("100");
 			conversionVideo.setFinished(true);
-			conversionVideoService.save(conversionVideo);
+			conversionVideoRepository.save(conversionVideo);
 			logger.info("Se ha terminado de convertir el video");
 
 		} catch (IOException e) {
