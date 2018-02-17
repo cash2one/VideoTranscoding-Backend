@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import urjc.videotranscoding.codecs.ConversionType;
 
 @Entity
-@Table(name = "Conversion_Video")
+@Table(name = "CONVERSION_VIDEO")
 public class ConversionVideo {
 	public interface Basic {
 	}

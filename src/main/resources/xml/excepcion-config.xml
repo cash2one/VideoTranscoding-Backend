@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+				http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd 
+				http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<util:properties id="propertiesFicheroCore"
+		location="classpath:/properties/ficherosCore.properties" />
+
+	<bean id="ffmpegResourceBundle" class="urjc.videotranscoding.wrapper.FfmpegResourceBundle">
+		<property name="basenames">
+			<list>
+				<value>file:#{propertiesFicheroCore['fichero.mensajes.trazas']}
+				</value>
+				<value>file:#{propertiesFicheroCore['fichero.mensajes.errores']}
+				</value>
+			</list>
+		</property>
+	</bean>
+</beans>

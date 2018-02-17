@@ -1,4 +1,4 @@
-package urjc.videotranscoding;
+package urjc.proc.videotranscoding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,12 @@ public class DataLoader implements CommandLineRunner {
 	@Autowired
 	private ConversionVideoRepository conversionVideoRepository;
 	@Resource
-	private Properties propertiesFFmpegTest;
+	private Properties propertiesFFmpeg;
 
-	@Override
 	public void run(String... strings) throws Exception {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 
-		OriginalVideo video = new OriginalVideo(propertiesFFmpegTest.getProperty(VIDEO_DEMO), Boolean.FALSE, u1);
+		OriginalVideo video = new OriginalVideo(propertiesFFmpeg.getProperty(VIDEO_DEMO), Boolean.FALSE, u1);
 
 		//
 		// List<ConversionType> conversions = new ArrayList<>();

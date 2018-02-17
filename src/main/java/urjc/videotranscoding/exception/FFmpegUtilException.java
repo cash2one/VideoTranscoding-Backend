@@ -1,0 +1,232 @@
+package urjc.videotranscoding.exception;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.util.Hashtable;
+
+public class FFmpegUtilException extends Exception {
+
+	/**
+	 * <p>
+	 * <b>FujitsuUtilidadesException</b>
+	 * </p>
+	 * <p>
+	 * Excepción Base para toda la Arquitectura de Excepciones.<br>
+	 * Esta excepción extiende de la clase Exception, y le añade las siguientes
+	 * funcionalidades:<br>
+	 * - Añade nuevos constructores y métodos para visualizar el contenido de la
+	 * excepción.<br>
+	 * - Los mensajes de error asociados a la excepción se definirán a partir de un
+	 * código de error en una tabla de mensajes. Todo mensaje ha de haber sido dado
+	 * de alta previamente en la tabla msgErrores.
+	 * 
+	 * @see java.lang.Exception
+	 *      </p>
+	 *      <p>
+	 *      Copyright: Copyright (c) 2005
+	 *      </p>
+	 *      <p>
+	 *      Company: Fujitsu España
+	 *      </p>
+	 * @author cgdemarcos
+	 * @author jcarro
+	 * @version 2.0
+	 */
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/** Mensaje que se mostrará al usuario */
+	protected String detailMessage = null;
+	/** Código de error */
+	private int codigo = -1;
+	/** Tabla de mensajes */
+	protected static Hashtable<Integer, String> msgErrores = new Hashtable<Integer, String>();
+	/**
+	 * Mensaje para indicar que no hay ningún mensaje asociado a un codigo de error
+	 */
+	public static final int ERROR_DESCONOCIDO = 0;
+	private static final String FJEX_NO_MSG = "Código de Error desconocido.";
+	public static final int EX_ERROR_RECUPERACION_PARAMETRO = 1;
+	public static final int EX_ERROR_RECUPERACION_PARAMETRO_NULO = 2;
+	public static final int EX_ERROR_RECUPERACION_PARAMETRO_DISTINTA_CLASE = 3;
+	public static final int ERROR_CONEXION_DATASOURCE = 4;
+	public static final int ERROR_CONEXION_JNDI = 5;
+	public static final int ERROR_EJECUCION = 6;
+	static {
+		msgErrores.put(new Integer(EX_ERROR_RECUPERACION_PARAMETRO),
+				"El servicio no ha podido recuperar los parámetros correctamente.");
+		msgErrores.put(new Integer(EX_ERROR_RECUPERACION_PARAMETRO_NULO),
+				"El servicio no ha podido recuperar un parámetro obligatorio.");
+		msgErrores.put(new Integer(EX_ERROR_RECUPERACION_PARAMETRO_DISTINTA_CLASE),
+				"El servicio ha recuperado un parámetro de una clase que no esperaba.");
+		msgErrores.put(new Integer(ERROR_CONEXION_DATASOURCE), "No se ha podido acceder a base de datos.");
+		msgErrores.put(new Integer(ERROR_CONEXION_JNDI), "No se ha podido acceder al recurso JNDI.");
+		msgErrores.put(new Integer(ERROR_EJECUCION), "Error en tiempo de ejecución.");
+
+	}
+
+	/**
+	 * Constructor por defecto.
+	 */
+	public FFmpegUtilException() {
+		super();
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 *            mensaje
+	 * @param cause
+	 *            causa de la excepcion
+	 */
+	public FFmpegUtilException(String message, Throwable cause) {
+		super(message, cause);
+		detailMessage = message;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param code
+	 *            Código del mensaje de la excepcion
+	 * @param cause
+	 *            causa de la excepcion
+	 */
+	public FFmpegUtilException(int code, Throwable cause) {
+		super(cause);
+		detailMessage = getMessage(code);
+		codigo = code;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param code
+	 *            Código del mensaje de la excepcion
+	 * @param mensaje
+	 *            Texto a concatenar al mensaje del código.
+	 * @param cause
+	 *            causa de la excepcion
+	 */
+	public FFmpegUtilException(int code, String mensaje, Throwable cause) {
+		super(cause);
+		detailMessage = getMessage(code) + " " + mensaje;
+		codigo = code;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 *            Mensaje de la excepcion
+	 */
+	public FFmpegUtilException(String message) {
+		super(message);
+		detailMessage = message;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param code
+	 *            Código del mensaje de la excepcion
+	 */
+	public FFmpegUtilException(int code) {
+		detailMessage = getMessage(code);
+		codigo = code;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param code
+	 *            Código del mensaje de la excepcion
+	 * @param mensaje
+	 *            Texto a concatenar al mensaje del código.
+	 */
+	public FFmpegUtilException(int code, String mensaje) {
+		super(mensaje);
+		detailMessage = getMessage(code) + " " + mensaje;
+		codigo = code;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param cause
+	 *            Throwable Causa de la excepcion
+	 */
+	public FFmpegUtilException(Throwable cause) {
+		super(cause);
+		detailMessage = (cause == null ? null : cause.toString());
+	}
+
+	/**
+	 * Sobreescribe el método para devolver el mensaje personalizado.
+	 * 
+	 * @return String Mensaje de la excepción
+	 */
+	public String getMessage() {
+		if (codigo != -1) {
+			return "FFMPEG-" + codigo + " : " + detailMessage;
+		} else {
+			return detailMessage;
+		}
+	}
+
+	/**
+	 * Devuelve el mensaje correspondiente al codigo de error dado.
+	 * 
+	 * @param codError
+	 *            int Código de error
+	 * @return String Mensaje correspondiente al código.
+	 */
+	private String getMessage(int codError) {
+		Integer cod = new Integer(codError);
+		if (FFmpegUtilException.msgErrores.containsKey(cod)) {
+			return (String) FFmpegUtilException.msgErrores.get(cod);
+		} else {
+			return FJEX_NO_MSG;
+		}
+	}
+
+	/**
+	 * Devuelve la pila de la excepción como una cadena.
+	 * 
+	 * @return String Pila de la excepción
+	 */
+	public String printStackTraceStr() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		this.printStackTrace(new PrintWriter(baos));
+		return new String(baos.toByteArray());
+	}
+
+	/**
+	 * Devuelve la pila de la causa de la excepción como una cadena. En caso de no
+	 * existir causa, devolverá la cadena '<< Exception Cause not available >>'
+	 * 
+	 * @return String Pila de la excepción o '<< Exception Cause not available >>'
+	 */
+	public String printStackTraceCauseStr() {
+		if (this.getCause() != null) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			this.getCause().printStackTrace(new PrintWriter(baos));
+			return new String(baos.toByteArray());
+		} else {
+			return "<< Exception Cause not available >>";
+		}
+	}
+
+	/**
+	 * Devuelve el código de la excepción. Si la excepción fue creada sin código
+	 * este valdrá -1.
+	 * 
+	 * @return int
+	 */
+	public int getCodigo() {
+		return codigo;
+	}
+}

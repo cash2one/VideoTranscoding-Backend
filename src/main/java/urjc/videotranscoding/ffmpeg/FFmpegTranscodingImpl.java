@@ -13,8 +13,8 @@ import javax.annotation.Resource;
 
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import urjc.videotranscoding.codecs.ConversionType;
@@ -62,12 +62,12 @@ public class FFmpegTranscodingImpl implements TranscodingService{
 		}
 		if(conversionType == null){
 			FFmpegException ex = new FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND);
-			logger.error("",new String[]{},ex);
+		//	logger.error("",new String[]{},null);
 			throw ex;
 		}
 		if(conversionType.isEmpty()){
 			FFmpegException ex = new FFmpegException(FFmpegException.EX_CONVERSION_TYPE_EMPTY);
-			logger.error("",new String[]{TRACE_CONVERSION_TYPE_NOT_FOUND + conversionType.size()},ex);
+		//TODO	logger.error("",new String[]{TRACE_CONVERSION_TYPE_NOT_FOUND + conversionType.size()});
 			throw ex;
 		}
 		return transcodeFinalVersion(ffmpegPath,fileInput,folderOutput,conversionType);
