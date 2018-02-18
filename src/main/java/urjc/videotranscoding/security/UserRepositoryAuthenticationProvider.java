@@ -1,4 +1,4 @@
-package urjc.proc.videotranscoding.security;
+package urjc.videotranscoding.security;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package urjc.proc.videotranscoding.security;
+package urjc.videotranscoding.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

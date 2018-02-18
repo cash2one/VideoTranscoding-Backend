@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import urjc.videotranscoding.codecs.ConversionType;
+import urjc.videotranscoding.core.VideoTranscodingService;
 import urjc.videotranscoding.exception.FFmpegException;
-import urjc.videotranscoding.ffmpeg.TranscodingService;
 import urjc.videotranscoding.service.FileService;
 
 @Controller
@@ -31,7 +31,7 @@ public class MainController {
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
 	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	@Autowired
-	private TranscodingService ffmpegTranscoding;
+	private VideoTranscodingService ffmpegTranscoding;
 	@Autowired
 	private FileService fileService;
 	@Resource
@@ -83,8 +83,8 @@ public class MainController {
 			@Override
 			public void run() {
 				try {
-					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)), pathToReturn.toFile(),
-							Paths.get(pathToReturn.getParent().toString()), conversionTypes);
+					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)),
+							Paths.get(pathToReturn.getParent().toString()), null);
 				} catch (FFmpegException e) {
 					// TODO EXCEPTION
 					e.printStackTrace();

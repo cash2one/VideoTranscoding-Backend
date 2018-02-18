@@ -1,4 +1,4 @@
-package urjc.proc.videotranscoding;
+package urjc.videotranscoding.security;
 
 import java.io.IOException;
 

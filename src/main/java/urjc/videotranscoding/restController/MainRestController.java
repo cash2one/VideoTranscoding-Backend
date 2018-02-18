@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import urjc.videotranscoding.ffmpeg.TranscodingService;
+import urjc.videotranscoding.core.VideoTranscodingService;
 
 @RestController
 public class MainRestController{
 	@Autowired
-	private TranscodingService ffmpegTranscoding;
+	private VideoTranscodingService ffmpegTranscoding;
 
 	@GetMapping(value = "/ajaxCall")
 	public String getStatusAjax(){

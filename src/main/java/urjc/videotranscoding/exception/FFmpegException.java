@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import urjc.proc.videotranscoding.ApplicationContextProvider;
+import urjc.videotranscoding.utils.ApplicationContextProvider;
 import urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 /**

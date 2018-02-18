@@ -26,20 +26,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import urjc.videotranscoding.codecs.ConversionType;
+import urjc.videotranscoding.core.VideoTranscodingService;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.entities.User;
 import urjc.videotranscoding.entities.UserRoles;
 import urjc.videotranscoding.exception.FFmpegException;
-import urjc.videotranscoding.persistentffmpeg.TranscodingServicePersistent;
-import urjc.videotranscoding.service.ConversionVideoService;
 import urjc.videotranscoding.service.OriginalVideoService;
 import urjc.videotranscoding.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/xml/ffmpeg-config-test-persistent.xml" })
+@ContextConfiguration(locations = { "classpath:/xml/ffmpeg-config-test.xml" })
 @EnableJpaRepositories
-public class FFmpegTranscodingPersistentTest {
+public class VideoTranscodingFFmpegTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
@@ -49,9 +48,7 @@ public class FFmpegTranscodingPersistentTest {
 	private static File FFMPEG_PATH;
 	private File FOLDER_OUTPUT_REAL;
 	@Autowired
-	private TranscodingServicePersistent transcoding;
-	@Autowired
-	private ConversionVideoService conversionVideoService;
+	private VideoTranscodingService transcoding;
 	@Autowired
 	private OriginalVideoService originalVideoService;
 	@Autowired
@@ -103,7 +100,6 @@ public class FFmpegTranscodingPersistentTest {
 	}
 
 	@Ignore
-
 	@Test
 	public void transcodeFailOnNullFolderPath() {
 		try {
@@ -115,7 +111,6 @@ public class FFmpegTranscodingPersistentTest {
 	}
 
 	@Ignore
-
 	@Test
 	public void transcodeFailOnFakeFolderOuput() {
 		try {
@@ -127,7 +122,6 @@ public class FFmpegTranscodingPersistentTest {
 	}
 
 	@Ignore
-
 	@Test
 	public void transcodeFailOnNullFolderOuput() {
 		try {
@@ -139,7 +133,6 @@ public class FFmpegTranscodingPersistentTest {
 	}
 
 	@Ignore
-
 	@Test
 	public void transcodeFailOnNullParams() {
 		try {
@@ -163,7 +156,7 @@ public class FFmpegTranscodingPersistentTest {
 		}
 	}
 
-	@Ignore
+	
 	@Test
 	public void transcodeSucess() {
 		// LA CARPETA PARA LAS PRUEBAS UNITARIAS EN LA NUBE DEBE SER ESTA

@@ -2,18 +2,33 @@
 <beans xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
 	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd 
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd 
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd  
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+	http://www.springframework.org/schema/data/jpa 
+    http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">
 
-	<context:component-scan base-package="urjc.videotranscoding.ffmpeg" />
-	<util:properties id="propertiesFFmpegTest"
-		location="classpath:/properties/ffmpeg-test.properties" />
+	<context:component-scan base-package="urjc.videotranscoding.codecs" />
+	<context:component-scan base-package="urjc.videotranscoding.entities" />
+	<context:component-scan base-package="urjc.videotranscoding.exception" />
+	<context:component-scan base-package="urjc.videotranscoding.core" />
+	<context:component-scan base-package="urjc.videotranscoding.repository" />
+	<context:component-scan base-package="urjc.videotranscoding.service" />
+
+	<import resource="classpath:/xml/hibernate-config-test.xml" />
+	<import resource="classpath:/xml/excepcion-config.xml" />
+
 	<util:properties id="propertiesFFmpeg"
 		location="classpath:/properties/ffmpeg.properties" />
+
+	<util:properties id="propertiesFFmpegTest"
+		location="classpath:/properties/ffmpeg-test.properties" />
+	<bean id="ApplicationContextProvider" class="urjc.videotranscoding.utils.ApplicationContextProvider" />
+
+
 
 </beans>

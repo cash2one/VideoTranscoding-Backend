@@ -1,4 +1,4 @@
-package urjc.videotranscoding.persistentffmpeg;
+package urjc.videotranscoding.core.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import urjc.videotranscoding.codecs.ConversionType;
+import urjc.videotranscoding.core.VideoTranscodingService;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.exception.FFmpegException;
@@ -28,7 +29,7 @@ import urjc.videotranscoding.service.OriginalVideoService;
 import urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 @Service
-public class FFmpegTranscondingPersistentImpl implements TranscodingServicePersistent {
+public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
 
 	// private static final Logger log =
@@ -36,7 +37,7 @@ public class FFmpegTranscondingPersistentImpl implements TranscodingServicePersi
 
 	// private static final Logger logger =
 	// LogManager.getLogger(FFmpegTranscondingPersistentImpl.class);
-	private static final Logger logger = Logger.getLogger(FFmpegTranscondingPersistentImpl.class);
+	private static final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
 
 	private StreamGobblerPersistent errorGobbler;
 	private StreamGobblerPersistent inputGobbler;

@@ -1,4 +1,4 @@
-package urjc.proc.videotranscoding;
+package urjc.videotranscoding.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,6 @@ import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.entities.User;
 import urjc.videotranscoding.entities.UserRoles;
-import urjc.videotranscoding.repository.ConversionVideoRepository;
 import urjc.videotranscoding.repository.OriginalVideoRepository;
 import urjc.videotranscoding.repository.UserRepository;
 
@@ -27,8 +26,6 @@ public class DataLoader implements CommandLineRunner {
 	private UserRepository users;
 	@Autowired
 	private OriginalVideoRepository originalVideoRepository;
-	@Autowired
-	private ConversionVideoRepository conversionVideoRepository;
 	@Resource
 	private Properties propertiesFFmpeg;
 

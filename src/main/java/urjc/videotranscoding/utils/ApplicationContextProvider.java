@@ -1,4 +1,4 @@
-package urjc.proc.videotranscoding;
+package urjc.videotranscoding.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

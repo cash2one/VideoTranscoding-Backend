@@ -1,4 +1,4 @@
-package urjc.proc.videotranscoding;
+package urjc.videotranscoding.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
