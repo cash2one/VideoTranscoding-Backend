@@ -17,19 +17,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.entities.User;
+import urjc.videotranscoding.exception.FFmpegException;
 import urjc.videotranscoding.service.UserService;
 
 @RestController
 @RequestMapping(value = "/api/user")
 public class UserRestController {
-	public interface Details
-			extends
-				User.Basic,
-				User.Details,
-				OriginalVideo.Basic,
-				OriginalVideo.Details,
-				ConversionVideo.Basic,
-				ConversionVideo.Details {
+	public interface Details extends User.Basic, User.Details, OriginalVideo.Basic, OriginalVideo.Details,
+			ConversionVideo.Basic, ConversionVideo.Details {
 	}
 
 	@Autowired
@@ -53,6 +48,16 @@ public class UserRestController {
 			return new ResponseEntity<>(u, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping(value = "/execute")
+	public String executeService() {
+		try {
+			userService.callTranscodeIfChargeIsDown();
+			return "ok";
+		} catch (FFmpegException e) {
+			return e.getMessage();
 		}
 	}
 

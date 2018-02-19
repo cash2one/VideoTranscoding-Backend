@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,37 +39,34 @@ public class OriginalVideo {
 	@JsonView(Basic.class)
 	private long originalVideoId;
 	/**
-	 * List of All Conversions for the video
+	 * Name of the video
 	 */
 	@JsonView(Basic.class)
-	private String originalVideo;
+	@Column(unique = true)
+	private String name;
 	/**
-	 * 
+	 * Path of the video
+	 */
+	@Column(unique = true)
+	@JsonView(Basic.class)
+	private String path;
+	/**
+	 * User of the video
 	 */
 	@JsonView(None.class)
 	@ManyToOne
 	private User userVideo;
 
 	/**
-	 * 
+	 * All Conversions of the video
 	 */
-	// @JsonView(Details.class)
-	// @ElementCollection(targetClass = ConversionType.class)
-	// @Column(name = "listAllConversions")
-	// @Enumerated
-	// private Collection<ConversionType> listAllConversions = new
-	// ArrayList<>();
-	/**
-	 * 
-	 */
-
 	@JsonView(Details.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<ConversionVideo> allConversions = new ArrayList<>();
 
 	/**
-	 * If is complete true, EOC false
+	 * If all conversions are complete true, EOC false
 	 */
 	@JsonView(Details.class)
 	private boolean complete;
@@ -78,33 +76,53 @@ public class OriginalVideo {
 	@JsonView(Details.class)
 	private boolean active;
 
+	/**
+	 * Constructor protected for hibernate.
+	 */
 	protected OriginalVideo() {
 	}
 
-	public OriginalVideo(String video, boolean complete, User u) {
-		this.originalVideo = video;
-		this.complete = complete;
-		this.userVideo = u;
-	}
+	/**
+	 * Constructor for the Original vide
+	 * 
+	 * @param video
+	 *            name of the video
+	 * @param path
+	 *            of the video
+	 * @param user
+	 *            user for the video
+	 */
+	public OriginalVideo(String name, String path, User user) {
+		this.name = name.replace(" ", "_");
+		this.path = path;
+		this.userVideo = user;
 
-	public String getOriginalVideo() {
-		return originalVideo;
-	}
-
-	public void setOriginalVideo(String originalVideo) {
-		this.originalVideo = originalVideo;
 	}
 
 	public boolean isComplete() {
-		return complete;
+		for (ConversionVideo conversionVideo : allConversions) {
+			if (!conversionVideo.isFinished()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isActive() {
+		for (ConversionVideo conversionVideo : allConversions) {
+			if (conversionVideo.isActive()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public List<ConversionVideo> getAllConversions() {
 		return allConversions;
-	}
-
-	public void setAllConversions(List<ConversionVideo> allConversions) {
-		this.allConversions = allConversions;
 	}
 
 	public void setComplete(boolean complete) {
@@ -119,13 +137,24 @@ public class OriginalVideo {
 		this.userVideo = userVideo;
 	}
 
-	public boolean isActive() {
-		return active;
+	public String getName() {
+		return name;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setAllConversions(List<ConversionVideo> allConversions) {
+		this.allConversions = allConversions;
+	}
 
 }

@@ -99,13 +99,17 @@ public class StreamGobblerPersistent implements Runnable {
 					// + "x");
 					// System.out.println(" // Bitrate: " +
 					// generalMatcher.group(5) + "kbits/s");
+					conversionVideo.setFileSize(generalMatcher.group(1)+" KB");
 				}
 				conversionVideoRepository.save(conversionVideo);
 
 			}
 			conversionVideo.setProgress("100");
 			conversionVideo.setFinished(true);
+			conversionVideo.setActive(false);
 			conversionVideoRepository.save(conversionVideo);
+			//TODO 
+			//logger.l7dlog(Level.INFO, arg1,new String[]{}, null);
 			logger.info("Se ha terminado de convertir el video");
 
 		} catch (IOException e) {

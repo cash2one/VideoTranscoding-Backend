@@ -24,8 +24,6 @@ import urjc.videotranscoding.service.UserService;
 public class UserServiceImpl implements UserService {
 	// TODO SUPRESSWARNINGS
 	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
-	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
-	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	@Autowired
 	private FileServiceImpl fileService;
 	@Resource
@@ -96,29 +94,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// @Scheduled(cron = "*/10 * * * * *")
-	private void callTranscodeIfChargeIsDown() {
-		users.findAll().forEach(x -> {
-			for (OriginalVideo originalVideo : x.getListVideos()) {
-				if (!originalVideo.isActive()) {
-					String FFMPEG_PATH;
-					if ((System.getProperty("os.name").equals("Mac OS X"))) {
-						FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
-					} else {
-						FFMPEG_PATH = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
-					}
-					// Path pathToReturn = fileService.saveFile(file,
+	public void callTranscodeIfChargeIsDown() throws FFmpegException {
+		for (User user : users.findAll()) {
+			for (OriginalVideo originalVideo : user.getListVideos()) {
+				if (!originalVideo.isActive() && !originalVideo.isComplete()) {
+					// TODO Path pathToReturn = fileService.saveFile(file,
 					// propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
-					try {
-						transcode.transcodeVideo(FFMPEG_PATH, "/Users/luisca/Documents/VideosPrueba", originalVideo);
-					} catch (FFmpegException e) {
-						// TODO LANZA EXCEPCION GENERICA POR FALLO DEL SISTEMA
-						e.printStackTrace();
-					}
+					transcode.transcodeVideo(transcode.getPathOfProgram(), "/Users/luisca/Documents/VideosPrueba",
+							originalVideo);
 
 				}
 			}
 
-		});
+		}
 
 	}
 }

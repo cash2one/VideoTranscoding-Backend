@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class User {
 	public interface Basic {
 	}
+
 	public interface Details {
 	}
 
@@ -74,14 +75,11 @@ public class User {
 	 */
 	@JsonView(Details.class)
 	@ElementCollection(fetch = FetchType.EAGER)
-	@Fetch (FetchMode.SELECT)
-	 Set<UserRoles> roles = new HashSet<>();
-
-	// @JsonView(Details.class)
-	// @ElementCollection
-	// @Column(name = "Favourite Categories")
-	// private final Set<String> favouriteCategories = new HashSet<>();
-
+	@Fetch(FetchMode.SELECT)
+	private final Set<UserRoles> roles = new HashSet<>();
+	/**
+	 * List Videos of the user
+	 */
 	@JsonView(Details.class)
 	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "userVideo")
 	private final List<OriginalVideo> listVideos = new ArrayList<>();
@@ -89,8 +87,7 @@ public class User {
 	protected User() {
 	}
 
-	public User(String email, String nick, String userPassword, String photo,
-			UserRoles... roles) {
+	public User(String email, String nick, String userPassword, String photo, UserRoles... roles) {
 		this.email = email;
 		this.nick = nick;
 		String salt = BCrypt.gensalt(WORKLOAD);

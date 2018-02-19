@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -87,7 +86,6 @@ public class VideoTranscodingFFmpegTest {
 		}
 	}
 
-	
 	@Test
 	public void transcodeFailOnFakeFFMPEGFile() {
 		try {
@@ -98,7 +96,6 @@ public class VideoTranscodingFFmpegTest {
 		}
 	}
 
-
 	@Test
 	public void transcodeFailOnNullFolderPath() {
 		try {
@@ -108,6 +105,7 @@ public class VideoTranscodingFFmpegTest {
 			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
 		}
 	}
+
 	@Test
 	public void transcodeFailOnFakeFolderOuput() {
 		try {
@@ -128,7 +126,6 @@ public class VideoTranscodingFFmpegTest {
 		}
 	}
 
-	
 	@Test
 	public void transcodeFailOnNullParams() {
 		try {
@@ -139,28 +136,25 @@ public class VideoTranscodingFFmpegTest {
 		}
 	}
 
-	
 	@Test
 	public void transcodeFailOnEmptyParams() {
 		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(),
-					new OriginalVideo("", false, null));
+			transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), new OriginalVideo("", "", null));
 			fail("No should empty params");
 		} catch (FFmpegException e) {
 			assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE, e.getCodigo());
 		}
 	}
 
-	@Ignore
 	@Test
 	public void transcodeSucess() {
 		// LA CARPETA PARA LAS PRUEBAS UNITARIAS EN LA NUBE DEBE SER ESTA
 		// Paths.get(FOLDER_OUTPUT_REAL.toString())
 
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		OriginalVideo video = new OriginalVideo(propertiesFFmpegTest.getProperty(VIDEO_DEMO), Boolean.FALSE, u1);
-		ConversionVideo newVideo = new ConversionVideo("Conversion Video 1", ConversionType.MKV_H264360_COPY, video);
-		ConversionVideo newVideo2 = new ConversionVideo("Conversion Video 2", ConversionType.MKV_H2641080_COPY, video);
+		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
+		ConversionVideo newVideo = new ConversionVideo(ConversionType.MKV_H264360_COPY, video);
+		ConversionVideo newVideo2 = new ConversionVideo(ConversionType.MKV_H2641080_COPY, video);
 		List<ConversionVideo> lista = new ArrayList<>();
 		lista.add(newVideo);
 		lista.add(newVideo2);

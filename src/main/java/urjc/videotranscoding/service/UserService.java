@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 
 import urjc.videotranscoding.entities.User;
+import urjc.videotranscoding.exception.FFmpegException;
 
 public interface UserService {
 
@@ -35,5 +36,7 @@ public interface UserService {
 
 	public boolean isAdmin(Principal principal);
 
-	
+	// TODO ESTE METODO ES AUTOMATICO
+	void callTranscodeIfChargeIsDown() throws FFmpegException;
+
 }

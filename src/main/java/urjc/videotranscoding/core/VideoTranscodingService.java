@@ -10,6 +10,7 @@ import urjc.videotranscoding.exception.FFmpegException;
  * @since 0.5
  */
 public interface VideoTranscodingService {
+	String getPathOfProgram();
 
 	void transcodeVideo(String pathFFMPEG, String folderOutput, OriginalVideo originalVideo) throws FFmpegException;
 

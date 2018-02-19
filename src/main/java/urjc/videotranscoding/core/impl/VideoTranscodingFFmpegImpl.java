@@ -18,31 +18,30 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import urjc.videotranscoding.codecs.ConversionType;
 import urjc.videotranscoding.core.VideoTranscodingService;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.exception.FFmpegException;
 import urjc.videotranscoding.service.ConversionVideoService;
 import urjc.videotranscoding.service.FileUtils;
-import urjc.videotranscoding.service.OriginalVideoService;
 import urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 @Service
 public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private static final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
-	private static final String TRACE_FFMPEG_NULL_OR_EMPTY="ffmpeg.nullOrEmpty";
-	private static final String TRACE_FFMPEG_NOT_FOUND="ffmpeg.notFound";
-	private static final String TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY="ffmpeg.folderOuput.nullOrEmpty";
-	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS="ffmpeg.folderOutput.notExits";
-	private static final String TRACE_ORIGINAL_VIDEO_NULL="ffmpeg.originalVideo.null";
-	private static final String TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE="ffmpeg.originalVideo.notSave";
-
+	private static final String TRACE_FFMPEG_NULL_OR_EMPTY = "ffmpeg.nullOrEmpty";
+	private static final String TRACE_FFMPEG_NOT_FOUND = "ffmpeg.notFound";
+	private static final String TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY = "ffmpeg.folderOuput.nullOrEmpty";
+	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS = "ffmpeg.folderOutput.notExits";
+	private static final String TRACE_ORIGINAL_VIDEO_NULL = "ffmpeg.originalVideo.null";
+	private static final String TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE = "ffmpeg.originalVideo.notSave";
+	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
+	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	private StreamGobblerPersistent errorGobbler;
 	private StreamGobblerPersistent inputGobbler;
 	private StreamGobblerPersistent outputGobbler;
-	ExecutorService executorService = Executors.newFixedThreadPool(6);
+	ExecutorService executorService = Executors.newFixedThreadPool(3);
 	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
 	@Resource
@@ -54,8 +53,6 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private FileUtils fileUtils;
 	@Autowired
 	private ConversionVideoService conversionVideoService;
-	@Autowired
-	private OriginalVideoService originalVideoService;
 	@Autowired
 	private StreamGobblerPersistentFactory streamGobblerPersistentFactory;
 	// TODO JAVADOC, LOGGER, EXCEPTS
@@ -71,6 +68,16 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
+	@Override
+	public String getPathOfProgram() {
+		if ((System.getProperty("os.name").equals("Mac OS X"))) {
+			return propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
+		} else {
+			return propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
+		}
+		// TODO otros casos
+	}
+
 	/**
 	 * 
 	 */
@@ -80,10 +87,10 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NULL_OR_EMPTY, null);
 			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
 		}
-		
+
 		if (!fileUtils.exitsFile(pathFFMPEG)) {
-			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NOT_FOUND,new String[] {pathFFMPEG} ,null);
-			throw new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND,new String [] {pathFFMPEG});
+			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG }, null);
+			throw new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG });
 
 		}
 		if (StringUtils.isBlank(folderOutput)) {
@@ -92,67 +99,52 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		}
 
 		if (!fileUtils.exitsPath(folderOutput)) {
-			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS,new String []{folderOutput}, null);
-			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,new String[] {folderOutput});
+			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutput }, null);
+			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutput });
 		}
-			
-		if (originalVideo == null ) {
+
+		if (originalVideo == null) {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
 		}
-		if (!fileUtils.exitsFile(originalVideo.getOriginalVideo())) {
-			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE,new String[]{originalVideo.getOriginalVideo()}, null);
-			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,new String[] {originalVideo.getOriginalVideo()});
+		if (!fileUtils.exitsFile(originalVideo.getPath())) {
+			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE, new String[] { originalVideo.getPath() },
+					null);
+			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
+					new String[] { originalVideo.getPath() });
 		}
-		
-		
-		// if(conversionType == null){
-		// FFmpegException ex = new
-		// FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND);
-		// logger.error("",new String[]{},ex);
-		// throw ex;
-		// }
-		// if(conversionType.isEmpty()){
-		// FFmpegException ex = new
-		// FFmpegException(FFmpegException.EX_CONVERSION_TYPE_EMPTY);
-		// logger.error("",new String[]{TRACE_CONVERSION_TYPE_NOT_FOUND +
-		// conversionType.size()},ex);
-		// throw ex;
-		// }
-
-		Thread conversion = new Thread(new Runnable() {
-			@Override
+		ExecutorService serviceConversion = Executors.newFixedThreadPool(1);
+		serviceConversion.execute(new Runnable() {
 			public void run() {
 				for (ConversionVideo video : originalVideo.getAllConversions()) {
 					if (!video.isActive()) {
-						try {
-							System.out.println("Se va a realizar una conversion");
-							String command = getCommand(pathFFMPEG, new File(originalVideo.getOriginalVideo()),
-									folderOutput, video.getConversionType());
-							video.setActive(true);
-							originalVideo.setActive(true);
-							originalVideoService.save(originalVideo);
-							System.out.println("Guardando el video ");
-							conversionVideoService.save(video);
-							conversionFinal(command, video);
+						String command = getCommand(pathFFMPEG, new File(originalVideo.getPath()), folderOutput, video);
 
+						try {
+							conversionFinal(command, video);
 						} catch (FFmpegException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+
 					}
 				}
-				// originalVideoService.save(originalVideo);
 			}
 		});
-		conversion.start();
-		System.out.println("Saliendo del trhread");
 	}
 
-	protected void conversionFinal(String command, ConversionVideo video) throws FFmpegException {
+	/**
+	 * 
+	 * @param command
+	 * @param video
+	 * @throws FFmpegException
+	 */
+	private void conversionFinal(String command, ConversionVideo video) throws FFmpegException {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
+			video.setActive(true);
+			conversionVideoService.save(video);
 			errorGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getErrorStream(), "ERROR",
 					video);
 			inputGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getInputStream(), "INPUT",
@@ -171,14 +163,17 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		} catch (ExecuteException e) {
 			// TODO LOGS
 			video.setFinished(false);
+			video.setActive(false);
 			throw new FFmpegException(e);
 		} catch (InterruptedException e) {
 			// TODO
 			video.setFinished(false);
+			video.setActive(false);
 			throw new FFmpegException(e);
 		} catch (IOException e) {
 			// TODO
 			video.setFinished(false);
+			video.setActive(false);
 			throw new FFmpegException(e);
 		} finally {
 			conversionVideoService.save(video);
@@ -188,17 +183,22 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	}
 
 	/**
+	 * 
 	 * @param pathFFMPEG
 	 * @param fileInput
 	 * @param folderOutput
-	 * @param conversionType
-	 * @return String with the Command ready for send it.
+	 * @param conversionVideo
+	 * @return
 	 */
-	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, ConversionType conversionType) {
-		String command = pathFFMPEG + " -i " + fileInput.toString() + conversionType.getCodecAudioType()
-				+ conversionType.getCodecVideoType() + folderOutput
-				+ getFinalNameFile(fileInput, conversionType.getContainerType());
-		logger.debug("El Comando que se va a enviar es :" + command);
+	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, ConversionVideo conversionVideo) {
+		String finalPath = folderOutput
+				+ getFinalNameFile(fileInput, conversionVideo.getConversionType().getContainerType());
+		conversionVideo.setPath(finalPath);
+		conversionVideoService.save(conversionVideo);
+		String command = pathFFMPEG + " -i " + fileInput.toString()
+				+ conversionVideo.getConversionType().getCodecAudioType()
+				+ conversionVideo.getConversionType().getCodecVideoType() + finalPath;
+		logger.l7dlog(Level.DEBUG, "El Comando que se va a enviar es :" + command, null);
 		return command;
 	}
 
@@ -214,14 +214,23 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		return "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(3, 9) + extension;
 	}
 
+	/**
+	 * 
+	 */
 	public StreamGobblerPersistent getErrorGobbler() {
 		return errorGobbler;
 	}
 
+	/**
+	 * 
+	 */
 	public StreamGobblerPersistent getInputGobbler() {
 		return inputGobbler;
 	}
 
+	/**
+	 * 
+	 */
 	public StreamGobblerPersistent getOutputGobbler() {
 		return outputGobbler;
 	}
