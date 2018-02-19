@@ -148,13 +148,10 @@ public class VideoTranscodingFFmpegTest {
 
 	@Test
 	public void transcodeSucess() {
-		// LA CARPETA PARA LAS PRUEBAS UNITARIAS EN LA NUBE DEBE SER ESTA
-		// Paths.get(FOLDER_OUTPUT_REAL.toString())
-
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
 		ConversionVideo newVideo = new ConversionVideo(ConversionType.MKV_H264360_COPY, video);
-		ConversionVideo newVideo2 = new ConversionVideo(ConversionType.MKV_H2641080_COPY, video);
+		ConversionVideo newVideo2 = new ConversionVideo(ConversionType.MKV_H264480_COPY, video);
 		List<ConversionVideo> lista = new ArrayList<>();
 		lista.add(newVideo);
 		lista.add(newVideo2);
@@ -163,13 +160,13 @@ public class VideoTranscodingFFmpegTest {
 		userService.save(u1);
 		originalVideoService.save(video);
 		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, "/Users/luisca/Documents/VideosPrueba", video);
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), video);
+//			try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			// conversionVideoService.delete(x1);
 			// conversionVideoService.delete(x2);
 			// originalVideoService.delete(toSend);
