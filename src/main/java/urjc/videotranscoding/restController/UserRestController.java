@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.entities.User;
+import urjc.videotranscoding.exception.ExceptionForRest;
 import urjc.videotranscoding.exception.FFmpegException;
 import urjc.videotranscoding.service.UserService;
 
@@ -52,12 +53,13 @@ public class UserRestController {
 	}
 
 	@GetMapping(value = "/execute")
-	public String executeService() {
+	public ResponseEntity<?> executeService() {
 		try {
 			userService.callTranscodeIfChargeIsDown();
-			return "ok";
+			return new ResponseEntity<String>("All Ok", HttpStatus.OK);
 		} catch (FFmpegException e) {
-			return e.getMessage();
+			return new ResponseEntity<ExceptionForRest>(new ExceptionForRest(e.getCodigo(), e.getLocalizedMessage()),
+					HttpStatus.BAD_REQUEST);
 		}
 	}
 

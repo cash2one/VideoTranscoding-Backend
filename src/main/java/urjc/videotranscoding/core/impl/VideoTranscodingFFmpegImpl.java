@@ -113,22 +113,23 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
 					new String[] { originalVideo.getPath() });
 		}
-		ExecutorService serviceConversion = Executors.newFixedThreadPool(1);
+
+		ExecutorService serviceConversion = Executors.newSingleThreadExecutor();
 		serviceConversion.execute(new Runnable() {
 			public void run() {
-				for (ConversionVideo video : originalVideo.getAllConversions()) {
-					if (!video.isActive()) {
-						String command = getCommand(pathFFMPEG, new File(originalVideo.getPath()), folderOutput, video);
-
+				originalVideo.getAllConversions().forEach((originalV -> {
+					if (!originalV.isActive()) {
+						String command = getCommand(pathFFMPEG, new File(originalVideo.getPath()), folderOutput,
+								originalV);
 						try {
-							conversionFinal(command, video);
+							conversionFinal(command, originalV);
 						} catch (FFmpegException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							logger.l7dlog(Level.ERROR, null, null);
+							//TODO EXCEPTION
+							throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
 						}
-
 					}
-				}
+				}));
 			}
 		});
 	}

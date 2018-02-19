@@ -160,16 +160,7 @@ public class VideoTranscodingFFmpegTest {
 		userService.save(u1);
 		originalVideoService.save(video);
 		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), video);
-//			try {
-//				Thread.sleep(10000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			// conversionVideoService.delete(x1);
-			// conversionVideoService.delete(x2);
-			// originalVideoService.delete(toSend);
+			transcoding.transcodeVideo(transcoding.getPathOfProgram(), FOLDER_OUTPUT_REAL.toString(), video);
 		} catch (FFmpegException e) {
 			e.printStackTrace();
 			fail("No should fail");

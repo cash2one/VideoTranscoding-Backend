@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.Hashtable;
 
-public class FFmpegUtilException extends Exception {
+public class FFmpegUtilException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	protected String detailMessage = null;
