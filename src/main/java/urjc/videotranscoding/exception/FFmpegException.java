@@ -12,21 +12,27 @@ import urjc.videotranscoding.wrapper.FfmpegResourceBundle;
  * @author luisca
  */
 public class FFmpegException extends FFmpegUtilException {
-
-	private Object[] parametros;
-	public static final String FICH_ERRORES = "fichero.mensajes.errores";
-	public static final String CLASSPATH = "classpath*:xml/exception-config.xml";
-	public static final String PROP_FICH_CORE = "propertiesFicheroCore";
-	public static final String TRAZAS = "ffmpegResourceBundle";
+	// TODO rehacer javadoc
 	private static final long serialVersionUID = 5434866761753051706L;
-	public static final String EX_FILE_INPUT_NOT_VALID = "File input for transcode is null or blank";
-	public static final String EX_FFMPEG_NOT_FOUND = "FFmpeg not found on this device.";
-	public static final String EX_FOLDER_OUTPUT_NOT_FOUND = "Folder output for files not found ";
-	public static final String EX_FOLDER_OUTPUT_NULL = "Folder output for files is null";
-	public static final String EX_NO_CONVERSION_TYPE_FOUND = "No type conversion found for this call";
-	public static final String EX_CONVERSION_TYPE_EMPTY = "Conversion type is empty";
-	public static final int EX_CONVERSION_TYPE_EMPT = 15000;
+	private Object[] parametros;
+	private static final String FICH_ERRORES = "fichero.mensajes.errores";
+	private static final String PROP_FICH_CORE = "propertiesFicheroCore";
+	private static final String FFMPEG_RESOURCE_BUNDLE = "ffmpegResourceBundle";
+	private static final String ERROR = "error.";
+	/**
+	 * EXCEPTIONS
+	 */
+	public static final int EX_FFMPEG_EMPTY_OR_NULL = 15000;
+	public static final int EX_FFMPEG_NOT_FOUND= 15001;
+	public static final int EX_FOLDER_OUTPUT_EMPTY_OR_NULL=15002;
+	public static final int EX_FOLDER_OUTPUT_NOT_EXITS=15003;
+	public static final int EX_ORIGINAL_VIDEO_NULL=15004;
+	public static final int EX_ORIGINAL_VIDEO_NOT_IS_SAVE=15005;
 
+
+	/**
+	 * Default builder
+	 */
 	public FFmpegException() {
 	}
 
@@ -110,9 +116,9 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param code
 	 *            C�digo del mensaje de la excepcion
 	 * @param params
-	 *            Par�metros para componer el mensaje de error.
+	 *            Parametros para componer el mensaje de error.
 	 * @param cause
-	 *            Excepci�n por la que se lanza esta excepci�n (causa).
+	 *            Excepcion por la que se lanza esta excepci�n (causa).
 	 */
 	public FFmpegException(int code, Object[] params, Throwable cause) {
 		super(code, cause);
@@ -120,28 +126,17 @@ public class FFmpegException extends FFmpegUtilException {
 		detailMessage = getLocalizedMessage();
 	}
 
-	/**
-	 * Debido a que esta clase no se invoca como recurso desde las otras clases, si
-	 * no que siempre que se quiere lanzar una excepci�n se crea un objeto nuevo, no
-	 * se puede recoger por inyecci�n ning�n par�metro. Es por ello que para recoger
-	 * los mensajes de los errores se carga un xml espec�fico
-	 * (xml/excepcion-config.xml) donde se han a�adido los recursos necesarios que
-	 * contienen los mensajes (propertiesFichero y excepcionMessageSource).
-	 * 
-	 * @return Mensaje internacionalizado correspondiente al c�digo de error de la
-	 *         excepci�n.
-	 */
 	@Override
 	public String getLocalizedMessage() {
 		Properties propertiesFicheroCore = (Properties) ApplicationContextProvider.getApplicationContext()
-				.getBean("propertiesFicheroCore");
+				.getBean(PROP_FICH_CORE);
 		FfmpegResourceBundle ffmpegResourceBundle = (FfmpegResourceBundle) ApplicationContextProvider
-				.getApplicationContext().getBean("ffmpegResourceBundle");
+				.getApplicationContext().getBean(FFMPEG_RESOURCE_BUNDLE);
 		ResourceBundle messages = ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_ERRORES), Locale.getDefault());
 		MessageFormat formatter = new MessageFormat("");
 		formatter.setLocale(Locale.getDefault());
-		formatter.applyPattern(messages.getString("error." + getCodigo()));
+		formatter.applyPattern(messages.getString(ERROR + getCodigo()));
 		return formatter.format(parametros);
 	}
 

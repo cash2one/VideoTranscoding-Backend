@@ -6,46 +6,10 @@ import java.util.Hashtable;
 
 public class FFmpegUtilException extends Exception {
 
-	/**
-	 * <p>
-	 * <b>FujitsuUtilidadesException</b>
-	 * </p>
-	 * <p>
-	 * Excepción Base para toda la Arquitectura de Excepciones.<br>
-	 * Esta excepción extiende de la clase Exception, y le añade las siguientes
-	 * funcionalidades:<br>
-	 * - Añade nuevos constructores y métodos para visualizar el contenido de la
-	 * excepción.<br>
-	 * - Los mensajes de error asociados a la excepción se definirán a partir de un
-	 * código de error en una tabla de mensajes. Todo mensaje ha de haber sido dado
-	 * de alta previamente en la tabla msgErrores.
-	 * 
-	 * @see java.lang.Exception
-	 *      </p>
-	 *      <p>
-	 *      Copyright: Copyright (c) 2005
-	 *      </p>
-	 *      <p>
-	 *      Company: Fujitsu España
-	 *      </p>
-	 * @author cgdemarcos
-	 * @author jcarro
-	 * @version 2.0
-	 */
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/** Mensaje que se mostrará al usuario */
 	protected String detailMessage = null;
-	/** Código de error */
 	private int codigo = -1;
-	/** Tabla de mensajes */
 	protected static Hashtable<Integer, String> msgErrores = new Hashtable<Integer, String>();
-	/**
-	 * Mensaje para indicar que no hay ningún mensaje asociado a un codigo de error
-	 */
 	public static final int ERROR_DESCONOCIDO = 0;
 	private static final String FJEX_NO_MSG = "Código de Error desconocido.";
 	public static final int EX_ERROR_RECUPERACION_PARAMETRO = 1;
@@ -54,18 +18,6 @@ public class FFmpegUtilException extends Exception {
 	public static final int ERROR_CONEXION_DATASOURCE = 4;
 	public static final int ERROR_CONEXION_JNDI = 5;
 	public static final int ERROR_EJECUCION = 6;
-	static {
-		msgErrores.put(new Integer(EX_ERROR_RECUPERACION_PARAMETRO),
-				"El servicio no ha podido recuperar los parámetros correctamente.");
-		msgErrores.put(new Integer(EX_ERROR_RECUPERACION_PARAMETRO_NULO),
-				"El servicio no ha podido recuperar un parámetro obligatorio.");
-		msgErrores.put(new Integer(EX_ERROR_RECUPERACION_PARAMETRO_DISTINTA_CLASE),
-				"El servicio ha recuperado un parámetro de una clase que no esperaba.");
-		msgErrores.put(new Integer(ERROR_CONEXION_DATASOURCE), "No se ha podido acceder a base de datos.");
-		msgErrores.put(new Integer(ERROR_CONEXION_JNDI), "No se ha podido acceder al recurso JNDI.");
-		msgErrores.put(new Integer(ERROR_EJECUCION), "Error en tiempo de ejecución.");
-
-	}
 
 	/**
 	 * Constructor por defecto.

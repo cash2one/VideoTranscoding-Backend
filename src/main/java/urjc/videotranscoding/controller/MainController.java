@@ -1,9 +1,7 @@
 package urjc.videotranscoding.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -83,8 +81,8 @@ public class MainController {
 			@Override
 			public void run() {
 				try {
-					ffmpegTranscoding.transcode(new File((FFMPEG_PATH)),
-							Paths.get(pathToReturn.getParent().toString()), null);
+					// TODO Rehacer este controlador
+					ffmpegTranscoding.transcodeVideo(FFMPEG_PATH, pathToReturn.getParent().toString(), null);
 				} catch (FFmpegException e) {
 					// TODO EXCEPTION
 					e.printStackTrace();

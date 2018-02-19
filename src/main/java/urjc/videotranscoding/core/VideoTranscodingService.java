@@ -1,8 +1,5 @@
 package urjc.videotranscoding.core;
 
-import java.io.File;
-import java.nio.file.Path;
-
 import urjc.videotranscoding.core.impl.StreamGobblerPersistent;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.exception.FFmpegException;
@@ -10,17 +7,16 @@ import urjc.videotranscoding.exception.FFmpegException;
 /**
  * 
  * @author luisca
- *
+ * @since 0.5
  */
 public interface VideoTranscodingService {
 
-	void transcode(File pathFFMPEG, Path folderOutput, OriginalVideo originalVideo)
-			throws FFmpegException;
+	void transcodeVideo(String pathFFMPEG, String folderOutput, OriginalVideo originalVideo) throws FFmpegException;
 
-	public StreamGobblerPersistent getErrorGobbler();
+	StreamGobblerPersistent getErrorGobbler();
 
-	public StreamGobblerPersistent getInputGobbler();
+	StreamGobblerPersistent getInputGobbler();
 
-	public StreamGobblerPersistent getOutputGobbler();
+	StreamGobblerPersistent getOutputGobbler();
 
 }

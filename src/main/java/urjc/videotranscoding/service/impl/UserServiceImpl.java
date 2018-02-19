@@ -1,7 +1,5 @@
 package urjc.videotranscoding.service.impl;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Properties;
@@ -24,7 +22,7 @@ import urjc.videotranscoding.service.UserService;
 @Service
 @SuppressWarnings("unused")
 public class UserServiceImpl implements UserService {
-	//TODO SUPRESSWARNINGS
+	// TODO SUPRESSWARNINGS
 	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
 	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
@@ -97,7 +95,7 @@ public class UserServiceImpl implements UserService {
 		return u.isAdmin();
 	}
 
-	//@Scheduled(cron = "*/10 * * * * *")
+	// @Scheduled(cron = "*/10 * * * * *")
 	private void callTranscodeIfChargeIsDown() {
 		users.findAll().forEach(x -> {
 			for (OriginalVideo originalVideo : x.getListVideos()) {
@@ -111,8 +109,7 @@ public class UserServiceImpl implements UserService {
 					// Path pathToReturn = fileService.saveFile(file,
 					// propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 					try {
-						transcode.transcode(new File(FFMPEG_PATH), Paths.get("/Users/luisca/Documents/VideosPrueba"),
-								originalVideo);
+						transcode.transcodeVideo(FFMPEG_PATH, "/Users/luisca/Documents/VideosPrueba", originalVideo);
 					} catch (FFmpegException e) {
 						// TODO LANZA EXCEPCION GENERICA POR FALLO DEL SISTEMA
 						e.printStackTrace();

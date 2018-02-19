@@ -2,8 +2,6 @@ package urjc.videotranscoding.core.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -14,6 +12,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +24,20 @@ import urjc.videotranscoding.entities.ConversionVideo;
 import urjc.videotranscoding.entities.OriginalVideo;
 import urjc.videotranscoding.exception.FFmpegException;
 import urjc.videotranscoding.service.ConversionVideoService;
+import urjc.videotranscoding.service.FileUtils;
 import urjc.videotranscoding.service.OriginalVideoService;
 import urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 @Service
 public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
-	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
-
-	// private static final Logger log =
-	// Logger.getLogger(DocumentosServiceImpl.class);
-
-	// private static final Logger logger =
-	// LogManager.getLogger(FFmpegTranscondingPersistentImpl.class);
 	private static final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
+	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
+	private static final String TRACE_FFMPEG_NULL_OR_EMPTY="ffmpeg.nullOrEmpty";
+	private static final String TRACE_FFMPEG_NOT_FOUND="ffmpeg.notFound";
+	private static final String TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY="ffmpeg.folderOuput.nullOrEmpty";
+	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS="ffmpeg.folderOutput.notExits";
+	private static final String TRACE_ORIGINAL_VIDEO_NULL="ffmpeg.originalVideo.null";
+	private static final String TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE="ffmpeg.originalVideo.notSave";
 
 	private StreamGobblerPersistent errorGobbler;
 	private StreamGobblerPersistent inputGobbler;
@@ -51,6 +51,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private Properties propertiesFicheroCore;
 
 	@Autowired
+	private FileUtils fileUtils;
+	@Autowired
 	private ConversionVideoService conversionVideoService;
 	@Autowired
 	private OriginalVideoService originalVideoService;
@@ -62,36 +64,48 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 
 	@PostConstruct
 	public void init() {
-//		propertiesFicheroCore = (Properties) ApplicationContextProvider.getApplicationContext()
-//				.getBean("propertiesFicheroCore");
+		// propertiesFicheroCore = (Properties)
+		// ApplicationContextProvider.getApplicationContext()
+		// .getBean("propertiesFicheroCore");
 		logger.setResourceBundle(ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
-	@Override
-	public void transcode(File pathFFMPEG, Path folderOutput, OriginalVideo originalVideo) throws FFmpegException {
-		if (pathFFMPEG == null || !pathFFMPEG.exists()) {
+	/**
+	 * 
+	 */
+	public void transcodeVideo(String pathFFMPEG, String folderOutput, OriginalVideo originalVideo)
+			throws FFmpegException {
+		if (StringUtils.isBlank(pathFFMPEG)) {
+			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NULL_OR_EMPTY, null);
+			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
+		}
+		
+		if (!fileUtils.exitsFile(pathFFMPEG)) {
+			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NOT_FOUND,new String[] {pathFFMPEG} ,null);
+			throw new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND,new String [] {pathFFMPEG});
 
-			FFmpegException x = new FFmpegException(FFmpegException.EX_CONVERSION_TYPE_EMPT);
-			logger.l7dlog(Level.ERROR, "cache.error", x);
-			throw x;
 		}
-		if (originalVideo == null || !new File(originalVideo.getOriginalVideo()).exists()) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FILE_INPUT_NOT_VALID);
+		if (StringUtils.isBlank(folderOutput)) {
+			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
+			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
+		}
 
-			logger.error("", ex);
-			throw ex;
+		if (!fileUtils.exitsPath(folderOutput)) {
+			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS,new String []{folderOutput}, null);
+			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,new String[] {folderOutput});
 		}
-		if (folderOutput == null) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NULL);
-			logger.error("", ex);
-			throw ex;
+			
+		if (originalVideo == null ) {
+			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
+			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
 		}
-		if (!Files.exists(folderOutput)) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_FOUND);
-			logger.error("", ex);
-			throw ex;
+		if (!fileUtils.exitsFile(originalVideo.getOriginalVideo())) {
+			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE,new String[]{originalVideo.getOriginalVideo()}, null);
+			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,new String[] {originalVideo.getOriginalVideo()});
 		}
+		
+		
 		// if(conversionType == null){
 		// FFmpegException ex = new
 		// FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND);
@@ -180,7 +194,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @param conversionType
 	 * @return String with the Command ready for send it.
 	 */
-	private String getCommand(File pathFFMPEG, File fileInput, Path folderOutput, ConversionType conversionType) {
+	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, ConversionType conversionType) {
 		String command = pathFFMPEG + " -i " + fileInput.toString() + conversionType.getCodecAudioType()
 				+ conversionType.getCodecVideoType() + folderOutput
 				+ getFinalNameFile(fileInput, conversionType.getContainerType());
