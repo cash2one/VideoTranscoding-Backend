@@ -23,12 +23,13 @@ public class FFmpegException extends FFmpegUtilException {
 	 * EXCEPTIONS
 	 */
 	public static final int EX_FFMPEG_EMPTY_OR_NULL = 15000;
-	public static final int EX_FFMPEG_NOT_FOUND= 15001;
-	public static final int EX_FOLDER_OUTPUT_EMPTY_OR_NULL=15002;
-	public static final int EX_FOLDER_OUTPUT_NOT_EXITS=15003;
-	public static final int EX_ORIGINAL_VIDEO_NULL=15004;
-	public static final int EX_ORIGINAL_VIDEO_NOT_IS_SAVE=15005;
-
+	public static final int EX_FFMPEG_NOT_FOUND = 15001;
+	public static final int EX_FOLDER_OUTPUT_EMPTY_OR_NULL = 15002;
+	public static final int EX_FOLDER_OUTPUT_NOT_EXITS = 15003;
+	public static final int EX_ORIGINAL_VIDEO_NULL = 15004;
+	public static final int EX_ORIGINAL_VIDEO_NOT_IS_SAVE = 15005;
+	public static final int EX_EXECUTION_EXCEPTION = 15006;
+	public static final int EX_IO_EXCEPTION_BY_EXEC=15007;
 
 	/**
 	 * Default builder

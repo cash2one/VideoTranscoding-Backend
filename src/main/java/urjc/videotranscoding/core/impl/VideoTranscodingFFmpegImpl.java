@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
@@ -36,6 +35,11 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS = "ffmpeg.folderOutput.notExits";
 	private static final String TRACE_ORIGINAL_VIDEO_NULL = "ffmpeg.originalVideo.null";
 	private static final String TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE = "ffmpeg.originalVideo.notSave";
+	private static final String TRACE_INTERRUP_EXCEPTION = "ffmpeg.interrupt.exception";
+	private static final String TRACE_IO_EXCEPTION_BY_EXEC = "ffmeg.io.exception.exec";
+	private static final String TRACE_EXCEPTION_EXECUTOR_SERVICE = "ffmeg.exception.executor.service";
+
+
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
 	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	private StreamGobblerPersistent errorGobbler;
@@ -124,9 +128,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 						try {
 							conversionFinal(command, originalV);
 						} catch (FFmpegException e) {
-							logger.l7dlog(Level.ERROR, null, null);
-							//TODO EXCEPTION
-							throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
+							logger.l7dlog(Level.ERROR, TRACE_EXCEPTION_EXECUTOR_SERVICE, e);
+							throw new FFmpegException(e.getCodigo());
 						}
 					}
 				}));
@@ -161,21 +164,18 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			} else {
 				video.setFinished(false);
 			}
-		} catch (ExecuteException e) {
-			// TODO LOGS
-			video.setFinished(false);
-			video.setActive(false);
-			throw new FFmpegException(e);
 		} catch (InterruptedException e) {
-			// TODO
 			video.setFinished(false);
 			video.setActive(false);
-			throw new FFmpegException(e);
+			logger.l7dlog(Level.ERROR, TRACE_INTERRUP_EXCEPTION, null);
+			throw new FFmpegException(FFmpegException.EX_EXECUTION_EXCEPTION, e);
 		} catch (IOException e) {
-			// TODO
+			FFmpegException ex = new FFmpegException(FFmpegException.EX_IO_EXCEPTION_BY_EXEC, new String[] { command },
+					e);
+			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_BY_EXEC, new String[] { command }, ex);
 			video.setFinished(false);
 			video.setActive(false);
-			throw new FFmpegException(e);
+			throw ex;
 		} finally {
 			conversionVideoService.save(video);
 

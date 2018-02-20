@@ -27,7 +27,6 @@ public class OriginalVideoServiceImpl implements OriginalVideoService {
 	}
 
 	public List<OriginalVideo> findAllVideos() {
-		// TODO Auto-generated method stub
 		return originalVideoRepository.findAll();
 	}
 }
