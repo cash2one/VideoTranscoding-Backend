@@ -9,6 +9,7 @@
 This application transcode a video that you send on all formats what you want and diferent resolutions. It´s build on a docker container to simplify the installation.
 #### Known errors:
 1. You can´t save your transcoded videos on your machine.
+2. Need mysql 
 
 ## Run it:
 1. Install [docker](https://docs.docker.com/engine/installation/) for your machine
