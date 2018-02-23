@@ -10,12 +10,12 @@ import es.urjc.videotranscoding.exception.FFmpegException;
  * @since 0.5
  */
 public interface VideoTranscodingService {
-	String getPathOfProgram();
+	
 
 	// TODO se puede quitar lo del pathFFMPEG ya que YO controlo la aplicación y se
 	// cada cosa. SOLO deberia bastar con el original video para las conversioes
 
-	void transcodeVideo(String pathFFMPEG, String folderOutput, OriginalVideo originalVideo) throws FFmpegException;
+	void transcodeVideo( OriginalVideo originalVideo) throws FFmpegException;
 
 	StreamGobbler getErrorGobbler();
 

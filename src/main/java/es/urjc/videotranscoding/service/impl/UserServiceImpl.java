@@ -100,8 +100,7 @@ public class UserServiceImpl implements UserService {
 				if (!originalVideo.isActive() && !originalVideo.isComplete()) {
 					// TODO Path pathToReturn = fileService.saveFile(file,
 					// propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
-					transcode.transcodeVideo(transcode.getPathOfProgram(), "/Users/luisca/Documents/VideosPrueba",
-							originalVideo);
+					transcode.transcodeVideo(originalVideo);
 
 				}
 			}

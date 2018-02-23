@@ -1,7 +1,6 @@
 package es.urjc.videotranscoding.controller;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -25,9 +24,11 @@ import es.urjc.videotranscoding.service.FileService;
 
 @Controller
 public class MainController {
-	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
+
 	@Autowired
 	private VideoTranscodingService ffmpegTranscoding;
+	//TODO UNUSED
+	@SuppressWarnings("unused")
 	@Autowired
 	private FileService fileService;
 	@Resource
@@ -68,13 +69,12 @@ public class MainController {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
 		// TODO Conversion TYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
-		Path pathToReturn = fileService.saveFile(file, propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 		Thread one = new Thread() {
 			@Override
 			public void run() {
 				try {
-					// TODO Rehacer este controlador
-					ffmpegTranscoding.transcodeVideo(ffmpegTranscoding.getPathOfProgram(), pathToReturn.getParent().toString(), null);
+					// TODO Rehacer este controlador con fileService
+					ffmpegTranscoding.transcodeVideo( null);
 				} catch (FFmpegException e) {
 					// TODO EXCEPTION
 					e.printStackTrace();

@@ -46,6 +46,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 */
 	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
 	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
+	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
 	/**
 	 * 
 	 */
@@ -68,7 +69,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private StreamGobblerFactory streamGobblerPersistentFactory;
 	// @Autowired
 	// private OriginalVideoService originalVideoService;
-	
+
 	// TODO JAVADOC, LOGGER, EXCEPTS
 
 	@PostConstruct
@@ -80,21 +81,15 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
-	@Override
-	public String getPathOfProgram() {
-		if ((System.getProperty("os.name").equals("Mac OS X"))) {
-			return propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
-		} else {
-			return propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
-		}
+	private String getPathOfProgram() {
 		// TODO otros casos
-	}
 
-	/**
-	 * @see
-	 */
-	public void transcodeVideo(String pathFFMPEG, String folderOutput, OriginalVideo originalVideo)
-			throws FFmpegException {
+		String pathFFMPEG;
+		if ((System.getProperty("os.name").equals("Mac OS X"))) {
+			pathFFMPEG = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
+		} else {
+			pathFFMPEG = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_CENTOS7);
+		}
 		if (StringUtils.isBlank(pathFFMPEG)) {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NULL_OR_EMPTY, null);
 			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
@@ -102,8 +97,12 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		if (!fileUtils.exitsFile(pathFFMPEG)) {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG }, null);
 			throw new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG });
-
 		}
+		return pathFFMPEG;
+	}
+
+	private String getPathToSaveFiles() {
+		String folderOutput = propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES);
 		if (StringUtils.isBlank(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
 			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
@@ -112,6 +111,13 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutput }, null);
 			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutput });
 		}
+		return folderOutput;
+	}
+
+	/**
+	 * @see
+	 */
+	public void transcodeVideo(OriginalVideo originalVideo) throws FFmpegException {
 		if (originalVideo == null) {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
@@ -122,14 +128,13 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
 					new String[] { originalVideo.getPath() });
 		}
-
 		ExecutorService serviceConversion = Executors.newSingleThreadExecutor();
 		serviceConversion.execute(new Runnable() {
 			public void run() {
 				originalVideo.getAllConversions().forEach((originalV -> {
 					if (!originalV.isActive()) {
-						String command = getCommand(pathFFMPEG, new File(originalVideo.getPath()), folderOutput,
-								originalV);
+						String command = getCommand(getPathOfProgram(), new File(originalVideo.getPath()),
+								getPathToSaveFiles(), originalV);
 						try {
 							conversionFinal(command, originalV);
 						} catch (FFmpegException e) {

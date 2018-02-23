@@ -1,6 +1,5 @@
 package es.urjc.videotranscoding.service.impl;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -39,12 +38,7 @@ import es.urjc.videotranscoding.service.UserService;
 public class VideoTranscodingFFmpegTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
-	private final String FFMPEG_INSTALLATION_CENTOS7 = "path.ffmpeg.centos";
-	private final String FFMPEG_INSTALLATION_MACOSX = "path.ffmpeg.macosx";
 	private final String VIDEO_DEMO = "path.video.demo";
-	private final String OS_MAC = "Mac OS X";
-	private static String FFMPEG_PATH;
-	private File FOLDER_OUTPUT_REAL;
 	@Autowired
 	private VideoTranscodingService transcoding;
 	@Autowired
@@ -62,12 +56,14 @@ public class VideoTranscodingFFmpegTest {
 
 	@Before
 	public void setUp() throws IOException {
-		if (System.getProperty("os.name").equals(OS_MAC)) {
-			FFMPEG_PATH = propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_MACOSX);
-		} else {
-			FFMPEG_PATH = propertiesFFmpegTest.getProperty(FFMPEG_INSTALLATION_CENTOS7);
+		createFolder("/tmp/videos/transcoded/");
+	}
+
+	private void createFolder(String string) {
+		File folder = new File(string);
+		if (!folder.exists()) {
+			folder.mkdirs();
 		}
-		FOLDER_OUTPUT_REAL = folder.newFolder("temp");
 	}
 
 	@AfterClass
@@ -76,75 +72,76 @@ public class VideoTranscodingFFmpegTest {
 		tempFolderOuput.delete();
 	}
 
-	@Test
-	public void ffmpegPathIsNull() {
-		try {
-			transcoding.transcodeVideo(null, null, null);
-			fail("No should fail for null ffmpeg file");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL, e.getCodigo());
-		}
-	}
-
-	@Test
-	public void transcodeFailOnFakeFFMPEGFile() {
-		try {
-			transcoding.transcodeVideo("FAKE", null, null);
-			fail("No should fail for fake ffmpeg file");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FFMPEG_NOT_FOUND, e.getCodigo());
-		}
-	}
-
-	@Test
-	public void transcodeFailOnNullFolderPath() {
-		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, null, null);
-			fail("No should fail for fake input file");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
-		}
-	}
-
-	@Test
-	public void transcodeFailOnFakeFolderOuput() {
-		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, "FAKE", null);
-			fail("No should fail for fake folder output");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, e.getCodigo());
-		}
-	}
-
-	@Test
-	public void transcodeFailOnNullFolderOuput() {
-		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, null, null);
-			fail("No should fail for null folder ouput");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
-		}
-	}
-
-	@Test
-	public void transcodeFailOnNullParams() {
-		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), null);
-			fail("No should fail for null params");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NULL, e.getCodigo());
-		}
-	}
-
-	@Test
-	public void transcodeFailOnEmptyParams() {
-		try {
-			transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), new OriginalVideo("", "", null));
-			fail("No should empty params");
-		} catch (FFmpegException e) {
-			assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE, e.getCodigo());
-		}
-	}
+	// @Test
+	// public void ffmpegPathIsNull() {
+	// try {
+	// transcoding.transcodeVideo(null, null, null);
+	// fail("No should fail for null ffmpeg file");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL, e.getCodigo());
+	// }
+	// }
+	//
+	// @Test
+	// public void transcodeFailOnFakeFFMPEGFile() {
+	// try {
+	// transcoding.transcodeVideo("FAKE", null, null);
+	// fail("No should fail for fake ffmpeg file");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_FFMPEG_NOT_FOUND, e.getCodigo());
+	// }
+	// }
+	//
+	// @Test
+	// public void transcodeFailOnNullFolderPath() {
+	// try {
+	// transcoding.transcodeVideo(FFMPEG_PATH, null, null);
+	// fail("No should fail for fake input file");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
+	// }
+	// }
+	//
+	// @Test
+	// public void transcodeFailOnFakeFolderOuput() {
+	// try {
+	// transcoding.transcodeVideo(FFMPEG_PATH, "FAKE", null);
+	// fail("No should fail for fake folder output");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, e.getCodigo());
+	// }
+	// }
+	//
+	// @Test
+	// public void transcodeFailOnNullFolderOuput() {
+	// try {
+	// transcoding.transcodeVideo(FFMPEG_PATH, null, null);
+	// fail("No should fail for null folder ouput");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
+	// }
+	// }
+	//
+	// @Test
+	// public void transcodeFailOnNullParams() {
+	// try {
+	// transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), null);
+	// fail("No should fail for null params");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NULL, e.getCodigo());
+	// }
+	// }
+	//
+	// @Test
+	// public void transcodeFailOnEmptyParams() {
+	// try {
+	// transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), new
+	// OriginalVideo("", "", null));
+	// fail("No should empty params");
+	// } catch (FFmpegException e) {
+	// assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE, e.getCodigo());
+	// }
+	// }
 
 	@Test
 	public void transcodeSucess() {
@@ -160,7 +157,7 @@ public class VideoTranscodingFFmpegTest {
 		userService.save(u1);
 		originalVideoService.save(video);
 		try {
-			transcoding.transcodeVideo(transcoding.getPathOfProgram(), FOLDER_OUTPUT_REAL.toString(), video);
+			transcoding.transcodeVideo(video);
 		} catch (FFmpegException e) {
 			e.printStackTrace();
 			fail("No should fail");
