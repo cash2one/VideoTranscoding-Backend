@@ -12,12 +12,12 @@
 	http://www.springframework.org/schema/data/jpa 
     http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">
 
-	<context:component-scan base-package="urjc.videotranscoding.codecs" />
-	<context:component-scan base-package="urjc.videotranscoding.entities" />
-	<context:component-scan base-package="urjc.videotranscoding.exception" />
-	<context:component-scan base-package="urjc.videotranscoding.core" />
-	<context:component-scan base-package="urjc.videotranscoding.repository" />
-	<context:component-scan base-package="urjc.videotranscoding.service" />
+	<context:component-scan base-package="es.urjc.videotranscoding.codecs" />
+	<context:component-scan base-package="es.urjc.videotranscoding.entities" />
+	<context:component-scan base-package="es.urjc.videotranscoding.exception" />
+	<context:component-scan base-package="es.urjc.videotranscoding.core" />
+	<context:component-scan base-package="es.urjc.videotranscoding.repository" />
+	<context:component-scan base-package="es.urjc.videotranscoding.service" />
 
 	<import resource="classpath:/xml/hibernate-config-test.xml" />
 	<import resource="classpath:/xml/excepcion-config.xml" />
@@ -27,7 +27,7 @@
 
 	<util:properties id="propertiesFFmpegTest"
 		location="classpath:/properties/ffmpeg-test.properties" />
-	<bean id="ApplicationContextProvider" class="urjc.videotranscoding.utils.ApplicationContextProvider" />
+	<bean id="ApplicationContextProvider" class="es.urjc.videotranscoding.utils.ApplicationContextProvider" />
 
 
 

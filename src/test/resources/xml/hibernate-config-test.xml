@@ -30,7 +30,7 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
-		<property name="packagesToScan" value="urjc.videotranscoding.entities" />
+		<property name="packagesToScan" value="es.urjc.videotranscoding.entities" />
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
@@ -44,6 +44,6 @@
 
 
 
-	<jpa:repositories base-package="urjc.videotranscoding.repository" />
+	<jpa:repositories base-package="es.urjc.videotranscoding.repository" />
 
 </beans>

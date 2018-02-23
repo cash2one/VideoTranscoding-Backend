@@ -12,7 +12,7 @@
 	<util:properties id="propertiesFicheroCore"
 		location="classpath:/properties/ficherosCore.properties" />
 
-	<bean id="ffmpegResourceBundle" class="urjc.videotranscoding.wrapper.FfmpegResourceBundle">
+	<bean id="ffmpegResourceBundle" class="es.urjc.videotranscoding.wrapper.FfmpegResourceBundle">
 		<property name="basenames">
 			<list>
 				<value>file:#{propertiesFicheroCore['fichero.mensajes.trazas']}
