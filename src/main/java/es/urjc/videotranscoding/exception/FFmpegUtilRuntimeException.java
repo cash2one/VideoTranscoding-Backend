@@ -4,8 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.Hashtable;
 
-public class FFmpegUtilException extends Exception {
-
+public class FFmpegUtilRuntimeException extends RuntimeException{
 	private static final long serialVersionUID = 1L;
 	protected String detailMessage = null;
 	private int codigo = -1;
@@ -17,7 +16,7 @@ public class FFmpegUtilException extends Exception {
 	/**
 	 * Default constructor
 	 */
-	public FFmpegUtilException() {
+	public FFmpegUtilRuntimeException() {
 		super();
 	}
 
@@ -29,7 +28,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param cause
 	 *            of the exception
 	 */
-	public FFmpegUtilException(String message, Throwable cause) {
+	public FFmpegUtilRuntimeException(String message, Throwable cause) {
 		super(message, cause);
 		detailMessage = message;
 	}
@@ -42,7 +41,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param cause
 	 *            of the exception
 	 */
-	public FFmpegUtilException(int code, Throwable cause) {
+	public FFmpegUtilRuntimeException(int code, Throwable cause) {
 		super(cause);
 		detailMessage = getMessage(code);
 		codigo = code;
@@ -58,7 +57,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param cause
 	 *            of the exception
 	 */
-	public FFmpegUtilException(int code, String mensaje, Throwable cause) {
+	public FFmpegUtilRuntimeException(int code, String mensaje, Throwable cause) {
 		super(cause);
 		detailMessage = getMessage(code) + " " + mensaje;
 		codigo = code;
@@ -70,7 +69,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param message
 	 *            message for the exception
 	 */
-	public FFmpegUtilException(String message) {
+	public FFmpegUtilRuntimeException(String message) {
 		super(message);
 		detailMessage = message;
 	}
@@ -81,7 +80,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param code
 	 *            of the message for the exception
 	 */
-	public FFmpegUtilException(int code) {
+	public FFmpegUtilRuntimeException(int code) {
 		detailMessage = getMessage(code);
 		codigo = code;
 	}
@@ -94,7 +93,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param message
 	 *            message for the exception
 	 */
-	public FFmpegUtilException(int code, String mensaje) {
+	public FFmpegUtilRuntimeException(int code, String mensaje) {
 		super(mensaje);
 		detailMessage = getMessage(code) + " " + mensaje;
 		codigo = code;
@@ -106,7 +105,7 @@ public class FFmpegUtilException extends Exception {
 	 * @param cause
 	 *            Throwable Cause of the exception
 	 */
-	public FFmpegUtilException(Throwable cause) {
+	public FFmpegUtilRuntimeException(Throwable cause) {
 		super(cause);
 		detailMessage = (cause == null ? null : cause.toString());
 	}
@@ -173,4 +172,5 @@ public class FFmpegUtilException extends Exception {
 	public int getCodigo() {
 		return codigo;
 	}
+
 }

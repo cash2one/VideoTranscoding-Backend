@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,6 +22,7 @@ import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.ConversionVideo;
 import es.urjc.videotranscoding.entities.OriginalVideo;
 import es.urjc.videotranscoding.exception.FFmpegException;
+import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
 import es.urjc.videotranscoding.service.ConversionVideoService;
 import es.urjc.videotranscoding.service.FileUtils;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
@@ -53,7 +55,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private StreamGobbler errorGobbler;
 	private StreamGobbler inputGobbler;
 	private StreamGobbler outputGobbler;
-	private ExecutorService executorService = Executors.newFixedThreadPool(3);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(3);
 	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
 	@Resource
@@ -69,7 +71,6 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private StreamGobblerFactory streamGobblerPersistentFactory;
 	// @Autowired
 	// private OriginalVideoService originalVideoService;
-
 	// TODO JAVADOC, LOGGER, EXCEPTS
 
 	@PostConstruct
@@ -81,9 +82,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
-	private String getPathOfProgram() {
+	private String getPathOfProgram() throws FFmpegRuntimeException  {
 		// TODO otros casos
-
 		String pathFFMPEG;
 		if ((System.getProperty("os.name").equals("Mac OS X"))) {
 			pathFFMPEG = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
@@ -92,32 +92,35 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		}
 		if (StringUtils.isBlank(pathFFMPEG)) {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NULL_OR_EMPTY, null);
-			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_FFMPEG_EMPTY_OR_NULL);
 		}
 		if (!fileUtils.exitsFile(pathFFMPEG)) {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG }, null);
-			throw new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG });
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG });
 		}
 		return pathFFMPEG;
 	}
 
-	private String getPathToSaveFiles() {
+	private String getPathToSaveFiles() throws FFmpegRuntimeException  {
 		String folderOutput = propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES);
 		if (StringUtils.isBlank(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
-			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 		}
 		if (!fileUtils.exitsPath(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutput }, null);
-			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutput });
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutput });
 		}
 		return folderOutput;
 	}
 
 	/**
+	 * @throws InterruptedException 
+	 * @throws ExecutionException 
 	 * @see
 	 */
 	public void transcodeVideo(OriginalVideo originalVideo) throws FFmpegException {
+		//if (originalVideo!=null)throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 		if (originalVideo == null) {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
@@ -137,10 +140,10 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 								getPathToSaveFiles(), originalV);
 						try {
 							conversionFinal(command, originalV);
-						} catch (FFmpegException e) {
+						} catch (FFmpegRuntimeException e) {
 							logger.l7dlog(Level.ERROR, TRACE_EXCEPTION_EXECUTOR_SERVICE, e);
-							throw new FFmpegException(e.getCodigo());
-						}
+							throw new FFmpegRuntimeException(e.getCodigo());
+						} 
 					}
 				}));
 			}
@@ -153,7 +156,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @param video
 	 * @throws FFmpegException
 	 */
-	private void conversionFinal(String command, ConversionVideo video) throws FFmpegException {
+	private void conversionFinal(String command, ConversionVideo video) throws FFmpegRuntimeException {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
@@ -178,9 +181,9 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			video.setFinished(false);
 			video.setActive(false);
 			logger.l7dlog(Level.ERROR, TRACE_INTERRUP_EXCEPTION, null);
-			throw new FFmpegException(FFmpegException.EX_EXECUTION_EXCEPTION, e);
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_EXECUTION_EXCEPTION, e);
 		} catch (IOException e) {
-			FFmpegException ex = new FFmpegException(FFmpegException.EX_IO_EXCEPTION_BY_EXEC, new String[] { command },
+			FFmpegRuntimeException ex = new FFmpegRuntimeException(FFmpegRuntimeException.EX_IO_EXCEPTION_BY_EXEC, new String[] { command },
 					e);
 			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_BY_EXEC, new String[] { command }, ex);
 			video.setFinished(false);

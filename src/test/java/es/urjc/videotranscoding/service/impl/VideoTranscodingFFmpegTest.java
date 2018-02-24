@@ -158,6 +158,13 @@ public class VideoTranscodingFFmpegTest {
 		originalVideoService.save(video);
 		try {
 			transcoding.transcodeVideo(video);
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				fail("No should fail");
+
+			}
 		} catch (FFmpegException e) {
 			e.printStackTrace();
 			fail("No should fail");

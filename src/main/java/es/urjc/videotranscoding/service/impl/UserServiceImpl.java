@@ -3,6 +3,7 @@ package es.urjc.videotranscoding.service.impl;
 import java.security.Principal;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 
@@ -20,12 +21,7 @@ import es.urjc.videotranscoding.repository.UserRepository;
 import es.urjc.videotranscoding.service.UserService;
 
 @Service
-@SuppressWarnings("unused")
 public class UserServiceImpl implements UserService {
-	// TODO SUPRESSWARNINGS
-	private final String DEFAULT_UPLOAD_FILES = "path.folder.ouput";
-	@Autowired
-	private FileServiceImpl fileService;
 	@Resource
 	private Properties propertiesFFmpeg;
 	@Autowired
@@ -94,12 +90,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// @Scheduled(cron = "*/10 * * * * *")
-	public void callTranscodeIfChargeIsDown() throws FFmpegException {
+	public void callTranscodeIfChargeIsDown() throws FFmpegException, InterruptedException, ExecutionException {
 		for (User user : users.findAll()) {
 			for (OriginalVideo originalVideo : user.getListVideos()) {
 				if (!originalVideo.isActive() && !originalVideo.isComplete()) {
-					// TODO Path pathToReturn = fileService.saveFile(file,
-					// propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES));
 					transcode.transcodeVideo(originalVideo);
 
 				}

@@ -17,10 +17,9 @@ import es.urjc.videotranscoding.repository.ConversionVideoRepository;
  * @author luisca
  */
 
-
 public class StreamGobbler implements Runnable {
-	private final Logger logger = LogManager
-			.getLogger(StreamGobbler.class);
+	//TODO JAVADOC
+	private final Logger logger = LogManager.getLogger(StreamGobbler.class);
 	private static Double finalTime;
 	private final String GENERAL_PATTERN = ".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits/s *speed= *(\\d+.\\d+)x.*";
 	private final String PROGRESS_VIDEO_PATTERN = "(?<=time=)[\\d:.]*";
@@ -33,11 +32,10 @@ public class StreamGobbler implements Runnable {
 	private volatile String bitrate;
 	private final String type;
 	private final ConversionVideo conversionVideo;
-	
-	private final ConversionVideoRepository conversionVideoRepository;	
 
-	public StreamGobbler(InputStream is, String type,
-			ConversionVideo conversionVideo,
+	private final ConversionVideoRepository conversionVideoRepository;
+
+	public StreamGobbler(InputStream is, String type, ConversionVideo conversionVideo,
 			ConversionVideoRepository conversionVideoRepository) {
 		this.is = is;
 		this.type = type;
@@ -45,38 +43,29 @@ public class StreamGobbler implements Runnable {
 		this.conversionVideoRepository = conversionVideoRepository;
 	}
 
-
-
-
 	public String getType() {
 		return type;
 	}
+
 	/**
 	 * 
 	 */
 	@Override
 	public void run() {
-		// TODO Try resource-->
-		// https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
-		// https://stackoverflow.com/questions/17739362/java7-try-with-resources-statement-advantage
 		try {
 			logger.info("Se va a convertir un video");
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
-			Pattern durationVideoPattern = Pattern
-					.compile(DURATION_VIDEO_PATTERN);
-			Pattern progreesVideoPattern = Pattern
-					.compile(PROGRESS_VIDEO_PATTERN);
+			Pattern durationVideoPattern = Pattern.compile(DURATION_VIDEO_PATTERN);
+			Pattern progreesVideoPattern = Pattern.compile(PROGRESS_VIDEO_PATTERN);
 			Pattern generalPattern = Pattern.compile(GENERAL_PATTERN);
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				Matcher progressMatcher = progreesVideoPattern.matcher(line);
 				Matcher generalMatcher = generalPattern.matcher(line);
-				Matcher durationVideoMatcher = durationVideoPattern
-						.matcher(line);
+				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);
 				while (progressMatcher.find()) {
-					double diference = getDifference(finalTime,
-							progressMatcher.group(0));
+					double diference = getDifference(finalTime, progressMatcher.group(0));
 					// System.out.print("Progress conversion: " +
 					// String.format("%.2f",diference) + "%");
 					setProgress(String.format("%.2f", diference));
@@ -99,17 +88,16 @@ public class StreamGobbler implements Runnable {
 					// + "x");
 					// System.out.println(" // Bitrate: " +
 					// generalMatcher.group(5) + "kbits/s");
-					conversionVideo.setFileSize(generalMatcher.group(1)+" KB");
+					conversionVideo.setFileSize(generalMatcher.group(1) + " KB");
 				}
 				conversionVideoRepository.save(conversionVideo);
-
 			}
 			conversionVideo.setProgress("100");
 			conversionVideo.setFinished(true);
 			conversionVideo.setActive(false);
 			conversionVideoRepository.save(conversionVideo);
-			//TODO 
-			//logger.l7dlog(Level.INFO, arg1,new String[]{}, null);
+			// TODO
+			// logger.l7dlog(Level.INFO, arg1,new String[]{}, null);
 			logger.info("Se ha terminado de convertir el video");
 
 		} catch (IOException e) {
@@ -125,8 +113,7 @@ public class StreamGobbler implements Runnable {
 	 */
 	private double getDifference(Double finalTime2, String timeVariable) {
 		String matchSplit[] = timeVariable.split(":");
-		return ((Integer.parseInt(matchSplit[0]) * 3600
-				+ Integer.parseInt(matchSplit[1]) * 60
+		return ((Integer.parseInt(matchSplit[0]) * 3600 + Integer.parseInt(matchSplit[1]) * 60
 				+ Double.parseDouble(matchSplit[2])) / finalTime2) * 100;
 	}
 
@@ -136,8 +123,7 @@ public class StreamGobbler implements Runnable {
 	 */
 	private double getDuration(String group) {
 		String[] hms = group.split(":");
-		return Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60
-				+ Double.parseDouble(hms[2]);
+		return Integer.parseInt(hms[0]) * 3600 + Integer.parseInt(hms[1]) * 60 + Double.parseDouble(hms[2]);
 	}
 
 	public String getProgress() {
@@ -184,6 +170,4 @@ public class StreamGobbler implements Runnable {
 		return conversionVideo;
 	}
 
-	
-	
 }

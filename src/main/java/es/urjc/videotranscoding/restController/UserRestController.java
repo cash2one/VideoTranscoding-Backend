@@ -1,6 +1,7 @@
 package es.urjc.videotranscoding.restController;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,7 +61,14 @@ public class UserRestController {
 		} catch (FFmpegException e) {
 			return new ResponseEntity<ExceptionForRest>(new ExceptionForRest(e.getCodigo(), e.getLocalizedMessage()),
 					HttpStatus.BAD_REQUEST);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 }

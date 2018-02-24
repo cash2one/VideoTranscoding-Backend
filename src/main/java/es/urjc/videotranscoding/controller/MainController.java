@@ -1,11 +1,11 @@
 package es.urjc.videotranscoding.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 
@@ -20,24 +20,18 @@ import org.springframework.web.multipart.MultipartFile;
 import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.exception.FFmpegException;
-import es.urjc.videotranscoding.service.FileService;
 
 @Controller
 public class MainController {
+	// TODO UNUSED,Conversion TYPE NOT NULL,Rehacer este controlador con
+	// fileService, Ademas de Javadoc
 
 	@Autowired
 	private VideoTranscodingService ffmpegTranscoding;
-	//TODO UNUSED
-	@SuppressWarnings("unused")
-	@Autowired
-	private FileService fileService;
+
 	@Resource
 	private Properties propertiesFFmpeg;
 
-	/**
-	 * @param m
-	 * @return
-	 */
 	@GetMapping(value = "/")
 	public String getIndex(Model m) {
 		EnumSet<ConversionType> conversionType = EnumSet.allOf(ConversionType.class);
@@ -57,31 +51,11 @@ public class MainController {
 		return "status";
 	}
 
-	/**
-	 * @param file
-	 * @param model
-	 * @param conversionType
-	 * @return
-	 * @throws IOException
-	 */
 	@PostMapping(value = "/uploadFile")
-	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType) {
+	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType) throws FFmpegException, InterruptedException, ExecutionException {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
-		// TODO Conversion TYPE NOT NULL
 		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
-		Thread one = new Thread() {
-			@Override
-			public void run() {
-				try {
-					// TODO Rehacer este controlador con fileService
-					ffmpegTranscoding.transcodeVideo( null);
-				} catch (FFmpegException e) {
-					// TODO EXCEPTION
-					e.printStackTrace();
-				}
-			}
-		};
-		one.start();
+		ffmpegTranscoding.transcodeVideo(null);
 		model.addAttribute("message",
 				"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");
 		return "fileUploaded";

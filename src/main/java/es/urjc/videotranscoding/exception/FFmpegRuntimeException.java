@@ -8,11 +8,7 @@ import java.util.ResourceBundle;
 import es.urjc.videotranscoding.utils.ApplicationContextProvider;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
-/**
- * @author luisca
- * @Since 0.5
- */
-public class FFmpegException extends FFmpegUtilException {
+public class FFmpegRuntimeException extends FFmpegUtilRuntimeException {
 	private static final long serialVersionUID = 5434866761753051706L;
 	private Object[] parametros;
 	private static final String FICH_ERRORES = "fichero.mensajes.errores";
@@ -34,7 +30,7 @@ public class FFmpegException extends FFmpegUtilException {
 	/**
 	 * Default constructor
 	 */
-	public FFmpegException() {
+	public FFmpegRuntimeException() {
 	}
 
 	/**
@@ -43,7 +39,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param message
 	 *            message for the exception
 	 */
-	public FFmpegException(String message) {
+	public FFmpegRuntimeException(String message) {
 		super(message);
 	}
 
@@ -56,7 +52,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 *            with the cause of the exception
 	 * 
 	 */
-	public FFmpegException(String message, Throwable throwable) {
+	public FFmpegRuntimeException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
 
@@ -66,7 +62,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param cause
 	 *            Throwable Cause of the exception
 	 */
-	public FFmpegException(Throwable throwable) {
+	public FFmpegRuntimeException(Throwable throwable) {
 		super(throwable);
 	}
 
@@ -78,7 +74,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param cause
 	 *            of the exception
 	 */
-	public FFmpegException(int code, Throwable cause) {
+	public FFmpegRuntimeException(int code, Throwable cause) {
 		super(code, cause);
 	}
 
@@ -92,7 +88,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param cause
 	 *            of the exception
 	 */
-	public FFmpegException(int code, String mensaje, Throwable cause) {
+	public FFmpegRuntimeException(int code, String mensaje, Throwable cause) {
 		super(code, mensaje, cause);
 	}
 
@@ -102,7 +98,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param code
 	 *            of the message for the exception
 	 */
-	public FFmpegException(int code) {
+	public FFmpegRuntimeException(int code) {
 		super(code);
 	}
 
@@ -114,7 +110,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param message
 	 *            message for the exception
 	 */
-	public FFmpegException(int code, String mensaje) {
+	public FFmpegRuntimeException(int code, String mensaje) {
 		super(code, mensaje);
 	}
 
@@ -126,7 +122,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 * @param params
 	 *            for build the message error
 	 */
-	public FFmpegException(int code, Object[] params) {
+	public FFmpegRuntimeException(int code, Object[] params) {
 		super(code);
 		parametros = params;
 		detailMessage = getLocalizedMessage();
@@ -141,7 +137,7 @@ public class FFmpegException extends FFmpegUtilException {
 	 *            for build the message error
 	 * @param cause of the exception
 	 */
-	public FFmpegException(int code, Object[] params, Throwable cause) {
+	public FFmpegRuntimeException(int code, Object[] params, Throwable cause) {
 		super(code, cause);
 		parametros = params;
 		detailMessage = getLocalizedMessage();
