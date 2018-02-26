@@ -18,8 +18,8 @@ public class SwaggerConfig{
 	private final String DESCRIPTION = "Documentation for urjc.videotranscoding.es/api/";
 	private final String LICENSE = "Apache 2.0";
 	private final String LICENSE_URL = "http://www.apache.org/licenses/LICENSE-2.0";
-	private final String VERSION = "0.1";
-	private final String BASE_PACKAGE = "urjc.videotranscoding.restController";
+	private final String VERSION = "0.5";
+	private final String BASE_PACKAGE = "es.urjc.videotranscoding.restController";
 	private final String TERMS_OF_SERVICE = "github";
 
 	@Bean

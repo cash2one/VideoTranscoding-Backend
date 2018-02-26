@@ -48,7 +48,7 @@ public class OriginalVideo {
 	 * Path of the video
 	 */
 	@Column(unique = true)
-	@JsonView(Basic.class)
+	@JsonView(Details.class)
 	private String path;
 	/**
 	 * User of the video
@@ -60,7 +60,7 @@ public class OriginalVideo {
 	/**
 	 * All Conversions of the video
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<ConversionVideo> allConversions = new ArrayList<>();

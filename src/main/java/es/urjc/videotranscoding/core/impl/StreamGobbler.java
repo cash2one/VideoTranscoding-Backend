@@ -101,8 +101,9 @@ public class StreamGobbler implements Runnable {
 			logger.info("Se ha terminado de convertir el video");
 
 		} catch (IOException e) {
+			//TODO exception
 			e.printStackTrace();
-			logger.warn("IO Exception", e);
+			logger.error("IO Exception", e);
 		}
 	}
 

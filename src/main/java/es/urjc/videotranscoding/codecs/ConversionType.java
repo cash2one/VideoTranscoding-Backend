@@ -49,23 +49,19 @@ public enum ConversionType {
 	/**
 	 * WEBM file extension, VideoCodec VP9 on 1080, AudioCodec LIVBORVIS
 	 */
-	WEBM_VP91080_VORBIS(Container.WEBM, CodecVideo.VP9_1080,
-			CodecAudio.LIBVORVIS),
+	WEBM_VP91080_VORBIS(Container.WEBM, CodecVideo.VP9_1080, CodecAudio.LIBVORVIS),
 	/**
 	 * WEBM file extension, VideoCodec VP9 on 720, AudioCodec LIVBORVIS
 	 */
-	WEBM_VP9720_VORBIS(Container.WEBM, CodecVideo.VP9_720,
-			CodecAudio.LIBVORVIS),
+	WEBM_VP9720_VORBIS(Container.WEBM, CodecVideo.VP9_720, CodecAudio.LIBVORVIS),
 	/**
 	 * WEBM file extension, VideoCodec VP9 on 480, AudioCodec LIVBORVIS
 	 */
-	WEBM_VP9480_VORBIS(Container.WEBM, CodecVideo.VP9_480,
-			CodecAudio.LIBVORVIS),
+	WEBM_VP9480_VORBIS(Container.WEBM, CodecVideo.VP9_480, CodecAudio.LIBVORVIS),
 	/**
 	 * WEBM file extension, VideoCodec VP9 on 360, AudioCodec LIVBORVIS
 	 */
-	WEBM_VP9360_VORBIS(Container.WEBM, CodecVideo.VP9_360,
-			CodecAudio.LIBVORVIS);
+	WEBM_VP9360_VORBIS(Container.WEBM, CodecVideo.VP9_360, CodecAudio.LIBVORVIS);
 	private final Container containerType;
 	private final CodecVideo codecVideoType;
 	private final CodecAudio codecAudioType;

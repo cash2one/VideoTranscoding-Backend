@@ -1,5 +1,6 @@
 package es.urjc.videotranscoding.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,7 +55,7 @@ public class FileServiceImpl implements FileService{
 		logger.setResourceBundle(ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
-	public Path saveFile(MultipartFile file) throws FFmpegException{
+	public File saveFile(MultipartFile file) throws FFmpegException{
 		try{
 			String folderOutputOriginalVideo=propertiesFFmpeg.getProperty(FOLDER_OUPUT_ORIGINAL);
 			if (StringUtils.isBlank(folderOutputOriginalVideo)) {
@@ -67,8 +68,9 @@ public class FileServiceImpl implements FileService{
 			}
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get( folderOutputOriginalVideo+ file.getOriginalFilename().replace(" ","_"));
+			
 			Files.write(path,bytes);
-			return path;
+			return path.toFile();
 		}catch(IOException e){
 			e.printStackTrace();
 			return null;

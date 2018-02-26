@@ -36,7 +36,7 @@ public class ConversionVideo {
 	/**
 	 * Path of the conversion of the video
 	 */
-	@JsonView(Basic.class)
+	@JsonView(Details.class)
 	private String path;
 	/**
 	 * Progress of the conversion

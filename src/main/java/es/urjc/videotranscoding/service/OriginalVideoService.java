@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.entities.OriginalVideo;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 
 public interface OriginalVideoService {
-
+	//TODO Javadoc
 	void save(OriginalVideo video);
 
 	void delete(OriginalVideo video);
@@ -19,5 +20,9 @@ public interface OriginalVideoService {
 
 	List<OriginalVideo> findAllVideos();
 	
-	OriginalVideo addOriginalVideo(User u,MultipartFile file,MultiValueMap<String, String> params) throws FFmpegException;
+	OriginalVideo addOriginalVideoExpert(User u,MultipartFile file,MultiValueMap<String, String> params) throws FFmpegException;
+
+	OriginalVideo addOriginalVideoBasic(User u, MultipartFile file, List<ConversionType> type) throws FFmpegException;
+
+	OriginalVideo findOneVideo(long id);
 }

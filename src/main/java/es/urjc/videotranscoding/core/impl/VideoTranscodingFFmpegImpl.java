@@ -41,8 +41,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private static final String TRACE_ORIGINAL_VIDEO_NULL = "ffmpeg.originalVideo.null";
 	private static final String TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE = "ffmpeg.originalVideo.notSave";
 	private static final String TRACE_INTERRUP_EXCEPTION = "ffmpeg.interrupt.exception";
-	private static final String TRACE_IO_EXCEPTION_BY_EXEC = "ffmeg.io.exception.exec";
-	private static final String TRACE_EXCEPTION_EXECUTOR_SERVICE = "ffmeg.exception.executor.service";
+	private static final String TRACE_IO_EXCEPTION_BY_EXEC = "ffmpeg.io.exception.exec";
+	private static final String TRACE_EXCEPTION_EXECUTOR_SERVICE = "ffmpeg.exception.executor.service";
 	/**
 	 * Paths Instalation FFMPEG
 	 */
@@ -131,7 +131,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
 					new String[] { originalVideo.getPath() });
 		}
-		ExecutorService serviceConversion = Executors.newSingleThreadExecutor();
+		ExecutorService serviceConversion = Executors.newFixedThreadPool(3);
 		serviceConversion.execute(new Runnable() {
 			public void run() {
 				originalVideo.getAllConversions().forEach((originalV -> {
@@ -223,7 +223,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 */
 	private String getFinalNameFile(File fileInput, String extension) {
 		String sort = String.valueOf(System.currentTimeMillis());
-		return "/" + FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(3, 9) + extension;
+		return  FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(3, 9) + extension;
 	}
 
 	/**

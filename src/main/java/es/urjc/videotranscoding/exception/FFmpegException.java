@@ -30,6 +30,7 @@ public class FFmpegException extends FFmpegUtilException {
 	public static final int EX_ORIGINAL_VIDEO_NOT_IS_SAVE = 15005;
 	public static final int EX_EXECUTION_EXCEPTION = 15006;
 	public static final int EX_IO_EXCEPTION_BY_EXEC = 15007;
+	public static final int EX_NO_CONVERSION_TYPE_FOUND=15008;
 
 	/**
 	 * Default constructor

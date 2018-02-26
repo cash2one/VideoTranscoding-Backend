@@ -1,6 +1,6 @@
 package es.urjc.videotranscoding.service;
 
-import java.nio.file.Path;
+import java.io.File;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,5 +13,5 @@ public interface FileService{
 	 * @return
 	 * @throws FFmpegException 
 	 */
-	public Path saveFile(MultipartFile file) throws FFmpegException;
+	public File saveFile(MultipartFile file) throws FFmpegException;
 }
