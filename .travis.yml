@@ -9,7 +9,9 @@ install:
   - sudo apt update -y && sudo apt install ffmpeg  
   - sudo find / -name ffmpeg
   - mvn install -Dgpg.skip
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker -version
+    
+# - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -t 0.2
   - docker tag 0.2 $DOCKER_USERNAME/videotranscoding
   - docker push $DOCKER_USERNAME/videotranscoding
