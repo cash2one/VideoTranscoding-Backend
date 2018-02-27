@@ -12,6 +12,6 @@ install:
   - mvn clean compile
   - docker --version
 # - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t $DOCKER_USERNAMEvideotranscoding:0.2 .
+  - docker build -t $DOCKER_USERNAME/videotranscoding:0.2 .
   - docker push $DOCKER_USERNAME/videotranscoding:0.2
 
