@@ -9,7 +9,7 @@ install:
   #- sudo apt update -y && sudo apt install ffmpeg  
   #- sudo find / -name ffmpeg
   #- mvn install -Dgpg.skip
-  - mvn clean compile -Dmaven.test.skip=true
+  - mvn clean package -Dmaven.test.skip=true
 # - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
   - docker build -t luiscajl/videotranscoding .
