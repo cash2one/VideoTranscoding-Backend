@@ -3,16 +3,18 @@ language: java
 services:
 - docker
 jdk:
-  - oraclejdk8
+- oraclejdk8
 install:
-  - sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
-  - sudo apt update -y && sudo apt install ffmpeg  
-  - sudo find / -name ffmpeg
-  - mvn install -Dgpg.skip
-  - docker -version
-    
-# - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t 0.2
-  - docker tag 0.2 $DOCKER_USERNAME/videotranscoding
-  - docker push $DOCKER_USERNAME/videotranscoding
+- sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
+- sudo apt update -y && sudo apt install ffmpeg
+- sudo find / -name ffmpeg
+- mvn install -Dgpg.skip
+- docker -version
+- docker build -t 0.2
+- docker tag 0.2 $DOCKER_USERNAME/videotranscoding
+- docker push $DOCKER_USERNAME/videotranscoding
 script: mvn clean compile
+env:
+  matrix:
+  - secure: L5QmJHzzQVkBkQIPzBXwpD8yGvBWKJ3fFv7ZVv0/yUQy+QASY2CCgd21ItL+rGUPkLVucZaKXqEwQuYMZFGi8NQhsg+1OOwkzmGe1vVypPQp0Z1k9QXeNW9zBzC4rAgvGAP3ur2Xj1zR80SdJWRI78r+g5Dj9UCeES19LX2Wie8YSc3hI51U/k3CMfxSHq5JBUvNIAj6Dw2eJ51hOw407dLH/g65a1R9ayikJpHhQOdYnXtmnK3vtzqOJkY0gvnd6MJy+ZL+8XUVvaf4pAjCXezTE447O+bSK3Jrcgm4Mpvz4uaJM7iwlG5R6hxJ8yOM6UdBU5KbF9Jbm6M227V5D+IncFi1+jyRKAeNAhXn+RqqbzpbXJXbcFdu+x5vgGdZat3qSQppByC3YNgNMfLjtr3nDp34rtiq1Hk0Vn24ouL/iQbdX0IszNHQJsUvsC/URRTbZtrf86rE8Zq1AKZiemDNI5kpItnqPz2TaL+0ItlSBh0kswzBBxH1EMLULNCejCsBgU6drAMsGMeBFoHsYekNdjKlCR0xzVP/4JYlK/cCTzDPigLpz9nGcwcKUCkQKS69A7kfC0qWrOl8xMhi/bXrxJZ3OUyhFzHQoBiYFfJsyv0MM1ABT6D2gHVL3bfT83gFx8IWJWAtwo8rRcKrdkI5zZr2ClGgYHbrlMIUMfw=
+  - secure: pkxqblzvcHzncc6WO+8YWI2Qxqv/KzQ18mrh6f01rhLoYDeK6Jw2Pl6m1OUourlYZoqhrNmdhDdtJRxFn2Ja0XdnUH+ceUvHbM+fRzteFVYV+fWNfscZRtkyqlyog7zQT4hqhhznJJxdi6NjKdRQVQESTI/ysO/k7htYBzRe3fNQIVfWFe9sWSnVokGGlWY8iK3ZrC1SCj35t1ddrXA9I7f3tv+HdiSig0FCnKjXDgnLU+XiT7wCHCQ35h5TvsJFac6+xzqvjxp3XDxxsJmRFqkfoxcwxke3ejI7whY+z691O83pHIa1pq5bnA2ES1DH2HtYASc9EF0nviYfJAi7unt/Ea+pdjVdoOCL3xf6A6LJMzvIUTDRaysJcfi5SQTUVs9zp8exGlf3IqdsanIf4q8YBxMBfEpLVDBB9xadmXCZUa0BcoGkV2PDTKQ1r0nU3mxDhKjmNrjc/PPGeSv0iVcORtGJrz4HUpDucpnlz3lWr78R1SnqP7V3k8YUXzVBTK87+UnSyecH2+aVd4k31w+/1mUv/W9B8uf1JP3NiIAOtq0QKS60dAl3PYovko6+r+3XDmUFrUxPsKpnXAo1EHkM9C97XnSxICkxr26fIUu2WT1znckuqG5cwE/x0SfMv9D8unQEq7x2Aa/ZftrrakDV5D1NZKzpbPCu8+iliWo=
