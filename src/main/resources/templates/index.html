@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>VideoTranscoding</title>
-<meta name="description" content="XXXXXXXXXXXXXXXXx" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="css/main.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
-<script src="http://malsup.github.com/jquery.form.js"></script>
-<script src="js/main.js"></script>
-</head>
 
+<head>
+	<meta charset="utf-8">
+	<title>VideoTranscoding</title>
+	<meta name="description" content="XXXXXXXXXXXXXXXXx" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/main.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+	<script src="http://malsup.github.com/jquery.form.js"></script>
+	<script src="js/main.js"></script>
+</head>
 <body>
 	<h1>VideoTranscoding</h1>
+	<a id="swagger" href="/swagger-ui.html">Api Documentation</a>
 	<h3>Upload your File and select all conversion type that you wants</h3>
 	<div class="container">
 		<div class="col-md-12">
-			<form id="uploadbanner" enctype="multipart/form-data" method="post"
-				action="/uploadFile">
-				<input id="fileupload" name="fileupload" type="file" /> <br />
-				<div>
-					{{#conversionType}} <input type="checkbox" name="conversionType"
-						id="conversionTypes" value="{{.}}"> {{.}} <br />
-					{{/conversionType}}
+			<form id="uploadbanner" enctype="multipart/form-data" method="post" action="/uploadFile">
+				<div id="typesConversion">
+					{{#conversionType}}
+					<input type="checkbox" name="conversionType" id="conversionTypes" value="{{.}}"> {{.}}
+					<br /> {{/conversionType}}
 				</div>
-				<input style="color: black;" type="submit" value="Send" id="submit" />
+				<br>
+				<input class="osxbutton" id="fileupload" name="fileupload" type="file" />
+				<br>
+				<br>
+				<button class="osxbutton" type="submit">Send</button>
+				<br>
+				<br>
 				<div class="progress">
 					<div class="bar"></div>
 					<div class="percent">0%</div>

@@ -1,5 +1,7 @@
 body {
-	padding: 30px
+	margin: 0;
+	padding: 0;
+	text-align: center;
 }
 
 form {
@@ -12,10 +14,11 @@ form {
 
 .progress {
 	position: relative;
-	width: 400px;
-	border: 1px solid #ddd;
+	width: 50%;
+	border: 1px solid #0b0b0b;
 	padding: 1px;
 	border-radius: 3px;
+	margin: auto;
 }
 
 .bar {
@@ -23,11 +26,49 @@ form {
 	width: 0%;
 	height: 20px;
 	border-radius: 3px;
+	margin: auto;
 }
 
 .percent {
 	position: absolute;
-	display: inline-block;
-	top: 3px;
+	top: 0px;
+	margin: auto;
 	left: 48%;
+}
+
+#swagger {
+	font-size: 20px;
+}
+
+#typesConversion {
+	text-align: left;
+}
+
+.osxbutton {
+	text-decoration: none;
+	font-family: ".LucidaGrandeUI", "Lucida Grande", "Lucida sans unicode";
+	color: black;
+	font-size: 11px;
+	padding: 1px 7px;
+	border: 1px solid #9C9C9C;
+	margin: 2px 2px;
+	display: inline-block;
+	background-image: -webkit-linear-gradient(#ffffff 0%, #F6F6F6 30%, #F3F3F3 45%, #EDEDED
+		60%, #eeeeee 100%);
+	border-radius: 3px;
+	cursor: default;
+	box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.20);
+}
+
+.osxbutton:active {
+	border-color: #705ebb;
+	background-image: -webkit-linear-gradient(#acc5e9 0%, #a3c0f2 18%, #61a0ed 39%, #55a3f2
+		70%, #82c2f1 91.72%, #9AD2F2 100%);
+	box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.65);
+}
+
+.osxbutton.disabled {
+	color: #999 !important;
+	background-image: -webkit-linear-gradient(#fbf8f8 0%, #f0f0f0 30%, #e3e3e3 45%, #d7d7d7
+		60%, #cbc9c9 100%);
 }
