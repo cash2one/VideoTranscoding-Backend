@@ -1,7 +1,7 @@
 sudo: required
-language: java
 services:
-- docker
+  - docker
+language: java
 jdk:
   - oraclejdk8
 install:
@@ -9,10 +9,10 @@ install:
   - sudo apt update -y && sudo apt install ffmpeg  
   - sudo find / -name ffmpeg
   - mvn install -Dgpg.skip
-  - docker -version
-    
+script: mvn clean compile
+after_sucess:
+  - docker --version
 # - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -t 0.2
   - docker tag 0.2 $DOCKER_USERNAME/videotranscoding
   - docker push $DOCKER_USERNAME/videotranscoding
-script: mvn clean compile
