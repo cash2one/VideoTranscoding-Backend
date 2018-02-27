@@ -25,6 +25,6 @@ RUN mkdir -p /tmp/videos/transcoded
 RUN chmod -R 777 /tmp/videos/transcoded
 
 #Config APP
-COPY target/VideoTranscoding--BETA-0.2.jar app.jar
+COPY $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
