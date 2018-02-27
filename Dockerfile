@@ -18,11 +18,14 @@ RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-
 RUN yum -y install ffmpeg ffmpeg-devel -y
 
 #Config LOGS
-RUN mkdir -p /tmp/logs/VideoTranscoding
-RUN chmod -R 777 /tmp/logs/VideoTranscoding
+RUN mkdir -p /tmp/VideoTranscoding/logs/
+RUN chmod -R 777 /tmp/VideoTranscoding/logs/
 #Config PATH to save Videos
-RUN mkdir -p /tmp/videos/transcoded
-RUN chmod -R 777 /tmp/videos/transcoded
+RUN mkdir -p /tmp/VideoTranscoding/videos/transcoded/
+RUN mkdir -p /tmp/VideoTranscoding/videos/original/
+RUN chmod -R 777 /tmp/VideoTranscoding/videos/original/
+RUN chmod -R 777 /tmp/VideoTranscoding/videos/transcoded/
+
 
 #Config APP
 COPY VideoTranscoding--BETA-0.2.jar app.jar
