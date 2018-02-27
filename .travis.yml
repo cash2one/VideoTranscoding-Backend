@@ -11,9 +11,9 @@ install:
 script: mvn clean compile
 jobs: 
  include:
-	- stage: build docker image
-	script:
-	- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-	- docker build -t 0.2
-	- docker tag 0.2 $DOCKER_USERNAME/videotranscoding
-	- docker push $DOCKER_USERNAME/videotranscoding
+- stage: build docker image
+script:
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker build -t 0.2
+- docker tag 0.2 $DOCKER_USERNAME/videotranscoding
+- docker push $DOCKER_USERNAME/videotranscoding
