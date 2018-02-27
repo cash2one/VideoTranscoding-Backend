@@ -5,7 +5,7 @@ language: java
 jdk:
 - oraclejdk8
 install:
-- docker login -u=$DOCKER_USERNAME -p=$DOCKER_PASSWORD ;
+- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ;
 - mvn clean package -Dmaven.test.skip=true
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
 - docker build -t luiscajl/videotranscoding .
