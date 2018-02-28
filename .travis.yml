@@ -1,4 +1,7 @@
 sudo: required
+addons:
+  ssh_known_hosts:
+  - lavandadelpatio.es
 services:
 - docker
 language: java
@@ -10,3 +13,10 @@ install:
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
 - docker build -t luiscajl/videotranscoding .
 - docker push luiscajl/videotranscoding:latest
+- sudo apt-get install sshpass
+- chmod +x ./scripts/docker_deploy.sh
+deploy:
+ provider: script
+ skip_cleanup: true
+ script: sh ./scripts/docker_deploy.sh
+
