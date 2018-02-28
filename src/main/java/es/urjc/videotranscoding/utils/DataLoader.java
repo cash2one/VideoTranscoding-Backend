@@ -39,7 +39,8 @@ public class DataLoader implements CommandLineRunner {
 		lista.add(newVideo2);
 		video.setAllConversions(lista);
 		u1.addVideo(video);
-		if (users.findOne(u1.getUserId()) == null) {
+		User user = users.findByEmail(u1.getEmail());
+		if (user == null) {
 			users.save(u1);
 			originalVideoRepository.save(video);
 		}
