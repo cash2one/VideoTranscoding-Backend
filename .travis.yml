@@ -14,7 +14,9 @@ install:
 - docker build -t luiscajl/videotranscoding .
 - docker push luiscajl/videotranscoding:latest
 - sudo apt-get install sshpass
-- sshpass -p $SSH_PASSWORD ssh $SSH_USER@lavandadelpatio.es
-- sudo docker-compose -f /home/luisca/TFG2017_2018/docker-compose.yml stop
-- sudo docker-compose -f /home/luisca/TFG2017_2018/docker-compose.yml pull
-- sudo docker-compose -f /home/luisca/TFG2017_2018/docker-compose.yml start
+- chmod +x ./scripts/docker_deploy.sh
+deploy:
+ provider: script
+ skip_cleanup: true
+ script: sh ./scripts/docker_deploy.sh
+
