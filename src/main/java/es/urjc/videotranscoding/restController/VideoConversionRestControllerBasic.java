@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/basic")
-@Api(tags = "VideoConversion Basic RestController")
+@Api(tags = "Conversion Basic Operations")
 public class VideoConversionRestControllerBasic {
 	@Autowired
 	private UserService userService;
@@ -60,13 +60,13 @@ public class VideoConversionRestControllerBasic {
 	@ApiOperation(value = "Send the video for conversion")
 	@JsonView(Details.class)
 	@ResponseBody
-	public ResponseEntity<Object> addConversionExpert(
-			@RequestParam(value = "file") MultipartFile file, Principal principal) throws FFmpegException {
+	public ResponseEntity<Object> addConversionExpert(@RequestParam(value = "file") MultipartFile file,
+			Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		OriginalVideo originalVideo = originalVideoService.addOriginalVideoBasic(u, file,ConversionTypeBasic.WEB );
+		OriginalVideo originalVideo = originalVideoService.addOriginalVideoBasic(u, file, ConversionTypeBasic.WEB);
 		videoTranscodingService.transcodeVideo(originalVideo);
 		return new ResponseEntity<>(originalVideo, HttpStatus.CREATED);
 	}

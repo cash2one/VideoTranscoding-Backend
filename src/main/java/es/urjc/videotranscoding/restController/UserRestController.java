@@ -21,9 +21,11 @@ import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.ExceptionForRest;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.UserService;
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping(value = "/api/user")
+@Api(tags = "User Api")
 public class UserRestController {
 	public interface Details extends User.Basic, User.Details, OriginalVideo.Basic, OriginalVideo.Details,
 			ConversionVideo.Basic, ConversionVideo.Details {
