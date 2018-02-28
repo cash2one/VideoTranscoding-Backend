@@ -1,7 +1,4 @@
 sudo: required
-addons:
-  ssh_known_hosts:
-  - lavandadelpatio.es
 services:
 - docker
 language: java
@@ -9,14 +6,10 @@ jdk:
 - oraclejdk8
 install:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
+- sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
+- sudo apt update -y && sudo apt install ffmpeg 
 - mvn clean package 
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
 - docker build -t luiscajl/videotranscoding .
 - docker push luiscajl/videotranscoding:latest
-- sudo apt-get install sshpass
-- chmod +x ./scripts/docker_deploy.sh
-deploy:
- provider: script
- skip_cleanup: true
- script: sh ./scripts/docker_deploy.sh
 

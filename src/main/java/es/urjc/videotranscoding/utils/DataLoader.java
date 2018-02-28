@@ -30,6 +30,7 @@ public class DataLoader implements CommandLineRunner {
 	private Properties propertiesFFmpeg;
 
 	public void run(String... strings) throws Exception {
+		//TODO When you have the user on the docker container
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		OriginalVideo video = new OriginalVideo("Nuevo Video", propertiesFFmpeg.getProperty(VIDEO_DEMO), u1);
 		ConversionVideo newVideo = new ConversionVideo(ConversionType.MKV_H264360_COPY, video);
