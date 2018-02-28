@@ -31,25 +31,18 @@ public class DataLoader implements CommandLineRunner {
 
 	public void run(String... strings) throws Exception {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-
-		OriginalVideo video = new OriginalVideo("Nuevo Video",propertiesFFmpeg.getProperty(VIDEO_DEMO), u1);
-
-		//
-		// List<ConversionType> conversions = new ArrayList<>();
-		// conversions.add(ConversionType.MKV_H264360_COPY);
-		// conversions.add(ConversionType.MKV_H2641080_COPY);
+		OriginalVideo video = new OriginalVideo("Nuevo Video", propertiesFFmpeg.getProperty(VIDEO_DEMO), u1);
 		ConversionVideo newVideo = new ConversionVideo(ConversionType.MKV_H264360_COPY, video);
-		ConversionVideo newVideo2 = new ConversionVideo( ConversionType.MKV_H264480_COPY, video);
+		ConversionVideo newVideo2 = new ConversionVideo(ConversionType.MKV_H264480_COPY, video);
 		List<ConversionVideo> lista = new ArrayList<>();
 		lista.add(newVideo);
 		lista.add(newVideo2);
 		video.setAllConversions(lista);
 		u1.addVideo(video);
-		users.save(u1);
-
-		originalVideoRepository.save(video);
-		// conversionVideoRepository.save(newVideo);
-		// conversionVideoRepository.save(newVideo2);
+		if (users.findOne(u1.getUserId()) == null) {
+			users.save(u1);
+			originalVideoRepository.save(video);
+		}
 
 	}
 }
