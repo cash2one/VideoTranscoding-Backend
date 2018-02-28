@@ -1,10 +1,14 @@
 sudo: required
+addons:
+  ssh_known_hosts:
+  - lavandadelpatio.es
 services:
 - docker
 language: java
 jdk:
 - oraclejdk8
 install:
+- ssh -p=$SSH_PASSWORD $SSH_USERNAME@lavandadelpatio.es
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
 - mvn clean package 
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
