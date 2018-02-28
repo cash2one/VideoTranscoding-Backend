@@ -8,10 +8,13 @@ language: java
 jdk:
 - oraclejdk8
 install:
-- sudo apt-get install sshpass
-- sshpass -p $SSH_PASSWORD ssh $SSH_USER@lavandadelpatio.es
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
 - mvn clean package 
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
 - docker build -t luiscajl/videotranscoding .
 - docker push luiscajl/videotranscoding:latest
+- sudo apt-get install sshpass
+- sshpass -p $SSH_PASSWORD ssh $SSH_USER@lavandadelpatio.es
+- sudo docker-compose -f /home/luisca/TFG2017_2018/docker-compose.yml stop
+- sudo docker-compose -f /home/luisca/TFG2017_2018/docker-compose.yml pull
+- sudo docker-compose -f /home/luisca/TFG2017_2018/docker-compose.yml start
