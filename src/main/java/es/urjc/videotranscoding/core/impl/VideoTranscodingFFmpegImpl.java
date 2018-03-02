@@ -56,6 +56,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private StreamGobbler inputGobbler;
 	private StreamGobbler outputGobbler;
 	private final ExecutorService executorService = Executors.newFixedThreadPool(3);
+	static ExecutorService serviceConversion = Executors.newFixedThreadPool(1);
+
 	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
 	@Resource
@@ -131,7 +133,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
 					new String[] { originalVideo.getPath() });
 		}
-		ExecutorService serviceConversion = Executors.newFixedThreadPool(3);
+
 		serviceConversion.execute(new Runnable() {
 			public void run() {
 				originalVideo.getAllConversions().forEach((originalV -> {
