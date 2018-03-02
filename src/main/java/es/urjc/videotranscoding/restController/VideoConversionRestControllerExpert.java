@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/expert")
-@Api(tags = "VideoConversion Expert RestController")
+@Api(tags = "Conversion Expert Operations")
 public class VideoConversionRestControllerExpert {
 	// TODO JAVADOC
 	@Autowired
@@ -97,7 +97,8 @@ public class VideoConversionRestControllerExpert {
 	/**
 	 * Handler for the exceptions
 	 * 
-	 * @param e exception
+	 * @param e
+	 *            exception
 	 * @return a ExceptionForRest with the exception
 	 */
 	@ExceptionHandler(FFmpegException.class)

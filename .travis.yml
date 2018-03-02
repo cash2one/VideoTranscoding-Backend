@@ -7,7 +7,8 @@ jdk:
 install:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
 - sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
-- sudo apt update -y && sudo apt install ffmpeg 
+- sudo apt-get update
+- sudo apt-get install ffmpeg
 - mvn clean package 
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding--BETA-0.2.jar VideoTranscoding--BETA-0.2.jar
 - docker build -t luiscajl/videotranscoding .

@@ -1,7 +1,12 @@
 package es.urjc.videotranscoding.restController;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,24 +23,28 @@ import es.urjc.videotranscoding.entities.OriginalVideo;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.service.OriginalVideoService;
 import es.urjc.videotranscoding.service.UserService;
+import es.urjc.videotranscoding.utils.FileSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/originalVideo")
-@Api(tags = "OriginalVideo RestController")
+@Api(tags = "Original Video Api")
 public class OriginalVideoRestController {
 
 	@Autowired
 	private OriginalVideoService originalVideoService;
 	@Autowired
 	private UserService userService;
+	
 
 	public interface Basic extends OriginalVideo.Basic, ConversionVideo.Basic {
 	}
 
-	public interface Details extends OriginalVideo.Basic,OriginalVideo.Details, ConversionVideo.Basic ,ConversionVideo.Details{
+	public interface Details
+			extends OriginalVideo.Basic, OriginalVideo.Details, ConversionVideo.Basic, ConversionVideo.Details {
 	}
+
 	/**
 	 * All OriginalVideos on the Api
 	 * 
@@ -79,6 +88,36 @@ public class OriginalVideoRestController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<OriginalVideo>(video, HttpStatus.OK);
+
+	}
+
+	/**
+	 * With this method you can see the original video
+	 * 
+	 * @param response
+	 *            for the video
+	 * @param request
+	 *            for the video
+	 * @param id
+	 *            of the original Video
+	 * @return 
+	 */
+	@ApiOperation(value = "Watch the Original Video")
+	@GetMapping(value = "/{id}/watch")
+	public ResponseEntity<?> downloadDirectFilm2(HttpServletResponse response, HttpServletRequest request,
+			@PathVariable long id) {
+
+		OriginalVideo video = originalVideoService.findOneVideo(id);
+
+		if (video != null) {
+			Path p1 = Paths.get(video.getPath());
+			
+				FileSender.fromPath(p1).with(request).with(response).serveResource();
+			
+			return new ResponseEntity<OriginalVideo>(HttpStatus.OK);
+		}
+
+		return new ResponseEntity<OriginalVideo>(HttpStatus.BAD_REQUEST);
 
 	}
 

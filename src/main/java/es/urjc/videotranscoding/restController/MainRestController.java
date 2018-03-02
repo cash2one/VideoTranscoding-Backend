@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.urjc.videotranscoding.core.VideoTranscodingService;
+import io.swagger.annotations.Api;
 
 @RestController
+@Api(tags = "Main Api Operations")
 public class MainRestController{
 	@Autowired
 	private VideoTranscodingService ffmpegTranscoding;
