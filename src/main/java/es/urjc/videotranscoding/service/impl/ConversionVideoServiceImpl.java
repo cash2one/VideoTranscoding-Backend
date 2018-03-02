@@ -21,7 +21,7 @@ public class ConversionVideoServiceImpl implements ConversionVideoService {
 	}
 
 	public void delete(long id) {
-		conversionVideoRepository.delete(id);
+		conversionVideoRepository.deleteById(id);
 	}
 
 }

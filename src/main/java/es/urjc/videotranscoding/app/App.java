@@ -14,9 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * Main APP with beans and import xml config
@@ -37,20 +34,6 @@ public class App {
 		SpringApplication.run(App.class, args);
 		logger.info(" --------- App SpringBoot Started ------- ");
 		System.out.println(" --------- App SpringBoot Started ------- ");
-	}
-
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurerAdapter() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "OPTIONS", "PUT", "DELETE")
-						.allowedHeaders("Content-Type", "X-Requested-With", "accept", "Origin",
-								"Access-Control-Request-Method", "Access-Control-Request-Headers")
-						.exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
-						.allowCredentials(true).maxAge(3600);
-			}
-		};
 	}
 
 	@Bean

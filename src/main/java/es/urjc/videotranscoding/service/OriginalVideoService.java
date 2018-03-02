@@ -1,6 +1,7 @@
 package es.urjc.videotranscoding.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,5 +25,5 @@ public interface OriginalVideoService {
 
 	OriginalVideo addOriginalVideoBasic(User u, MultipartFile file, List<ConversionType> type) throws FFmpegException;
 
-	OriginalVideo findOneVideo(long id);
+	Optional<OriginalVideo> findOneVideo(long id);
 }

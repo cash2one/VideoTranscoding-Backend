@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -59,15 +60,15 @@ public class OriginalVideoServiceImpl implements OriginalVideoService {
 	}
 
 	public void delete(long id) {
-		originalVideoRepository.delete(id);
+		originalVideoRepository.deleteById(id);
 	}
 
 	public List<OriginalVideo> findAllVideos() {
 		return originalVideoRepository.findAll();
 	}
 
-	public OriginalVideo findOneVideo(long id) {
-		return originalVideoRepository.findOne(id);
+	public Optional<OriginalVideo> findOneVideo(long id) {
+		return originalVideoRepository.findById(id);
 	}
 
 	@Override

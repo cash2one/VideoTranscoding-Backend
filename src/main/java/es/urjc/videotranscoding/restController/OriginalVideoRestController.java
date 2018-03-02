@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +37,6 @@ public class OriginalVideoRestController {
 	private OriginalVideoService originalVideoService;
 	@Autowired
 	private UserService userService;
-	
 
 	public interface Basic extends OriginalVideo.Basic, ConversionVideo.Basic {
 	}
@@ -78,16 +78,16 @@ public class OriginalVideoRestController {
 	@ApiOperation(value = "Original Video for id")
 	@GetMapping(value = "/{id}")
 	@JsonView(Details.class)
-	public ResponseEntity<OriginalVideo> getOriginalVideo(Principal principal, @PathVariable long id) {
+	public ResponseEntity<Optional<OriginalVideo>> getOriginalVideo(Principal principal, @PathVariable long id) {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		OriginalVideo video = originalVideoService.findOneVideo(id);
+		Optional<OriginalVideo> video = originalVideoService.findOneVideo(id);
 		if (video == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<OriginalVideo>(video, HttpStatus.OK);
+		return new ResponseEntity<Optional<OriginalVideo>>(video, HttpStatus.OK);
 
 	}
 
@@ -100,20 +100,21 @@ public class OriginalVideoRestController {
 	 *            for the video
 	 * @param id
 	 *            of the original Video
-	 * @return 
+	 * @return
 	 */
 	@ApiOperation(value = "Watch the Original Video")
 	@GetMapping(value = "/{id}/watch")
 	public ResponseEntity<?> downloadDirectFilm2(HttpServletResponse response, HttpServletRequest request,
 			@PathVariable long id) {
 
-		OriginalVideo video = originalVideoService.findOneVideo(id);
+		Optional<OriginalVideo> video = originalVideoService.findOneVideo(id);
 
 		if (video != null) {
-			Path p1 = Paths.get(video.getPath());
-			
-				FileSender.fromPath(p1).with(request).with(response).serveResource();
-			
+			video.get();
+			Path p1 = Paths.get(video.get().getPath());
+
+			FileSender.fromPath(p1).with(request).with(response).serveResource();
+
 			return new ResponseEntity<OriginalVideo>(HttpStatus.OK);
 		}
 

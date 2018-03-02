@@ -2,6 +2,7 @@ package es.urjc.videotranscoding.service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface UserService {
 
 	public Page<User> findAllUsersPage(Pageable page);
 
-	public User findOneUser(long id);
+	public Optional<User> findOneUser(long id);
 
 	public User findOneUser(String nombreUsuario);
 

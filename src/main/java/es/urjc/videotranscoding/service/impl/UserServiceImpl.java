@@ -2,6 +2,7 @@ package es.urjc.videotranscoding.service.impl;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
@@ -41,8 +42,8 @@ public class UserServiceImpl implements UserService {
 		return users.findAll(page);
 	}
 
-	public User findOneUser(long id) {
-		return users.findOne(id);
+	public Optional<User> findOneUser(long id) {
+		return users.findById(id);
 	}
 
 	public User findOneUser(String nombreUsuario) {
@@ -50,11 +51,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void deleteUsers(long id) {
-		users.delete(id);
+		users.deleteById(id);
 	}
 
 	public boolean exists(long id) {
-		return users.exists(id);
+		return users.existsById(id);
 	}
 
 	public void isAdminVisitorLogged(Principal principal, Model m) {

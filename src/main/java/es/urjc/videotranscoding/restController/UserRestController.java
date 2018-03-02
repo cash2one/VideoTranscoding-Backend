@@ -1,6 +1,7 @@
 package es.urjc.videotranscoding.restController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,10 @@ public class UserRestController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<User> getSingleUser(@PathVariable long id) {
 
-		User u = userService.findOneUser(id);
+		Optional<User> u = userService.findOneUser(id);
 
 		if (u != null) {
-			return new ResponseEntity<>(u, HttpStatus.OK);
+			return new ResponseEntity<>(u.get(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
