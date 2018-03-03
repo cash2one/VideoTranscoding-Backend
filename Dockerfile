@@ -1,15 +1,17 @@
 FROM centos
 MAINTAINER luisca_jl@hotmail.com
 	
-ENV JAVA_VERSION 8u144
+ENV JAVA_VERSION 9~b149
 ENV BUILD_VERSION b01
  
 # Upgrading system
 RUN yum -y upgrade
 RUN yum -y install wget
  
-# Downloading & Config Java 8
-RUN yum -y install java-1.8.0-openjdk
+# Downloading & Config Java 9
+RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/9.0.4+11/c2514751926b4512b076cc82f959763f/jdk-9.0.4_linux-x64_bin.rpm
+RUN yum -y install jdk-9.0.4_linux-x64_bin.rpm
+RUN rm jdk-9.0.4_linux-x64_bin.rpm
 #Download FFMPEG
 RUN yum -y install epel-release 
 RUN yum -y update 

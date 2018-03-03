@@ -130,9 +130,8 @@ public class FFmpegUtilRuntimeException extends RuntimeException{
 	 * @return String message of the code.
 	 */
 	private String getMessage(int codError) {
-		Integer cod = new Integer(codError);
-		if (FFmpegUtilException.msgErrors.containsKey(cod)) {
-			return (String) FFmpegUtilException.msgErrors.get(cod);
+		if (FFmpegUtilException.msgErrors.containsKey(codError)) {
+			return (String) FFmpegUtilException.msgErrors.get(codError);
 		} else {
 			return FJEX_NO_MSG;
 		}

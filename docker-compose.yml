@@ -10,7 +10,7 @@ services:
   spring-repository:
     depends_on:
       - mysql
-    image: luiscajl/videotranscoding:0.2
+    image: luiscajl/videotranscoding:latest
     container_name: springbackend
     ports:
       - 8080:8080

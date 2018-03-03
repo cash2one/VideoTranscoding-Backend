@@ -3,7 +3,7 @@ services:
 - docker
 language: java
 jdk:
-- oraclejdk8
+- oraclejdk9
 install:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
 - sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
