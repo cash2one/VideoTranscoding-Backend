@@ -1,5 +1,4 @@
 FROM centos
-MAINTAINER luisca_jl@hotmail.com
 	
 ENV JAVA_VERSION 9~b149
 ENV BUILD_VERSION b01
