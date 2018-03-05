@@ -25,7 +25,6 @@ import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.OriginalRepository;
-import es.urjc.videotranscoding.service.FileService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
@@ -37,7 +36,7 @@ public class OriginalServiceImpl implements OriginalService {
 	@Autowired
 	private OriginalRepository originalVideoRepository;
 	@Autowired
-	private FileService fileService;
+	private FileUtilsFFmpegImpl fileUtilsService;
 
 	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
@@ -74,7 +73,7 @@ public class OriginalServiceImpl implements OriginalService {
 	@Override
 	public Original addOriginalExpert(User u, MultipartFile file, MultiValueMap<String, String> params)
 			throws FFmpegException {
-		File fileSaved = fileService.saveFile(file);
+		File fileSaved = fileUtilsService.saveFile(file);
 		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 				fileSaved.getAbsolutePath(), u);
 		List<Conversion> conversionsVideo = new ArrayList<>();
@@ -103,7 +102,7 @@ public class OriginalServiceImpl implements OriginalService {
 	@Override
 	public Original addOriginalBasic(User u, MultipartFile file, List<ConversionType> type)
 			throws FFmpegException {
-		File fileSaved = fileService.saveFile(file);
+		File fileSaved = fileUtilsService.saveFile(file);
 		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 				fileSaved.getAbsolutePath(), u);
 		List<Conversion> conversionsVideo = new ArrayList<>();

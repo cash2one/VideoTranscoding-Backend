@@ -44,6 +44,10 @@ public class VideoTranscodingFFmpegTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private final String VIDEO_DEMO = "path.video.demo";
+	private final static String FOLDER_OUPUT_ORIGINAL="path.folder.original";
+	private final static String FOLDER_OUTPUT_TRANSCODE="path.folder.ouput";
+
+
 	@Autowired
 	private VideoTranscodingService transcoding;
 	@Autowired
@@ -53,6 +57,8 @@ public class VideoTranscodingFFmpegTest {
 	@Resource
 	private Properties propertiesFFmpegTest;
 	@Resource
+	private Properties propertiesFFmpeg;
+	@Resource
 	private Properties propertiesFicheroCore;
 	private static User u1;
 	@BeforeClass
@@ -61,7 +67,9 @@ public class VideoTranscodingFFmpegTest {
 
 	@Before
 	public void setUp() throws IOException {
-		createFolder("/tmp/videos/transcoded/");
+		createFolder(propertiesFFmpeg.getProperty(FOLDER_OUPUT_ORIGINAL));
+		createFolder(propertiesFFmpeg.getProperty(FOLDER_OUTPUT_TRANSCODE));
+
 	}
 	@After
 	public void setDown() throws IOException {

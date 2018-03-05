@@ -6,13 +6,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.urjc.videotranscoding.exception.FFmpegException;
 
-public interface FileService{
+public interface FileUtilsFFmpeg {
+
+	boolean exitsFile(String file);
+	boolean exitsPath(String path);
 	/**
 	 * @param file
 	 * @param folderOutput
 	 * @return
 	 * @throws FFmpegException 
 	 */
-	public File saveFile(MultipartFile file) throws FFmpegException;
-	//TODO union con fileUtils
+	File saveFile(MultipartFile file) throws FFmpegException;
 }

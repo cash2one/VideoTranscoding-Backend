@@ -24,7 +24,7 @@ import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
 import es.urjc.videotranscoding.service.ConversionService;
-import es.urjc.videotranscoding.service.FileUtils;
+import es.urjc.videotranscoding.service.impl.FileUtilsFFmpegImpl;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 @Service
@@ -66,7 +66,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private Properties propertiesFicheroCore;
 
 	@Autowired
-	private FileUtils fileUtils;
+	private FileUtilsFFmpegImpl fileUtilsService;
 	@Autowired
 	private ConversionService conversionService;
 	@Autowired
@@ -96,7 +96,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NULL_OR_EMPTY, null);
 			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
 		}
-		if (!fileUtils.exitsFile(pathFFMPEG)) {
+		if (!fileUtilsService.exitsFile(pathFFMPEG)) {
 			logger.l7dlog(Level.ERROR, TRACE_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG }, null);
 			throw new FFmpegException(FFmpegException.EX_FFMPEG_NOT_FOUND, new String[] { pathFFMPEG });
 		}
@@ -109,7 +109,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
 			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 		}
-		if (!fileUtils.exitsPath(folderOutput)) {
+		if (!fileUtilsService.exitsPath(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutput }, null);
 			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,
 					new String[] { folderOutput });
@@ -129,7 +129,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
 		}
-		if (!fileUtils.exitsFile(original.getPath())) {
+		if (!fileUtilsService.exitsFile(original.getPath())) {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE, new String[] { original.getPath() },
 					null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
