@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.repository.ConversionVideoRepository;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.repository.ConversionRepository;
 
 /**
  * @author luisca
@@ -31,16 +31,16 @@ public class StreamGobbler implements Runnable {
 	private volatile String speed;
 	private volatile String bitrate;
 	private final String type;
-	private final ConversionVideo conversionVideo;
+	private final Conversion conversion;
 
-	private final ConversionVideoRepository conversionVideoRepository;
+	private final ConversionRepository conversionRepository;
 
-	public StreamGobbler(InputStream is, String type, ConversionVideo conversionVideo,
-			ConversionVideoRepository conversionVideoRepository) {
+	public StreamGobbler(InputStream is, String type, Conversion conversion,
+			ConversionRepository conversionRepository) {
 		this.is = is;
 		this.type = type;
-		this.conversionVideo = conversionVideo;
-		this.conversionVideoRepository = conversionVideoRepository;
+		this.conversion = conversion;
+		this.conversionRepository = conversionRepository;
 	}
 
 	public String getType() {
@@ -69,7 +69,7 @@ public class StreamGobbler implements Runnable {
 					// System.out.print("Progress conversion: " +
 					// String.format("%.2f",diference) + "%");
 					setProgress(String.format("%.2f", diference));
-					conversionVideo.setProgress(String.format("%.2f", diference));
+					conversion.setProgress(String.format("%.2f", diference));
 				}
 				while (durationVideoMatcher.find()) {
 					// System.out.println(durationVideoMatcher.group(0));
@@ -88,14 +88,14 @@ public class StreamGobbler implements Runnable {
 					// + "x");
 					// System.out.println(" // Bitrate: " +
 					// generalMatcher.group(5) + "kbits/s");
-					conversionVideo.setFileSize(generalMatcher.group(1) + " KB");
+					conversion.setFileSize(generalMatcher.group(1) + " KB");
 				}
-				conversionVideoRepository.save(conversionVideo);
+				conversionRepository.save(conversion);
 			}
-			conversionVideo.setProgress("100");
-			conversionVideo.setFinished(true);
-			conversionVideo.setActive(false);
-			conversionVideoRepository.save(conversionVideo);
+			conversion.setProgress("100");
+			conversion.setFinished(true);
+			conversion.setActive(false);
+			conversionRepository.save(conversion);
 			// TODO
 			// logger.l7dlog(Level.INFO, arg1,new String[]{}, null);
 			logger.info("Se ha terminado de convertir el video");
@@ -167,8 +167,8 @@ public class StreamGobbler implements Runnable {
 		this.bitrate = bitrate;
 	}
 
-	public ConversionVideo getConversionVideo() {
-		return conversionVideo;
+	public Conversion getConversionVideo() {
+		return conversion;
 	}
 
 }

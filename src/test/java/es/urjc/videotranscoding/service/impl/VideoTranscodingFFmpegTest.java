@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,13 +28,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.entities.UserRoles;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
-import es.urjc.videotranscoding.service.OriginalVideoService;
+import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,14 +47,14 @@ public class VideoTranscodingFFmpegTest {
 	@Autowired
 	private VideoTranscodingService transcoding;
 	@Autowired
-	private OriginalVideoService originalVideoService;
+	private OriginalService originalService;
 	@Autowired
 	private UserService userService;
 	@Resource
 	private Properties propertiesFFmpegTest;
 	@Resource
 	private Properties propertiesFicheroCore;
-
+	private static User u1;
 	@BeforeClass
 	public static void beforeClass() {
 	}
@@ -61,6 +62,10 @@ public class VideoTranscodingFFmpegTest {
 	@Before
 	public void setUp() throws IOException {
 		createFolder("/tmp/videos/transcoded/");
+	}
+	@After
+	public void setDown() throws IOException {
+		userService.deleteUser(u1);
 	}
 
 	private void createFolder(String string) {
@@ -149,17 +154,17 @@ public class VideoTranscodingFFmpegTest {
 
 	@Test
 	public void transcodeSucess() {
-		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
-		ConversionVideo newVideo = new ConversionVideo(ConversionType.MKV_H264360_COPY, video);
-		ConversionVideo newVideo2 = new ConversionVideo(ConversionType.MKV_H264480_COPY, video);
-		List<ConversionVideo> lista = new ArrayList<>();
+		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
+		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
+		Conversion newVideo = new Conversion(ConversionType.MKV_H264360_COPY, video);
+		Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY, video);
+		List<Conversion> lista = new ArrayList<>();
 		lista.add(newVideo);
 		lista.add(newVideo2);
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		userService.save(u1);
-		originalVideoService.save(video);
+		originalService.save(video);
 		try {
 			transcoding.transcodeVideo(video);
 			Thread.sleep(10000);
@@ -177,16 +182,16 @@ public class VideoTranscodingFFmpegTest {
 
 	@Test
 	public void allTypeTranscode() {
-		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
-		List<ConversionVideo> lista = new ArrayList<>();
+		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
+		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
+		List<Conversion> lista = new ArrayList<>();
 		EnumSet.allOf(ConversionType.class).forEach(c -> {
-			lista.add(new ConversionVideo(c, video));
+			lista.add(new Conversion(c, video));
 		});
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		userService.save(u1);
-		originalVideoService.save(video);
+		originalService.save(video);
 		try {
 			transcoding.transcodeVideo(video);
 			Thread.sleep(10000);
@@ -203,16 +208,16 @@ public class VideoTranscodingFFmpegTest {
 	@Test
 	public void transcodeTypeBasicMovil() {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
-		List<ConversionVideo> lista = new ArrayList<>();
+		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
+		List<Conversion> lista = new ArrayList<>();
 		List<ConversionType> x = ConversionTypeBasic.MOVIL;
 		x.forEach(c -> {
-			lista.add(new ConversionVideo(c, video));
+			lista.add(new Conversion(c, video));
 		});
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		userService.save(u1);
-		originalVideoService.save(video);
+		originalService.save(video);
 		try {
 			transcoding.transcodeVideo(video);
 			Thread.sleep(10000);
@@ -228,9 +233,6 @@ public class VideoTranscodingFFmpegTest {
 		}
 	}
 
-	@Test
-	public void failD() {
-		fail("Done Fail");
-	}
+	
 
 }

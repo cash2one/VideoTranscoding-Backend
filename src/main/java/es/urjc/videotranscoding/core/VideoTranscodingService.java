@@ -3,7 +3,7 @@ package es.urjc.videotranscoding.core;
 import java.util.concurrent.ExecutionException;
 
 import es.urjc.videotranscoding.core.impl.StreamGobbler;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.exception.FFmpegException;
 
 /**
@@ -19,7 +19,7 @@ public interface VideoTranscodingService {
 	 * @throws InterruptedException 
 	 * @throws ExecutionException 
 	 */
-	void transcodeVideo(OriginalVideo originalVideo) throws FFmpegException;
+	void transcodeVideo(Original originalVideo) throws FFmpegException;
 
 	StreamGobbler getErrorGobbler();
 

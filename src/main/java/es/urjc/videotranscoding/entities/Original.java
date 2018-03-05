@@ -18,10 +18,9 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonView;
-
 @Entity
-@Table(name = "ORIGINAL_VIDEO")
-public class OriginalVideo {
+@Table(name = "ORIGINAL")
+public class Original {
 	public interface Basic {
 	}
 
@@ -37,7 +36,7 @@ public class OriginalVideo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@JsonView(Basic.class)
-	private long originalVideoId;
+	private long originalId;
 	/**
 	 * Name of the video
 	 */
@@ -63,7 +62,7 @@ public class OriginalVideo {
 	@JsonView(Basic.class)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
-	private List<ConversionVideo> allConversions = new ArrayList<>();
+	private List<Conversion> conversions = new ArrayList<>();
 
 	/**
 	 * If all conversions are complete true, EOC false
@@ -79,7 +78,7 @@ public class OriginalVideo {
 	/**
 	 * Constructor protected for hibernate.
 	 */
-	protected OriginalVideo() {
+	protected Original() {
 	}
 
 	/**
@@ -92,7 +91,7 @@ public class OriginalVideo {
 	 * @param user
 	 *            user for the video
 	 */
-	public OriginalVideo(String name, String path, User user) {
+	public Original(String name, String path, User user) {
 		this.name = name.replace(" ", "_");
 		this.path = path;
 		this.userVideo = user;
@@ -100,7 +99,7 @@ public class OriginalVideo {
 	}
 
 	public boolean isComplete() {
-		for (ConversionVideo conversionVideo : allConversions) {
+		for (Conversion conversionVideo : conversions) {
 			if (!conversionVideo.isFinished()) {
 				return false;
 			}
@@ -109,7 +108,7 @@ public class OriginalVideo {
 	}
 
 	public boolean isActive() {
-		for (ConversionVideo conversionVideo : allConversions) {
+		for (Conversion conversionVideo : conversions) {
 			if (conversionVideo.isActive()) {
 				return true;
 			}
@@ -121,8 +120,8 @@ public class OriginalVideo {
 		this.active = active;
 	}
 
-	public List<ConversionVideo> getAllConversions() {
-		return allConversions;
+	public List<Conversion> getAllConversions() {
+		return conversions;
 	}
 
 	public void setComplete(boolean complete) {
@@ -153,8 +152,8 @@ public class OriginalVideo {
 		this.path = path;
 	}
 
-	public void setAllConversions(List<ConversionVideo> allConversions) {
-		this.allConversions = allConversions;
+	public void setAllConversions(List<Conversion> conversions) {
+		this.conversions = conversions;
 	}
 
 }

@@ -1,8 +1,7 @@
 package es.urjc.videotranscoding.controller;
 
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -18,7 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
+import es.urjc.videotranscoding.entities.Original;
+import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
+import es.urjc.videotranscoding.service.OriginalService;
+import es.urjc.videotranscoding.service.UserService;
 
 @Controller
 public class MainController {
@@ -26,7 +29,11 @@ public class MainController {
 	// fileService, Ademas de Javadoc
 
 	@Autowired
-	private VideoTranscodingService ffmpegTranscoding;
+	private VideoTranscodingService videoTranscodingService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private OriginalService originalService;
 
 	@Resource
 	private Properties propertiesFFmpeg;
@@ -51,10 +58,15 @@ public class MainController {
 	}
 
 	@PostMapping(value = "/uploadFile")
-	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, @RequestParam MultiValueMap<String, String> conversionType) throws FFmpegException {
-		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
-		//Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
-		ffmpegTranscoding.transcodeVideo(null);
+	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model,
+			@RequestParam MultiValueMap<String, String> params, Principal principal) throws FFmpegException {
+
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return "403";
+		}
+		Original original = originalService.addOriginalExpert(u, file, params);
+		videoTranscodingService.transcodeVideo(original);
 		model.addAttribute("message",
 				"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");
 		return "fileUploaded";

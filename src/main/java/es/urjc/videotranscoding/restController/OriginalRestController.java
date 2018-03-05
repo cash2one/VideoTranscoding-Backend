@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
-import es.urjc.videotranscoding.service.OriginalVideoService;
+import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 import es.urjc.videotranscoding.utils.FileSender;
 import io.swagger.annotations.Api;
@@ -30,19 +30,19 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/originalVideo")
-@Api(tags = "Original Video Api")
-public class OriginalVideoRestController {
+@Api(tags = "Original Video Api Operations")
+public class OriginalRestController {
 
 	@Autowired
-	private OriginalVideoService originalVideoService;
+	private OriginalService originalService;
 	@Autowired
 	private UserService userService;
 
-	public interface Basic extends OriginalVideo.Basic, ConversionVideo.Basic {
+	public interface Basic extends Original.Basic, Conversion.Basic {
 	}
 
 	public interface Details
-			extends OriginalVideo.Basic, OriginalVideo.Details, ConversionVideo.Basic, ConversionVideo.Details {
+			extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
 	}
 
 	/**
@@ -55,16 +55,16 @@ public class OriginalVideoRestController {
 	@ApiOperation(value = "All OriginalVideos on the Api with their conversions")
 	@GetMapping(value = "")
 	@JsonView(Basic.class)
-	public ResponseEntity<List<OriginalVideo>> getAllVideoConversions(Principal principal) {
+	public ResponseEntity<List<Original>> getAllVideoConversions(Principal principal) {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		List<OriginalVideo> allOriginalVideos = originalVideoService.findAllVideos();
+		List<Original> allOriginalVideos = originalService.findAllVideos();
 		if (allOriginalVideos.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<List<OriginalVideo>>(allOriginalVideos, HttpStatus.OK);
+		return new ResponseEntity<List<Original>>(allOriginalVideos, HttpStatus.OK);
 
 	}
 
@@ -78,16 +78,16 @@ public class OriginalVideoRestController {
 	@ApiOperation(value = "Original Video for id")
 	@GetMapping(value = "/{id}")
 	@JsonView(Details.class)
-	public ResponseEntity<Optional<OriginalVideo>> getOriginalVideo(Principal principal, @PathVariable long id) {
+	public ResponseEntity<Optional<Original>> getOriginalVideo(Principal principal, @PathVariable long id) {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		Optional<OriginalVideo> video = originalVideoService.findOneVideo(id);
+		Optional<Original> video = originalService.findOneVideo(id);
 		if (video == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Optional<OriginalVideo>>(video, HttpStatus.OK);
+		return new ResponseEntity<Optional<Original>>(video, HttpStatus.OK);
 
 	}
 
@@ -107,7 +107,7 @@ public class OriginalVideoRestController {
 	public ResponseEntity<?> downloadDirectFilm2(HttpServletResponse response, HttpServletRequest request,
 			@PathVariable long id) {
 
-		Optional<OriginalVideo> video = originalVideoService.findOneVideo(id);
+		Optional<Original> video = originalService.findOneVideo(id);
 
 		if (video != null) {
 			video.get();
@@ -115,10 +115,10 @@ public class OriginalVideoRestController {
 
 			FileSender.fromPath(p1).with(request).with(response).serveResource();
 
-			return new ResponseEntity<OriginalVideo>(HttpStatus.OK);
+			return new ResponseEntity<Original>(HttpStatus.OK);
 		}
 
-		return new ResponseEntity<OriginalVideo>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 	}
 

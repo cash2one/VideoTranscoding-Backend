@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import es.urjc.videotranscoding.core.VideoTranscodingService;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.UserRepository;
@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
 
 	public void deleteUsers(long id) {
 		users.deleteById(id);
+	}
+
+	public void deleteUser(User u1) {
+		users.delete(u1);
 	}
 
 	public boolean exists(long id) {
@@ -93,7 +97,7 @@ public class UserServiceImpl implements UserService {
 	// @Scheduled(cron = "*/10 * * * * *")
 	public void callTranscodeIfChargeIsDown() throws FFmpegException, InterruptedException, ExecutionException {
 		for (User user : users.findAll()) {
-			for (OriginalVideo originalVideo : user.getListVideos()) {
+			for (Original originalVideo : user.getListVideos()) {
 				if (!originalVideo.isActive() && !originalVideo.isComplete()) {
 					transcode.transcodeVideo(originalVideo);
 
@@ -103,4 +107,5 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
+
 }

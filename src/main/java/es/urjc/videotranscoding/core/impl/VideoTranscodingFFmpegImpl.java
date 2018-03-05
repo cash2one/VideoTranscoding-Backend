@@ -19,11 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.urjc.videotranscoding.core.VideoTranscodingService;
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
-import es.urjc.videotranscoding.service.ConversionVideoService;
+import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.FileUtils;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
@@ -68,7 +68,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	@Autowired
 	private FileUtils fileUtils;
 	@Autowired
-	private ConversionVideoService conversionVideoService;
+	private ConversionService conversionService;
 	@Autowired
 	private StreamGobblerFactory streamGobblerPersistentFactory;
 	// @Autowired
@@ -122,25 +122,25 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @throws ExecutionException
 	 * @see
 	 */
-	public void transcodeVideo(OriginalVideo originalVideo) throws FFmpegException {
+	public void transcodeVideo(Original original) throws FFmpegException {
 		// if (originalVideo!=null)throw new
 		// FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
-		if (originalVideo == null) {
+		if (original == null) {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
 		}
-		if (!fileUtils.exitsFile(originalVideo.getPath())) {
-			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE, new String[] { originalVideo.getPath() },
+		if (!fileUtils.exitsFile(original.getPath())) {
+			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE, new String[] { original.getPath() },
 					null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
-					new String[] { originalVideo.getPath() });
+					new String[] { original.getPath() });
 		}
 		String pathFFmpeg = getPathOfProgram();
-		File fileOV = new File(originalVideo.getPath());
+		File fileOV = new File(original.getPath());
 		String pathSaveConvertedVideos = getPathToSaveFiles();
 		serviceConversion.execute(new Runnable() {
 			public void run() {
-				originalVideo.getAllConversions().forEach((originalV -> {
+				original.getAllConversions().forEach((originalV -> {
 					if (!originalV.isActive()) {
 						String command = getCommand(pathFFmpeg, fileOV, pathSaveConvertedVideos, originalV);
 						try {
@@ -161,12 +161,12 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @param video
 	 * @throws FFmpegException
 	 */
-	private void conversionFinal(String command, ConversionVideo video) throws FFmpegRuntimeException {
+	private void conversionFinal(String command, Conversion video) throws FFmpegRuntimeException {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process proc = rt.exec(command);
 			video.setActive(true);
-			conversionVideoService.save(video);
+			conversionService.save(video);
 			errorGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getErrorStream(), "ERROR",
 					video);
 			inputGobbler = streamGobblerPersistentFactory.getStreamGobblerPersistent(proc.getInputStream(), "INPUT",
@@ -195,7 +195,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 			video.setActive(false);
 			throw ex;
 		} finally {
-			conversionVideoService.save(video);
+			conversionService.save(video);
 		}
 	}
 
@@ -204,17 +204,17 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @param pathFFMPEG
 	 * @param fileInput
 	 * @param folderOutput
-	 * @param conversionVideo
+	 * @param conversion
 	 * @return
 	 */
-	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, ConversionVideo conversionVideo) {
+	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, Conversion conversion) {
 		String finalPath = folderOutput
-				+ getFinalNameFile(fileInput, conversionVideo.getConversionType().getContainerType());
-		conversionVideo.setPath(finalPath);
-		conversionVideoService.save(conversionVideo);
+				+ getFinalNameFile(fileInput, conversion.getConversionType().getContainerType());
+		conversion.setPath(finalPath);
+		conversionService.save(conversion);
 		String command = pathFFMPEG + " -i " + fileInput.toString()
-				+ conversionVideo.getConversionType().getCodecAudioType()
-				+ conversionVideo.getConversionType().getCodecVideoType() + finalPath;
+				+ conversion.getConversionType().getCodecAudioType()
+				+ conversion.getConversionType().getCodecVideoType() + finalPath;
 		logger.l7dlog(Level.DEBUG, "El Comando que se va a enviar es :" + command, null);
 		return command;
 	}

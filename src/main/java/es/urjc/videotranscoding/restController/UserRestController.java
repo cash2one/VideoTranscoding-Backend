@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.ExceptionForRest;
 import es.urjc.videotranscoding.exception.FFmpegException;
@@ -26,10 +26,10 @@ import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping(value = "/api/user")
-@Api(tags = "User Api")
+@Api(tags = "User Api Operations")
 public class UserRestController {
-	public interface Details extends User.Basic, User.Details, OriginalVideo.Basic, OriginalVideo.Details,
-			ConversionVideo.Basic, ConversionVideo.Details {
+	public interface Details extends User.Basic, User.Details, Original.Basic, Original.Details,
+			Conversion.Basic, Conversion.Details {
 	}
 
 	@Autowired

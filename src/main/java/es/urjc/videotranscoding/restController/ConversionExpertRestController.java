@@ -21,12 +21,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.ExceptionForRest;
 import es.urjc.videotranscoding.exception.FFmpegException;
-import es.urjc.videotranscoding.service.OriginalVideoService;
+import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,17 +34,17 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/api/expert")
 @Api(tags = "Conversion Expert Operations")
-public class VideoConversionRestControllerExpert {
+public class ConversionExpertRestController {
 	// TODO JAVADOC
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private OriginalVideoService originalVideoService;
+	private OriginalService originalService;
 	@Autowired
 	private VideoTranscodingService videoTranscodingService;
 
 	public interface Details
-			extends OriginalVideo.Basic, OriginalVideo.Details, ConversionVideo.Basic, ConversionVideo.Details {
+			extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class VideoConversionRestControllerExpert {
 	 * 
 	 * 
 	 * @param params
-	 *            with the types of conversion videos ready for converter
+	 *            with the types of conversion(conversionType) videos ready for converter
 	 * @param file
 	 *            with the file to converter
 	 * @param principal
@@ -80,18 +80,18 @@ public class VideoConversionRestControllerExpert {
 	 * @throws FFmpegException
 	 */
 	@PostMapping(value = "")
-	@ApiOperation(value = "Send the video and the type of conversions for the video")
+	@ApiOperation(value = "Send the video(file) and the type of conversions(conversionType) for the video")
 	@JsonView(Details.class)
 	@ResponseBody
-	public ResponseEntity<Object> addConversionExpert(@RequestParam MultiValueMap<String, String> params,
+	public ResponseEntity<?> addConversionExpert(@RequestParam MultiValueMap<String, String> params,
 			@RequestParam(value = "file") MultipartFile file, Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		OriginalVideo originalVideo = originalVideoService.addOriginalVideoExpert(u, file, params);
-		videoTranscodingService.transcodeVideo(originalVideo);
-		return new ResponseEntity<>(originalVideo, HttpStatus.CREATED);
+		Original original = originalService.addOriginalExpert(u, file, params);
+		videoTranscodingService.transcodeVideo(original);
+		return new ResponseEntity<Original>(original, HttpStatus.CREATED);
 	}
 
 	/**

@@ -21,12 +21,12 @@
 	<div class="container">
 		<div class="col-md-12">
 			<form id="uploadbanner" enctype="multipart/form-data" method="post" action="/uploadFile">
-				<select multiple size='6'>
-					{{#conversionType}}
-					<option id="conversionType" value="{{.}}">{{.}}</option>
-					{{/conversionType}}
+				<select multiple size='6' name="conversionType" id="conversionType">
+								{{#conversionType}}
+                                 <option value="{{.}}">{{.}}</option>
+                                    {{/conversionType}}
 				</select>
-				<br>
+				<br><br>
 				<input class="osxbutton" id="fileupload" name="fileupload" type="file" />
 				<br>
 				<br>
@@ -40,16 +40,7 @@
 				<div id="status"></div>
 			</form>
 			
-			<form method="post" action="/uploadFile" modelAttribute="lesson">
-				 <select path="course"> 
-				 {{#conversionType}}
-			 		<option >{{.}}</option> 
-			 	  {{/conversionType}}
-			 		
-			 	</select> 
-			 	<input class="osxbutton" id="fileupload" name="fileupload" type="file" />
-			 <input type="submit" name="addLesson" value="Add lesson"> 
-			 </form>
+			
 		</div>
 	</div>
 </body>

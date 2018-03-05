@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.urjc.videotranscoding.codecs.ConversionType;
 
 @Entity
-@Table(name = "CONVERSION_VIDEO")
-public class ConversionVideo {
+@Table(name = "CONVERSION")
+public class Conversion {
 	public interface Basic {
 	}
 
@@ -67,7 +67,7 @@ public class ConversionVideo {
 	/**
 	 * Constructor for hibernate
 	 */
-	protected ConversionVideo() {
+	protected Conversion() {
 	}
 
 	/**
@@ -78,8 +78,8 @@ public class ConversionVideo {
 	 * @param originalVideo
 	 *            of the master video
 	 */
-	public ConversionVideo(ConversionType conversion, OriginalVideo originalVideo) {
-		this.name = originalVideo.getName() + "_" + System.currentTimeMillis();
+	public Conversion(ConversionType conversion, Original original) {
+		this.name = original.getName() + "_" + System.currentTimeMillis();
 		this.conversionType = conversion;
 
 	}
@@ -92,7 +92,7 @@ public class ConversionVideo {
 	 * @param conversion
 	 *            for the video
 	 */
-	public ConversionVideo(String name, ConversionType conversion) {
+	public Conversion(String name, ConversionType conversion) {
 		this.name = name;
 		this.conversionType = conversion;
 	}
@@ -150,7 +150,7 @@ public class ConversionVideo {
 			return fileSize;
 		} else if (isFinished()) {
 			File f = new File(getPath());
-			return String.valueOf(f.length())+" KB";
+			return String.valueOf(f.length()) + " KB";
 		} else
 			return "0";
 	}

@@ -5,19 +5,19 @@ import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.repository.ConversionVideoRepository;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.repository.ConversionRepository;
 
 @Component
 public class StreamGobblerFactory {
 
 	@Autowired
-	private ConversionVideoRepository conversionVideoService;
+	private ConversionRepository conversionService;
 
 	public StreamGobbler getStreamGobblerPersistent(InputStream is, String type,
-			ConversionVideo conversionVideo){
+			Conversion conversion){
 		
-		return new StreamGobbler(is, type, conversionVideo, conversionVideoService);
+		return new StreamGobbler(is, type, conversion, conversionService);
 		
 	}
 }

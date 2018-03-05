@@ -20,22 +20,22 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
-import es.urjc.videotranscoding.repository.OriginalVideoRepository;
+import es.urjc.videotranscoding.repository.OriginalRepository;
 import es.urjc.videotranscoding.service.FileService;
-import es.urjc.videotranscoding.service.OriginalVideoService;
+import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 @Service
-public class OriginalVideoServiceImpl implements OriginalVideoService {
-	private static final Logger logger = Logger.getLogger(OriginalVideoServiceImpl.class);
+public class OriginalServiceImpl implements OriginalService {
+	private static final Logger logger = Logger.getLogger(OriginalServiceImpl.class);
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
 	private static final String TRACE_NO_CONVERSION_TYPE_FOUND = "ffmpeg.conversionType.notFound";
 	@Autowired
-	private OriginalVideoRepository originalVideoRepository;
+	private OriginalRepository originalVideoRepository;
 	@Autowired
 	private FileService fileService;
 
@@ -51,11 +51,11 @@ public class OriginalVideoServiceImpl implements OriginalVideoService {
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
-	public void save(OriginalVideo video) {
+	public void save(Original video) {
 		originalVideoRepository.save(video);
 	}
 
-	public void delete(OriginalVideo video) {
+	public void delete(Original video) {
 		originalVideoRepository.delete(video);
 	}
 
@@ -63,26 +63,26 @@ public class OriginalVideoServiceImpl implements OriginalVideoService {
 		originalVideoRepository.deleteById(id);
 	}
 
-	public List<OriginalVideo> findAllVideos() {
+	public List<Original> findAllVideos() {
 		return originalVideoRepository.findAll();
 	}
 
-	public Optional<OriginalVideo> findOneVideo(long id) {
+	public Optional<Original> findOneVideo(long id) {
 		return originalVideoRepository.findById(id);
 	}
 
 	@Override
-	public OriginalVideo addOriginalVideoExpert(User u, MultipartFile file, MultiValueMap<String, String> params)
+	public Original addOriginalExpert(User u, MultipartFile file, MultiValueMap<String, String> params)
 			throws FFmpegException {
 		File fileSaved = fileService.saveFile(file);
-		OriginalVideo originalVideo = new OriginalVideo(FilenameUtils.removeExtension(fileSaved.getName()),
+		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 				fileSaved.getAbsolutePath(), u);
-		List<ConversionVideo> conversionsVideo = new ArrayList<>();
+		List<Conversion> conversionsVideo = new ArrayList<>();
 		for (Entry<String, List<String>> entry : params.entrySet()) {
 			switch (entry.getKey()) {
-			case "conversion":
+			case "conversionType":
 				entry.getValue().forEach(c -> {
-					ConversionVideo x = new ConversionVideo(ConversionType.valueOf(c), originalVideo);
+					Conversion x = new Conversion(ConversionType.valueOf(c), originalVideo);
 					conversionsVideo.add(x);
 				});
 				break;
@@ -101,19 +101,21 @@ public class OriginalVideoServiceImpl implements OriginalVideoService {
 	}
 
 	@Override
-	public OriginalVideo addOriginalVideoBasic(User u, MultipartFile file, List<ConversionType> type)
+	public Original addOriginalBasic(User u, MultipartFile file, List<ConversionType> type)
 			throws FFmpegException {
 		File fileSaved = fileService.saveFile(file);
-		OriginalVideo originalVideo = new OriginalVideo(FilenameUtils.removeExtension(fileSaved.getName()),
+		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 				fileSaved.getAbsolutePath(), u);
-		List<ConversionVideo> conversionsVideo = new ArrayList<>();
+		List<Conversion> conversionsVideo = new ArrayList<>();
 
 		type.forEach(x -> {
-			ConversionVideo y = new ConversionVideo(x, originalVideo);
+			Conversion y = new Conversion(x, originalVideo);
 			conversionsVideo.add(y);
 		});
 		originalVideo.setAllConversions(conversionsVideo);
 		originalVideoRepository.save(originalVideo);
 		return originalVideo;
 	}
+
+	
 }

@@ -11,11 +11,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.entities.UserRoles;
-import es.urjc.videotranscoding.repository.OriginalVideoRepository;
+import es.urjc.videotranscoding.repository.OriginalRepository;
 import es.urjc.videotranscoding.repository.UserRepository;
 
 @Component
@@ -25,17 +25,17 @@ public class DataLoader implements CommandLineRunner {
 	@Autowired
 	private UserRepository users;
 	@Autowired
-	private OriginalVideoRepository originalVideoRepository;
+	private OriginalRepository originalRepository;
 	@Resource
 	private Properties propertiesFFmpeg;
 
 	public void run(String... strings) throws Exception {
 		//TODO When you have the user on the docker container
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		OriginalVideo video = new OriginalVideo("Nuevo Video", propertiesFFmpeg.getProperty(VIDEO_DEMO), u1);
-		ConversionVideo newVideo = new ConversionVideo(ConversionType.MKV_H264360_COPY, video);
-		ConversionVideo newVideo2 = new ConversionVideo(ConversionType.MKV_H264480_COPY, video);
-		List<ConversionVideo> lista = new ArrayList<>();
+		Original video = new Original("Nuevo Video", propertiesFFmpeg.getProperty(VIDEO_DEMO), u1);
+		Conversion newVideo = new Conversion(ConversionType.MKV_H264360_COPY, video);
+		Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY, video);
+		List<Conversion> lista = new ArrayList<>();
 		lista.add(newVideo);
 		lista.add(newVideo2);
 		video.setAllConversions(lista);
@@ -43,7 +43,7 @@ public class DataLoader implements CommandLineRunner {
 		User user = users.findByEmail(u1.getEmail());
 		if (user == null) {
 			users.save(u1);
-			originalVideoRepository.save(video);
+			originalRepository.save(video);
 		}
 
 	}

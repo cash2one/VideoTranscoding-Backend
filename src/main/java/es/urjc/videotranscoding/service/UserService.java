@@ -41,4 +41,6 @@ public interface UserService {
 	// TODO ESTE METODO ES AUTOMATICO
 	void callTranscodeIfChargeIsDown() throws FFmpegException, InterruptedException, ExecutionException;
 
+	public void deleteUser(User u1);
+
 }

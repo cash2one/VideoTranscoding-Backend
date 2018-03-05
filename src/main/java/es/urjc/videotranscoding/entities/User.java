@@ -82,7 +82,7 @@ public class User {
 	 */
 	@JsonView(Details.class)
 	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "userVideo")
-	private final List<OriginalVideo> listVideos = new ArrayList<>();
+	private final List<Original> listOriginal = new ArrayList<>();
 
 	protected User() {
 	}
@@ -156,12 +156,12 @@ public class User {
 		userPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(WORKLOAD));
 	}
 
-	public void addVideo(OriginalVideo newVideo) {
-		this.listVideos.add(newVideo);
+	public void addVideo(Original newVideo) {
+		this.listOriginal.add(newVideo);
 	}
 
-	public List<OriginalVideo> getListVideos() {
-		return listVideos;
+	public List<Original> getListVideos() {
+		return listOriginal;
 	}
 
 	@Override

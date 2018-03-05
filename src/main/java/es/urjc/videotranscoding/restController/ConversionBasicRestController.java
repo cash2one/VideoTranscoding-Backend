@@ -17,12 +17,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
-import es.urjc.videotranscoding.entities.ConversionVideo;
-import es.urjc.videotranscoding.entities.OriginalVideo;
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.ExceptionForRest;
 import es.urjc.videotranscoding.exception.FFmpegException;
-import es.urjc.videotranscoding.service.OriginalVideoService;
+import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,16 +30,16 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/api/basic")
 @Api(tags = "Conversion Basic Operations")
-public class VideoConversionRestControllerBasic {
+public class ConversionBasicRestController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private OriginalVideoService originalVideoService;
+	private OriginalService originalService;
 	@Autowired
 	private VideoTranscodingService videoTranscodingService;
 
 	public interface Details
-			extends OriginalVideo.Basic, OriginalVideo.Details, ConversionVideo.Basic, ConversionVideo.Details {
+			extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class VideoConversionRestControllerBasic {
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		OriginalVideo originalVideo = originalVideoService.addOriginalVideoBasic(u, file, ConversionTypeBasic.WEB);
-		videoTranscodingService.transcodeVideo(originalVideo);
-		return new ResponseEntity<>(originalVideo, HttpStatus.CREATED);
+		Original original= originalService.addOriginalBasic(u, file, ConversionTypeBasic.WEB);
+		videoTranscodingService.transcodeVideo(original);
+		return new ResponseEntity<>(original, HttpStatus.CREATED);
 	}
 
 	/**
