@@ -5,15 +5,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 public enum CodecAudio {
-	
+
 	/**
 	 * Audio AAC
 	 */
 	AAC(" -c:a libfdk_aac "),
-	/**
-	 * NO IMPLEMENTADO
-	 */
-	OGG(""),
 	/**
 	 * Audio LibVorbis
 	 */
@@ -30,6 +26,7 @@ public enum CodecAudio {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long idAudio;
+
 	CodecAudio(String x) {
 		this.codecAudioType = x;
 	}

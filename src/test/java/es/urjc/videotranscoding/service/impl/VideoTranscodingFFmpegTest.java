@@ -1,10 +1,11 @@
 package es.urjc.videotranscoding.service.impl;
 
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -23,12 +25,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
+import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.ConversionVideo;
 import es.urjc.videotranscoding.entities.OriginalVideo;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.entities.UserRoles;
 import es.urjc.videotranscoding.exception.FFmpegException;
+import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
 import es.urjc.videotranscoding.service.OriginalVideoService;
 import es.urjc.videotranscoding.service.UserService;
 
@@ -158,29 +162,75 @@ public class VideoTranscodingFFmpegTest {
 		originalVideoService.save(video);
 		try {
 			transcoding.transcodeVideo(video);
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				fail("No should fail");
-
-			}
+			Thread.sleep(10000);
 		} catch (FFmpegException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		} catch (FFmpegRuntimeException e) {
 			e.printStackTrace();
 			fail("No should fail");
 		}
 	}
 
 	@Test
-	public void transcodeTypeBasicMovil() {
-		// User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN,
-		// UserRoles.USER);
-		// OriginalVideo video = new OriginalVideo("Perico",
-		// propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
-		// TODO Se puede crear una clase de typeConversionTypeBasic que lo haga es
-		// devolver una clase de conversionType ya definidas.
-		// List<ConversionType> x = ConversionTypeBasic.getConversionTypeBasicMovil();
+	public void allTypeTranscode() {
+		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
+		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
+		List<ConversionVideo> lista = new ArrayList<>();
+		EnumSet.allOf(ConversionType.class).forEach(c -> {
+			lista.add(new ConversionVideo(c, video));
+		});
+		video.setAllConversions(lista);
+		u1.addVideo(video);
+		userService.save(u1);
+		originalVideoService.save(video);
+		try {
+			transcoding.transcodeVideo(video);
+			Thread.sleep(10000);
+		} catch (FFmpegException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		}
+	}
 
+	@Ignore
+	@Test
+	public void transcodeTypeBasicMovil() {
+		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
+		OriginalVideo video = new OriginalVideo("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
+		List<ConversionVideo> lista = new ArrayList<>();
+		List<ConversionType> x = ConversionTypeBasic.MOVIL;
+		x.forEach(c -> {
+			lista.add(new ConversionVideo(c, video));
+		});
+		video.setAllConversions(lista);
+		u1.addVideo(video);
+		userService.save(u1);
+		originalVideoService.save(video);
+		try {
+			transcoding.transcodeVideo(video);
+			Thread.sleep(10000);
+		} catch (FFmpegException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		} catch (FFmpegRuntimeException e) {
+			e.printStackTrace();
+			fail("No should fail");
+		}
+	}
+
+	@Test
+	public void failD() {
+		fail("Done Fail");
 	}
 
 }

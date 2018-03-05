@@ -28,19 +28,23 @@ public enum CodecVideo {
 	/**
 	 * 
 	 */
+	VP9_2160(" -c:v libvpx-vp9 -s 3840x2160 -threads 4 -crf 30 -b:v 0 "),
+	/**
+	 * 
+	 */
 	VP9_1080(" -c:v libvpx-vp9 -s 1920x1080 -threads 4 -crf 30 -b:v 0 "),
 	/**
 	 * 
 	 */
-	VP9_720(" -c:v libvpx-vp9 -s 1280x720 -crf 30 -b:v 0"),
+	VP9_720(" -c:v libvpx-vp9 -s 1280x720 -threads 4 -crf 30 -b:v 0"),
 	/**
 	 * 
 	 */
-	VP9_480(" -c:v libvpx-vp9 -s 640x480 -crf 30 -b:v 0"),
+	VP9_480(" -c:v libvpx-vp9 -s 640x480 -threads 4 -crf 30 -b:v 0"),
 	/**
 	 * 
 	 */
-	VP9_360(" -c:v libvpx-vp9 -s 480x360 -crf 30 -b:v 0"),
+	VP9_360(" -c:v libvpx-vp9 -s 480x360 -threads 4 -crf 30 -b:v 0"),
 	/**
 	 * 
 	 */

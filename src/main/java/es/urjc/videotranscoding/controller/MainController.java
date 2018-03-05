@@ -1,17 +1,16 @@
 package es.urjc.videotranscoding.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,9 +51,9 @@ public class MainController {
 	}
 
 	@PostMapping(value = "/uploadFile")
-	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, String conversionType) throws FFmpegException, InterruptedException, ExecutionException {
+	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model, @RequestParam MultiValueMap<String, String> conversionType) throws FFmpegException {
 		List<ConversionType> conversionTypes = new ArrayList<ConversionType>();
-		Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
+		//Arrays.stream(conversionType.split(",")).forEach(s -> conversionTypes.add(ConversionType.valueOf(s)));
 		ffmpegTranscoding.transcodeVideo(null);
 		model.addAttribute("message",
 				"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");

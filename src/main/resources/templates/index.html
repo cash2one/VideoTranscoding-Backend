@@ -13,6 +13,7 @@
 	<script src="http://malsup.github.com/jquery.form.js"></script>
 	<script src="js/main.js"></script>
 </head>
+
 <body>
 	<h1>VideoTranscoding</h1>
 	<a id="swagger" href="/swagger-ui.html">Api Documentation</a>
@@ -20,11 +21,11 @@
 	<div class="container">
 		<div class="col-md-12">
 			<form id="uploadbanner" enctype="multipart/form-data" method="post" action="/uploadFile">
-				<div id="typesConversion">
+				<select multiple size='6'>
 					{{#conversionType}}
-					<input type="checkbox" name="conversionType" id="conversionTypes" value="{{.}}"> {{.}}
-					<br /> {{/conversionType}}
-				</div>
+					<option id="conversionType" value="{{.}}">{{.}}</option>
+					{{/conversionType}}
+				</select>
 				<br>
 				<input class="osxbutton" id="fileupload" name="fileupload" type="file" />
 				<br>
@@ -38,6 +39,17 @@
 				</div>
 				<div id="status"></div>
 			</form>
+			
+			<form method="post" action="/uploadFile" modelAttribute="lesson">
+				 <select path="course"> 
+				 {{#conversionType}}
+			 		<option >{{.}}</option> 
+			 	  {{/conversionType}}
+			 		
+			 	</select> 
+			 	<input class="osxbutton" id="fileupload" name="fileupload" type="file" />
+			 <input type="submit" name="addLesson" value="Add lesson"> 
+			 </form>
 		</div>
 	</div>
 </body>

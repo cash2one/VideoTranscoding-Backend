@@ -11,25 +11,26 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @Order(1)
 @EnableWebSecurity()
-public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter{
+public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public UserRepositoryAuthenticationProvider userRepoAuthProvider;
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception{
-		http.authorizeRequests().antMatchers("/movies/**/download").permitAll().antMatchers("/admin/**").hasRole("ADMIN")
-					.antMatchers("/**").hasRole("USER");
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+		.antMatchers("*").hasRole("USER")
+		.antMatchers("/admin/**").hasRole("ADMIN")
+		.antMatchers("/**").hasRole("USER");
 		http.csrf().disable();
 		http.cors();
 		http.httpBasic();
 		// Do not redirect when logout
-		http.logout().logoutSuccessHandler((rq,rs,a) -> {
+		http.logout().logoutSuccessHandler((rq, rs, a) -> {
 		});
 	}
 
-
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// AQUI HAY JALEEEOOO, DESCOMENTAR
 		auth.authenticationProvider(userRepoAuthProvider);
 	}

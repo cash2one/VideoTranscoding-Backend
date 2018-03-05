@@ -11,56 +11,73 @@ import javax.persistence.Id;
  */
 public enum ConversionType {
 	/**
-	 * MKV file extension, VideoCodec h265 on 2160, AudioCodec copy
-	 */
+ 	* MKV/HEVC/COPY
+ 	*/
 	MKV_HEVC2160_COPY(Container.MKV, CodecVideo.HEVC_2160, CodecAudio.COPY),
-	/**
-	 * MKV file extension, VideoCodec h265 on 1080, AudioCodec copy
-	 */
 	MKV_HEVC1080_COPY(Container.MKV, CodecVideo.HEVC_1080, CodecAudio.COPY),
-	/**
-	 * MKV file extension, VideoCodec h265 on 720, AudioCodec copy
-	 */
 	MKV_HEVC720_COPY(Container.MKV, CodecVideo.HEVC_720, CodecAudio.COPY),
-	/**
-	 * MKV file extension, VideoCodec h265 on 480, AudioCodec copy
-	 */
 	MKV_HEVC480_COPY(Container.MKV, CodecVideo.HEVC_480, CodecAudio.COPY),
-	/**
-	 * MKV file extension, VideoCodec h265 on 360, AudioCodec copy
-	 */
 	MKV_HEVC360_COPY(Container.MKV, CodecVideo.HEVC_360, CodecAudio.COPY),
 	/**
-	 * MKV file extension, VideoCodec h264 on 1080, AudioCodec copy
+	 * MKV/H264/COPY
 	 */
 	MKV_H2641080_COPY(Container.MKV, CodecVideo.H264_1080, CodecAudio.COPY),
-	/**
-	 * 
-	 */
 	MKV_H264720_COPY(Container.MKV, CodecVideo.H264_720, CodecAudio.COPY),
-	/**
-	 * 
-	 */
 	MKV_H264480_COPY(Container.MKV, CodecVideo.H264_480, CodecAudio.COPY),
-	/**
-	 * 
-	 */
 	MKV_H264360_COPY(Container.MKV, CodecVideo.H264_360, CodecAudio.COPY),
+	
 	/**
-	 * WEBM file extension, VideoCodec VP9 on 1080, AudioCodec LIVBORVIS
+	 * MKV/H264/AAC
 	 */
+	MKV_HEVC2160_AAC(Container.MKV, CodecVideo.HEVC_2160, CodecAudio.AAC),
+	MKV_HEVC1080_AAC(Container.MKV, CodecVideo.HEVC_1080, CodecAudio.AAC),
+	MKV_HEVC720_AAC(Container.MKV, CodecVideo.HEVC_720, CodecAudio.AAC),
+	MKV_HEVC480_AAC(Container.MKV, CodecVideo.HEVC_480, CodecAudio.AAC),
+	MKV_HEVC360_AAC(Container.MKV, CodecVideo.HEVC_360, CodecAudio.AAC),
+	/**
+	 * MKV/H264/AAC
+	 */
+	MKV_H2641080_AAC(Container.MKV, CodecVideo.H264_1080, CodecAudio.AAC),
+	MKV_H264720_AAC(Container.MKV, CodecVideo.H264_720, CodecAudio.AAC),
+	MKV_H264480_AAC(Container.MKV, CodecVideo.H264_480, CodecAudio.AAC),
+	MKV_H264360_AAC(Container.MKV, CodecVideo.H264_360, CodecAudio.AAC),
+	/**
+	 * MP4/HEVC/COPY
+	 */
+	MP4_HEVC2160_COPY(Container.MP4, CodecVideo.HEVC_2160, CodecAudio.COPY),
+	MP4_HEVC1080_COPY(Container.MP4, CodecVideo.HEVC_1080, CodecAudio.COPY),
+	MP4_HEVC720_COPY(Container.MP4, CodecVideo.HEVC_720, CodecAudio.COPY),
+	MP4_HEVC480_COPY(Container.MP4, CodecVideo.HEVC_480, CodecAudio.COPY),
+	MP4_HEVC360_COPY(Container.MP4, CodecVideo.HEVC_360, CodecAudio.COPY),
+	/**
+	 * MP4/H264/COPY
+	 */
+	MP4_H2641080_COPY(Container.MP4, CodecVideo.H264_1080, CodecAudio.COPY),
+	MP4_H264720_COPY(Container.MP4, CodecVideo.H264_720, CodecAudio.COPY),
+	MP4_H264480_COPY(Container.MP4, CodecVideo.H264_480, CodecAudio.COPY),
+	MP4_H264360_COPY(Container.MP4, CodecVideo.H264_360, CodecAudio.COPY),
+	/**
+	 * MP4/HEVC/AAC
+	 */
+	MP4_HEVC2160_AAC(Container.MP4, CodecVideo.HEVC_2160, CodecAudio.AAC),
+	MP4_HEVC1080_AAC(Container.MP4, CodecVideo.HEVC_1080, CodecAudio.AAC),
+	MP4_HEVC720_AAC(Container.MP4, CodecVideo.HEVC_720, CodecAudio.AAC),
+	MP4_HEVC480_AAC(Container.MP4, CodecVideo.HEVC_480, CodecAudio.AAC),
+	MP4_HEVC360_AAC(Container.MP4, CodecVideo.HEVC_360, CodecAudio.AAC),
+	/**
+	 * MP4/H264/AAC
+	 */
+	MP4_H2641080_AAC(Container.MP4, CodecVideo.H264_1080, CodecAudio.AAC),
+	MP4_H264720_AAC(Container.MP4, CodecVideo.H264_720, CodecAudio.AAC),
+	MP4_H264480_AAC(Container.MP4, CodecVideo.H264_480, CodecAudio.AAC),
+	MP4_H264360_AAC(Container.MP4, CodecVideo.H264_360, CodecAudio.AAC),
+	/**
+ 	* WEBM/VP9/LIVBORVIS
+ 	*/
+	WEBM_VP92160_VORBIS(Container.WEBM, CodecVideo.VP9_2160, CodecAudio.LIBVORVIS),
 	WEBM_VP91080_VORBIS(Container.WEBM, CodecVideo.VP9_1080, CodecAudio.LIBVORVIS),
-	/**
-	 * WEBM file extension, VideoCodec VP9 on 720, AudioCodec LIVBORVIS
-	 */
 	WEBM_VP9720_VORBIS(Container.WEBM, CodecVideo.VP9_720, CodecAudio.LIBVORVIS),
-	/**
-	 * WEBM file extension, VideoCodec VP9 on 480, AudioCodec LIVBORVIS
-	 */
 	WEBM_VP9480_VORBIS(Container.WEBM, CodecVideo.VP9_480, CodecAudio.LIBVORVIS),
-	/**
-	 * WEBM file extension, VideoCodec VP9 on 360, AudioCodec LIVBORVIS
-	 */
 	WEBM_VP9360_VORBIS(Container.WEBM, CodecVideo.VP9_360, CodecAudio.LIBVORVIS);
 	private final Container containerType;
 	private final CodecVideo codecVideoType;
