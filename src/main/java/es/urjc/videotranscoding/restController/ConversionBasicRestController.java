@@ -1,21 +1,24 @@
 package es.urjc.videotranscoding.restController;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
+import es.urjc.videotranscoding.codecs.ConversionTypeBasic.Types;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.entities.Original;
@@ -38,8 +41,26 @@ public class ConversionBasicRestController {
 	@Autowired
 	private VideoTranscodingService videoTranscodingService;
 
-	public interface Details
-			extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
+	public interface Details extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
+	}
+
+	/**
+	 * Get the types of conversion
+	 * 
+	 * @param principal
+	 *            user Logged
+	 * @return the list of conversion basic
+	 * @throws FFmpegException
+	 */
+	@GetMapping(value = "")
+	@ApiOperation(value = "Get the types of conversion")
+	public ResponseEntity<List<String>> addConversionExpert(Principal principal) throws FFmpegException {
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		List<String> typeConversionBasic = ConversionTypeBasic.getAllTypesBasic();
+		return new ResponseEntity<>(typeConversionBasic, HttpStatus.OK);
 	}
 
 	/**
@@ -56,17 +77,21 @@ public class ConversionBasicRestController {
 	 * @return the original video with conversionVideos for the video / exception
 	 * @throws FFmpegException
 	 */
-	@PostMapping(value = "/web")
+	@PostMapping(value = "")
 	@ApiOperation(value = "Send the video for conversion")
 	@JsonView(Details.class)
-	@ResponseBody
 	public ResponseEntity<Object> addConversionExpert(@RequestParam(value = "file") MultipartFile file,
-			Principal principal) throws FFmpegException {
+			@RequestParam(value = "conversionType") String conversion, Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		Original original= originalService.addOriginalBasic(u, file, ConversionTypeBasic.WEB);
+		List<ConversionType> listConversion = ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, conversion));
+		if (listConversion == null) {
+			// TODO
+			throw new FFmpegException();
+		}
+		Original original = originalService.addOriginalBasic(u, file, listConversion);
 		videoTranscodingService.transcodeVideo(original);
 		return new ResponseEntity<>(original, HttpStatus.CREATED);
 	}

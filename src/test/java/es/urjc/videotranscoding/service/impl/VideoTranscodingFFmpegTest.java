@@ -44,9 +44,8 @@ public class VideoTranscodingFFmpegTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private final String VIDEO_DEMO = "path.video.demo";
-	private final static String FOLDER_OUPUT_ORIGINAL="path.folder.original";
-	private final static String FOLDER_OUTPUT_TRANSCODE="path.folder.ouput";
-
+	private final static String FOLDER_OUPUT_ORIGINAL = "path.folder.original";
+	private final static String FOLDER_OUTPUT_TRANSCODE = "path.folder.ouput";
 
 	@Autowired
 	private VideoTranscodingService transcoding;
@@ -61,6 +60,7 @@ public class VideoTranscodingFFmpegTest {
 	@Resource
 	private Properties propertiesFicheroCore;
 	private static User u1;
+
 	@BeforeClass
 	public static void beforeClass() {
 	}
@@ -71,6 +71,7 @@ public class VideoTranscodingFFmpegTest {
 		createFolder(propertiesFFmpeg.getProperty(FOLDER_OUTPUT_TRANSCODE));
 
 	}
+
 	@After
 	public void setDown() throws IOException {
 		userService.deleteUser(u1);
@@ -218,7 +219,7 @@ public class VideoTranscodingFFmpegTest {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
 		List<Conversion> lista = new ArrayList<>();
-		List<ConversionType> x = ConversionTypeBasic.MOVIL;
+		List<ConversionType> x =ConversionTypeBasic.getConversion( ConversionTypeBasic.Types.MOVIL);
 		x.forEach(c -> {
 			lista.add(new Conversion(c, video));
 		});
@@ -240,7 +241,5 @@ public class VideoTranscodingFFmpegTest {
 			fail("No should fail");
 		}
 	}
-
-	
 
 }
