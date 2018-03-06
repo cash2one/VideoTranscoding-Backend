@@ -20,6 +20,7 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers("*").hasRole("USER")
 		.antMatchers("/admin/**").hasRole("ADMIN")
+		.antMatchers("/api/downloader/**").permitAll()
 		.antMatchers("/**").hasRole("USER");
 		http.csrf().disable();
 		http.cors();

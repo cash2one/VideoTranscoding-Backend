@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class FileSender {
+public class FileWatcher {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -37,32 +37,32 @@ public class FileSender {
 	HttpServletRequest request;
 	HttpServletResponse response;
 
-	protected FileSender() {
+	protected FileWatcher() {
 	}
 
-	private FileSender setFilepath(Path filepath) {
+	private FileWatcher setFilepath(Path filepath) {
 		this.filepath = filepath;
 		return this;
 	}
 
-	public static FileSender fromPath(Path path) {
-		return new FileSender().setFilepath(path);
+	public static FileWatcher fromPath(Path path) {
+		return new FileWatcher().setFilepath(path);
 	}
 
-	public static FileSender fromFile(File file) {
-		return new FileSender().setFilepath(file.toPath());
+	public static FileWatcher fromFile(File file) {
+		return new FileWatcher().setFilepath(file.toPath());
 	}
 
-	public static FileSender fromURIString(String uri) {
-		return new FileSender().setFilepath(Paths.get(uri));
+	public static FileWatcher fromURIString(String uri) {
+		return new FileWatcher().setFilepath(Paths.get(uri));
 	}
 
-	public FileSender with(HttpServletRequest httpRequest) {
+	public FileWatcher with(HttpServletRequest httpRequest) {
 		request = httpRequest;
 		return this;
 	}
 
-	public FileSender with(HttpServletResponse httpResponse) {
+	public FileWatcher with(HttpServletResponse httpResponse) {
 		response = httpResponse;
 		return this;
 	}

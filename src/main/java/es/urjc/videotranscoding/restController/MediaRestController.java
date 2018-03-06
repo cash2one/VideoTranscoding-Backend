@@ -1,17 +1,13 @@
 package es.urjc.videotranscoding.restController;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,32 +18,36 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
+import es.urjc.videotranscoding.exception.ExceptionForRest;
+import es.urjc.videotranscoding.exception.FFmpegException;
+import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
-import es.urjc.videotranscoding.utils.FileSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/originalVideo")
-@Api(tags = "Original Video Api Operations")
-public class OriginalRestController {
+@RequestMapping(value = "/api/media")
+@Api(tags = "Media Api Operations")
+public class MediaRestController {
+	// TODO quitar todos los User UNAUTHORIZED
 
 	@Autowired
 	private OriginalService originalService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ConversionService conversionService;
 
 	public interface Basic extends Original.Basic, Conversion.Basic {
 	}
 
-	public interface Details
-			extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
+	public interface Details extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
 	}
 
 	/**
-	 * All OriginalVideos on the Api
-	 * 
+	 * All Original Videos on the Api
+	 *
 	 * @param principal
 	 *            the user logger
 	 * @return all original videos for all the users
@@ -70,56 +70,44 @@ public class OriginalRestController {
 
 	/**
 	 * Original Video
-	 * 
-	 * @param principal
-	 *            the user logger
-	 * @return the original video for this id.
+	 *
+	 * @return the video(Original or Conversion) for this id.
+	 * @throws FFmpegException
 	 */
-	@ApiOperation(value = "Original Video for id")
+	@ApiOperation(value = "Get videos information for id")
 	@GetMapping(value = "/{id}")
 	@JsonView(Details.class)
-	public ResponseEntity<Optional<Original>> getOriginalVideo(Principal principal, @PathVariable long id) {
-		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+	public ResponseEntity<?> getOriginalVideo(@PathVariable long id) throws FFmpegException {
 		Optional<Original> video = originalService.findOneVideo(id);
-		if (video == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		if (!video.isPresent()) {
+			return new ResponseEntity<>(getConversionVideo(id), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(video.get(), HttpStatus.OK);
 		}
-		return new ResponseEntity<Optional<Original>>(video, HttpStatus.OK);
+	}
+
+	private Conversion getConversionVideo(long id) throws FFmpegException {
+		Optional<Conversion> video = conversionService.findOneConversion(id);
+		Conversion conversion = video.get();
+		if (conversion == null) {
+			//TODO
+			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
+		}
+		return conversion;
 
 	}
 
 	/**
-	 * With this method you can see the original video
+	 * Handler for the exceptions
 	 * 
-	 * @param response
-	 *            for the video
-	 * @param request
-	 *            for the video
-	 * @param id
-	 *            of the original Video
-	 * @return
+	 * @param e
+	 *            exception
+	 * @return a ExceptionForRest with the exception
 	 */
-	@ApiOperation(value = "Watch the Original Video")
-	@GetMapping(value = "/{id}/watch")
-	public ResponseEntity<?> downloadDirectFilm2(HttpServletResponse response, HttpServletRequest request,
-			@PathVariable long id) {
-
-		Optional<Original> video = originalService.findOneVideo(id);
-
-		if (video != null) {
-			video.get();
-			Path p1 = Paths.get(video.get().getPath());
-
-			FileSender.fromPath(p1).with(request).with(response).serveResource();
-
-			return new ResponseEntity<Original>(HttpStatus.OK);
-		}
-
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
+	@ExceptionHandler(FFmpegException.class)
+	public ResponseEntity<ExceptionForRest> exceptionHandler(FFmpegException e) {
+		ExceptionForRest error = new ExceptionForRest(e.getCodigo(), e.getLocalizedMessage());
+		return new ResponseEntity<ExceptionForRest>(error, HttpStatus.BAD_REQUEST);
 	}
 
 }
