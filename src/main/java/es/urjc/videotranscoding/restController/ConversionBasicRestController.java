@@ -16,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
-import es.urjc.videotranscoding.codecs.ConversionTypeBasic.Types;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.entities.Original;
@@ -65,7 +63,7 @@ public class ConversionBasicRestController {
 
 	/**
 	 * Take a MultipartFile and create an original video and her conversions with
-	 * the multivaluemap
+	 * list of conversion as params
 	 * 
 	 * 
 	 * @param params
@@ -81,17 +79,12 @@ public class ConversionBasicRestController {
 	@ApiOperation(value = "Send the video for conversion")
 	@JsonView(Details.class)
 	public ResponseEntity<Object> addConversionExpert(@RequestParam(value = "file") MultipartFile file,
-			@RequestParam(value = "conversionType") String conversion, Principal principal) throws FFmpegException {
+			@RequestParam(value = "conversionType") List<String> conversionList, Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		List<ConversionType> listConversion = ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, conversion));
-		if (listConversion == null) {
-			// TODO
-			throw new FFmpegException();
-		}
-		Original original = originalService.addOriginalBasic(u, file, listConversion);
+		Original original = originalService.addOriginalBasic(u, file, conversionList);
 		videoTranscodingService.transcodeVideo(original);
 		return new ResponseEntity<>(original, HttpStatus.CREATED);
 	}

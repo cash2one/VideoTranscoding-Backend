@@ -2,11 +2,12 @@ package es.urjc.videotranscoding.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -16,10 +17,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
+import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
+import es.urjc.videotranscoding.codecs.ConversionTypeBasic.Types;
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
@@ -71,24 +73,23 @@ public class OriginalServiceImpl implements OriginalService {
 	}
 
 	@Override
-	public Original addOriginalExpert(User u, MultipartFile file, MultiValueMap<String, String> params)
-			throws FFmpegException {
+	public Original addOriginalExpert(User u, MultipartFile file, List<String> params) throws FFmpegException {
 		File fileSaved = fileUtilsService.saveFile(file);
 		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 				fileSaved.getAbsolutePath(), u);
 		List<Conversion> conversionsVideo = new ArrayList<>();
-		for (Entry<String, List<String>> entry : params.entrySet()) {
-			switch (entry.getKey()) {
-			case "conversionType":
-				entry.getValue().forEach(c -> {
-					Conversion x = new Conversion(ConversionType.valueOf(c), originalVideo);
-					conversionsVideo.add(x);
-				});
-				break;
-			default:
-				break;
+		List<ConversionType> listConversion = new ArrayList<>();
+		params.forEach(x -> {
+			try {
+				listConversion.add(ConversionType.valueOf(x));
+			} catch (IllegalArgumentException e) {
+				//TODO LOG
 			}
-		}
+		});
+		listConversion.forEach(d -> {
+			Conversion x = new Conversion(d, originalVideo);
+			conversionsVideo.add(x);
+		});
 		originalVideo.setAllConversions(conversionsVideo);
 		if (originalVideo.getAllConversions().isEmpty()) {
 			logger.l7dlog(Level.ERROR, TRACE_NO_CONVERSION_TYPE_FOUND, new String[] { originalVideo.getName() }, null);
@@ -100,14 +101,26 @@ public class OriginalServiceImpl implements OriginalService {
 	}
 
 	@Override
-	public Original addOriginalBasic(User u, MultipartFile file, List<ConversionType> type)
-			throws FFmpegException {
+	public Original addOriginalBasic(User u, MultipartFile file, List<String> params) throws FFmpegException {
 		File fileSaved = fileUtilsService.saveFile(file);
 		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 				fileSaved.getAbsolutePath(), u);
+		
+		Set<ConversionType> listConversion = new HashSet<>();
+		params.forEach(x -> {
+			try {
+				listConversion.addAll(ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, x)));
+			} catch (IllegalArgumentException e) {
+			}
+		});
+		
+		if (listConversion.isEmpty()) {
+			// TODO
+			throw new FFmpegException();
+		}
 		List<Conversion> conversionsVideo = new ArrayList<>();
 
-		type.forEach(x -> {
+		listConversion.forEach(x -> {
 			Conversion y = new Conversion(x, originalVideo);
 			conversionsVideo.add(y);
 		});
@@ -116,5 +129,4 @@ public class OriginalServiceImpl implements OriginalService {
 		return originalVideo;
 	}
 
-	
 }

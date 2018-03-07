@@ -2,6 +2,7 @@ package es.urjc.videotranscoding.controller;
 
 import java.security.Principal;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -9,7 +10,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,7 +59,7 @@ public class MainController {
 
 	@PostMapping(value = "/uploadFile")
 	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model,
-			@RequestParam MultiValueMap<String, String> params, Principal principal) throws FFmpegException {
+			@RequestParam(value="conversionType") List<String> params, Principal principal) throws FFmpegException {
 
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {

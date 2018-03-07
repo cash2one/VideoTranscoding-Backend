@@ -65,6 +65,7 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 				logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutputOriginalVideo }, null);
 				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutputOriginalVideo });
 			}
+			//TODO COMPROBAR QUE EXISTE YA EL FICHERO
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get( folderOutputOriginalVideo+ file.getOriginalFilename().replace(" ","_"));
 			

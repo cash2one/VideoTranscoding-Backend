@@ -1,5 +1,6 @@
 package es.urjc.videotranscoding.codecs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,7 +8,7 @@ import java.util.stream.Stream;
 
 public class ConversionTypeBasic {
 	public enum Types {
-		WEB("web"), MOVIL("movil"), VLC("vlc");
+		WEB("web"), MOVIL("movil"), VLC("vlc"),ALL("");
 
 		private final String text;
 
@@ -21,9 +22,9 @@ public class ConversionTypeBasic {
 		}
 
 	}
-
-	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MKV_H264360_COPY);
-	private static List<ConversionType> WEB = Arrays.asList(ConversionType.MKV_H264360_COPY);
+//TODO FINAL LISTS OF CONVERSIONS
+	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MKV_H264480_COPY);
+	private static List<ConversionType> WEB = Arrays.asList(ConversionType.MKV_H264720_COPY);
 	private static List<ConversionType> VLC = Arrays.asList(ConversionType.MKV_H264360_COPY);
 
 	public static List<String> getAllTypesBasic() {
@@ -41,7 +42,12 @@ public class ConversionTypeBasic {
 
 		case VLC:
 			return VLC;
-
+		case ALL:
+			List<ConversionType> allList= new ArrayList<>();
+			allList.addAll(VLC);
+			allList.addAll(WEB);
+			allList.addAll(MOVIL);
+			return allList;
 		}
 		return null;
 
