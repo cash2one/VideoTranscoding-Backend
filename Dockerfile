@@ -21,12 +21,12 @@ RUN yum -y install ffmpeg ffmpeg-devel -y
 #Config LOGS
 RUN mkdir -p /tmp/VideoTranscoding/logs/
 RUN chmod -R 777 /tmp/VideoTranscoding/logs/
-RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Spring.log && \
-    ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Spring.log
-RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Core.log && \
-    ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Core.log
-RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log && \
-    ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log    
+#RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Spring.log && \
+#   ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Spring.log
+#RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Core.log && \
+#   ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Core.log
+#RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log && \
+#   ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log    
 #Config PATH to save Videos
 RUN mkdir -p /tmp/VideoTranscoding/videos/transcoded/
 RUN mkdir -p /tmp/VideoTranscoding/videos/original/
