@@ -162,6 +162,7 @@ public class VideoTranscodingFFmpegTest {
 	// }
 
 	@Test
+	@Ignore
 	public void transcodeSucess() {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
@@ -190,6 +191,8 @@ public class VideoTranscodingFFmpegTest {
 	}
 
 	@Test
+	@Ignore
+
 	public void allTypeTranscode() {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
