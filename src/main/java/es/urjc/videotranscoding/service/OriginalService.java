@@ -10,18 +10,21 @@ import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 
 public interface OriginalService {
-	//TODO Javadoc
+	// TODO Javadoc
 	void save(Original video);
 
 	void delete(Original video);
 
-	void delete(long id);
+	User delete(long id, User u) throws FFmpegException;
+
+	User deleteAllVideos(User u);
 
 	List<Original> findAllVideos();
-	
-	Original addOriginalExpert(User u,MultipartFile file,List<String> params) throws FFmpegException;
+
+	Original addOriginalExpert(User u, MultipartFile file, List<String> params) throws FFmpegException;
 
 	Original addOriginalBasic(User u, MultipartFile file, List<String> params) throws FFmpegException;
 
 	Optional<Original> findOneVideo(long id);
+
 }

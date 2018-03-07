@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,11 +91,34 @@ public class MediaRestController {
 		Optional<Conversion> video = conversionService.findOneConversion(id);
 		Conversion conversion = video.get();
 		if (conversion == null) {
-			//TODO
+			// TODO
 			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
 		}
 		return conversion;
 
+	}
+
+	@JsonView(Details.class)
+	@ApiOperation(value = "Get videos information for id")
+	@DeleteMapping(value = "")
+	public ResponseEntity<?> deleteAllVideos(Principal principal) {
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		originalService.deleteAllVideos(u);
+		return new ResponseEntity<>(u,HttpStatus.OK);
+	}
+	@JsonView(Details.class)
+	@ApiOperation(value = "Get videos information for id")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> deleteVideos(Principal principal,@PathVariable long id) throws FFmpegException {
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		originalService.delete(id, u);
+		return new ResponseEntity<>(u,HttpStatus.OK);
 	}
 
 	/**

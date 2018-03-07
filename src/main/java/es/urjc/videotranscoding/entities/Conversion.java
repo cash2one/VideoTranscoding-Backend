@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -63,7 +64,13 @@ public class Conversion {
 	 */
 	@JsonView(Basic.class)
 	private ConversionType conversionType;
-
+	/**
+	 * 
+	 */
+	
+	@ManyToOne
+	private Original parent;
+	
 	/**
 	 * Constructor for hibernate
 	 */
@@ -81,6 +88,8 @@ public class Conversion {
 	public Conversion(ConversionType conversion, Original original) {
 		this.name = original.getName() + "_" + System.currentTimeMillis();
 		this.conversionType = conversion;
+		this.parent=original;
+	
 
 	}
 
@@ -158,5 +167,19 @@ public class Conversion {
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}
+
+	public long getConversionId() {
+		return conversionId;
+	}
+
+	public Original getParent() {
+		return parent;
+	}
+
+	
+
+
+
+	
 
 }

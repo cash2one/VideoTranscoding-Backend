@@ -14,10 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "ORIGINAL")
 public class Original {
@@ -60,8 +58,7 @@ public class Original {
 	 * All Conversions of the video
 	 */
 	@JsonView(Basic.class)
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY,mappedBy = "parent")
 	private List<Conversion> conversions = new ArrayList<>();
 
 	/**
@@ -154,6 +151,13 @@ public class Original {
 
 	public void setAllConversions(List<Conversion> conversions) {
 		this.conversions = conversions;
+	}
+
+	public Long getOriginalId() {
+		return originalId;
+	}
+	public void removeConversion(Conversion c) {
+		conversions.remove(c);
 	}
 
 }

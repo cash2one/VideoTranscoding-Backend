@@ -25,7 +25,6 @@ import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 @Service
 public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 
-	
 	private static final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
 
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
@@ -37,10 +36,11 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 
 	@Resource
 	private Properties propertiesFFmpeg;
-	private final static String FOLDER_OUPUT_ORIGINAL="path.folder.original";
-	
-	@Resource 
+	private final static String FOLDER_OUPUT_ORIGINAL = "path.folder.original";
+
+	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
+
 	/**
 	 * @param file
 	 * @param folderOutput
@@ -54,36 +54,51 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 		logger.setResourceBundle(ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
-	public File saveFile(MultipartFile file) throws FFmpegException{
-		try{
-			String folderOutputOriginalVideo=propertiesFFmpeg.getProperty(FOLDER_OUPUT_ORIGINAL);
+
+	public File saveFile(MultipartFile file) throws FFmpegException {
+		try {
+			String folderOutputOriginalVideo = propertiesFFmpeg.getProperty(FOLDER_OUPUT_ORIGINAL);
 			if (StringUtils.isBlank(folderOutputOriginalVideo)) {
 				logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
 				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 			}
 			if (!exitsPath(folderOutputOriginalVideo)) {
-				logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutputOriginalVideo }, null);
-				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutputOriginalVideo });
+				logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutputOriginalVideo },
+						null);
+				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,
+						new String[] { folderOutputOriginalVideo });
 			}
-			//TODO COMPROBAR QUE EXISTE YA EL FICHERO
+			// TODO COMPROBAR QUE EXISTE YA EL FICHERO
 			byte[] bytes = file.getBytes();
-			Path path = Paths.get( folderOutputOriginalVideo+ file.getOriginalFilename().replace(" ","_"));
-			
-			Files.write(path,bytes);
+			Path path = Paths.get(folderOutputOriginalVideo + file.getOriginalFilename().replace(" ", "_"));
+
+			Files.write(path, bytes);
 			return path.toFile();
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+
 	@Override
 	public boolean exitsFile(String file) {
 		File f = new File(file);
 		return f.exists();
 	}
+
 	public boolean exitsPath(String path) {
-		File f = new File (path);
+		File f = new File(path);
 		return f.isDirectory();
+	}
+
+	@Override
+	public boolean deleteFile(String file) {
+		File f = new File(file);
+		if (f.exists()) {
+			f.delete();
+			return true;
+		}
+		return false;
 	}
 
 }

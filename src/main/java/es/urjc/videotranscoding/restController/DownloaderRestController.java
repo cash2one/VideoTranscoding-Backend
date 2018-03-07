@@ -38,26 +38,40 @@ public class DownloaderRestController {
 	 * @param response
 	 * @param id
 	 * @return
+	 * @throws FFmpegException
 	 * @throws IOException
 	 */
 	@ApiOperation(value = "Download the Original or transcode Video")
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> downloadDirectFilm(HttpServletResponse response, @PathVariable long id) {
+	public ResponseEntity<?> downloadDirectFilm(HttpServletResponse response, @PathVariable long id)
+			throws FFmpegException {
 		Optional<Original> video = originalService.findOneVideo(id);
-		if (video == null) {
-			Optional<Conversion> conversion = conversionService.findOneConversion(id);
-			if (conversion == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			} else {
-				File filepath = new File(conversion.get().getPath());
-				FileDownloader.fromFile(filepath).with(response).serveResource();
-				return new ResponseEntity<>(HttpStatus.OK);
-			}
+		if (!video.isPresent()) {
+			return new ResponseEntity<>(getDownloadConversion(id, response), HttpStatus.OK);
 		} else {
 			File filepath = new File(video.get().getPath());
 			FileDownloader.fromFile(filepath).with(response).serveResource();
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param response
+	 * @return
+	 * @throws FFmpegException
+	 */
+	private Conversion getDownloadConversion(long id, HttpServletResponse response) throws FFmpegException {
+		Optional<Conversion> video = conversionService.findOneConversion(id);
+		Conversion conversion = video.get();
+		if (conversion == null) {
+			// TODO
+			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
+		}
+		File filepath = new File(video.get().getPath());
+		FileDownloader.fromFile(filepath).with(response).serveResource();
+		return conversion;
 	}
 
 	/**

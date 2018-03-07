@@ -8,4 +8,5 @@ import es.urjc.videotranscoding.entities.Original;
 @Repository
 public interface OriginalRepository extends JpaRepository<Original, Long> {
 
+	
 }

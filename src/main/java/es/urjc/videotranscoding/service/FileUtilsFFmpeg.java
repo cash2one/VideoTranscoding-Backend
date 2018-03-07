@@ -17,4 +17,6 @@ public interface FileUtilsFFmpeg {
 	 * @throws FFmpegException 
 	 */
 	File saveFile(MultipartFile file) throws FFmpegException;
+	 
+	boolean deleteFile(String file);
 }
