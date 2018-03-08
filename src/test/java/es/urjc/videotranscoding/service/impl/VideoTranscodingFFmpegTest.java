@@ -165,12 +165,12 @@ public class VideoTranscodingFFmpegTest {
 	@Ignore
 	public void transcodeSucess() {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
-		Conversion newVideo = new Conversion(ConversionType.MKV_H264360_COPY, video);
-		Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY, video);
+		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
+		Conversion newVideo = new Conversion(ConversionType.MP4_H264360_AAC, video);
+	//	Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY, video);
 		List<Conversion> lista = new ArrayList<>();
 		lista.add(newVideo);
-		lista.add(newVideo2);
+	//	lista.add(newVideo2);
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		userService.save(u1);
@@ -192,28 +192,24 @@ public class VideoTranscodingFFmpegTest {
 
 	@Test
 	@Ignore
-
-	public void allTypeTranscode() {
+	public void allTypeTranscode() throws InterruptedException {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
-		List<Conversion> lista = new ArrayList<>();
-		EnumSet.allOf(ConversionType.class).forEach(c -> {
-			lista.add(new Conversion(c, video));
-		});
-		video.setAllConversions(lista);
-		u1.addVideo(video);
-		userService.save(u1);
-		originalService.save(video);
-		try {
-			transcoding.transcodeVideo(video);
-			Thread.sleep(10000);
-		} catch (FFmpegException e) {
-			e.printStackTrace();
-			fail("No should fail");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			fail("No should fail");
+		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
+		for (ConversionType iterable_element : EnumSet.allOf(ConversionType.class)) {
+			List<Conversion> lista = new ArrayList<>();
+			lista.add(new Conversion(iterable_element, video));
+			video.setAllConversions(lista);
+			u1.addVideo(video);
+			userService.save(u1);
+			originalService.save(video);
+			try {
+				transcoding.transcodeVideo(video);
+				Thread.sleep(1000000000);
+			} catch (FFmpegException e) {
+				e.printStackTrace();
+			}
 		}
+
 	}
 
 	@Ignore
@@ -222,7 +218,7 @@ public class VideoTranscodingFFmpegTest {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);
 		List<Conversion> lista = new ArrayList<>();
-		List<ConversionType> x =ConversionTypeBasic.getConversion( ConversionTypeBasic.Types.MOVIL);
+		List<ConversionType> x = ConversionTypeBasic.getConversion(ConversionTypeBasic.Types.MOVIL);
 		x.forEach(c -> {
 			lista.add(new Conversion(c, video));
 		});

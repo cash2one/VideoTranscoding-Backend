@@ -9,7 +9,7 @@ public enum CodecAudio {
 	/**
 	 * Audio AAC
 	 */
-	AAC(" -c:a aac -b:a 320k"),
+	AAC(" -c:a aac -b:a 320k -strict -2 "),
 	/**
 	 * Audio LibVorbis
 	 */

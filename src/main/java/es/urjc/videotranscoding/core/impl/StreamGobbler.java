@@ -4,13 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Locale;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -18,7 +13,6 @@ import org.apache.log4j.Logger;
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
 import es.urjc.videotranscoding.repository.ConversionRepository;
-import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 /**
  * @author luisca
@@ -26,8 +20,7 @@ import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 public class StreamGobbler implements Runnable {
 	// TODO JAVADOC
-	private static final Logger logger = Logger.getLogger(StreamGobbler.class);
-	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
+
 	private static final String TRACE_STARTING_CONVERSION = "ffmpeg.conversion.start";
 	private static final String TRACE_FINISH_CONVERSION = "ffmpeg.conversion.end";
 	private static final String TRACE_IO_EXCEPTION_READ_LINE = "ffmpeg.io.exception.readLine";
@@ -44,28 +37,21 @@ public class StreamGobbler implements Runnable {
 	private final String type;
 	private final Conversion conversion;
 	private final ConversionRepository conversionRepository;
-	@Resource
-	private Properties propertiesFicheroCore;
-	@Resource
-	private FfmpegResourceBundle ffmpegResourceBundle;
+	private  Logger logger ;
 
-	public StreamGobbler(InputStream is, String type, Conversion conversion,
-			ConversionRepository conversionRepository) {
+	public StreamGobbler(InputStream is, String type, Conversion conversion, ConversionRepository conversionRepository,Logger logger) {
 		this.is = is;
 		this.type = type;
 		this.conversion = conversion;
 		this.conversionRepository = conversionRepository;
+		this.logger=logger;
 	}
 
 	public String getType() {
 		return type;
 	}
 
-	@PostConstruct
-	public void init() {
-		logger.setResourceBundle(ffmpegResourceBundle
-				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
-	}
+	
 
 	/**
 	 * 
@@ -81,6 +67,7 @@ public class StreamGobbler implements Runnable {
 			Pattern generalPattern = Pattern.compile(GENERAL_PATTERN);
 			String line = null;
 			while ((line = br.readLine()) != null) {
+				logger.l7dlog(Level.TRACE, line, null);
 				Matcher progressMatcher = progreesVideoPattern.matcher(line);
 				Matcher generalMatcher = generalPattern.matcher(line);
 				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);
