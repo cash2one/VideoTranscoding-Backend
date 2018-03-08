@@ -43,6 +43,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private static final String TRACE_INTERRUP_EXCEPTION = "ffmpeg.interrupt.exception";
 	private static final String TRACE_IO_EXCEPTION_BY_EXEC = "ffmpeg.io.exception.exec";
 	private static final String TRACE_EXCEPTION_EXECUTOR_SERVICE = "ffmpeg.exception.executor.service";
+	private static final String TRACE_COMMAND_TO_SEND = "ffmpeg.command.to.send";
 	/**
 	 * Paths Instalation FFMPEG
 	 */
@@ -77,9 +78,6 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 
 	@PostConstruct
 	public void init() {
-		// propertiesFicheroCore = (Properties)
-		// ApplicationContextProvider.getApplicationContext()
-		// .getBean("propertiesFicheroCore");
 		logger.setResourceBundle(ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
@@ -111,8 +109,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		}
 		if (!fileUtilsService.exitsPath(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutput }, null);
-			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,
-					new String[] { folderOutput });
+			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutput });
 		}
 		return folderOutput;
 	}
@@ -123,15 +120,12 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @see
 	 */
 	public void transcodeVideo(Original original) throws FFmpegException {
-		// if (originalVideo!=null)throw new
-		// FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 		if (original == null) {
 			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NULL, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NULL);
 		}
 		if (!fileUtilsService.exitsFile(original.getPath())) {
-			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE, new String[] { original.getPath() },
-					null);
+			logger.l7dlog(Level.ERROR, TRACE_ORIGINAL_VIDEO_NOT_IS_SAVE, new String[] { original.getPath() }, null);
 			throw new FFmpegException(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE,
 					new String[] { original.getPath() });
 		}
@@ -212,10 +206,10 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 				+ getFinalNameFile(fileInput, conversion.getConversionType().getContainerType());
 		conversion.setPath(finalPath);
 		conversionService.save(conversion);
-		String command = pathFFMPEG + " -i " + fileInput.toString()
-				+ conversion.getConversionType().getCodecAudioType()
+		String command = pathFFMPEG + " -i " + fileInput.toString() + conversion.getConversionType().getCodecAudioType()
 				+ conversion.getConversionType().getCodecVideoType() + finalPath;
-		logger.l7dlog(Level.DEBUG, "El Comando que se va a enviar es :" + command, null);
+
+		logger.l7dlog(Level.DEBUG, TRACE_COMMAND_TO_SEND, new String[] { command }, null);
 		return command;
 	}
 

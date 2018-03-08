@@ -3,7 +3,6 @@ package es.urjc.videotranscoding.service;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +38,7 @@ public interface UserService {
 	public boolean isAdmin(Principal principal);
 
 	// TODO ESTE METODO ES AUTOMATICO
-	void callTranscodeIfChargeIsDown() throws FFmpegException, InterruptedException, ExecutionException;
+	void callTranscodeIfChargeIsDown() throws FFmpegException;
 
 	public void deleteUser(User u1);
 

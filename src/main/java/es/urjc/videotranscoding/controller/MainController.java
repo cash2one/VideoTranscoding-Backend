@@ -25,8 +25,7 @@ import es.urjc.videotranscoding.service.UserService;
 
 @Controller
 public class MainController {
-	// TODO UNUSED,Conversion TYPE NOT NULL,Rehacer este controlador con
-	// fileService, Ademas de Javadoc
+	// TODO JAVADOC
 
 	@Autowired
 	private VideoTranscodingService videoTranscodingService;
@@ -59,7 +58,7 @@ public class MainController {
 
 	@PostMapping(value = "/uploadFile")
 	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model,
-			@RequestParam(value="conversionType") List<String> params, Principal principal) throws FFmpegException {
+			@RequestParam(value = "conversionType") List<String> params, Principal principal) throws FFmpegException {
 
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {

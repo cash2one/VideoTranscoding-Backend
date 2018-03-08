@@ -26,6 +26,8 @@ public class FFmpegRuntimeException extends FFmpegUtilRuntimeException {
 	public static final int EX_ORIGINAL_VIDEO_NOT_IS_SAVE = 15005;
 	public static final int EX_EXECUTION_EXCEPTION = 15006;
 	public static final int EX_IO_EXCEPTION_BY_EXEC = 15007;
+	public static final int EX_IO_EXCEPTION_READ_LINE=15009;
+
 
 	/**
 	 * Default constructor

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class ConversionTypeBasic {
 	public enum Types {
-		WEB("web"), MOVIL("movil"), VLC("vlc"),ALL("");
+		WEB("web"), MOVIL("movil"), VLC("vlc"), ALL("");
 
 		private final String text;
 
@@ -22,7 +22,8 @@ public class ConversionTypeBasic {
 		}
 
 	}
-//TODO FINAL LISTS OF CONVERSIONS
+
+	// TODO FINAL LISTS OF CONVERSIONS
 	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MKV_H264480_COPY);
 	private static List<ConversionType> WEB = Arrays.asList(ConversionType.MKV_H264720_COPY);
 	private static List<ConversionType> VLC = Arrays.asList(ConversionType.MKV_H264360_COPY);
@@ -43,7 +44,7 @@ public class ConversionTypeBasic {
 		case VLC:
 			return VLC;
 		case ALL:
-			List<ConversionType> allList= new ArrayList<>();
+			List<ConversionType> allList = new ArrayList<>();
 			allList.addAll(VLC);
 			allList.addAll(WEB);
 			allList.addAll(MOVIL);

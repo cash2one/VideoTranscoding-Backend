@@ -30,7 +30,6 @@ public class DataLoader implements CommandLineRunner {
 	private Properties propertiesFFmpeg;
 
 	public void run(String... strings) throws Exception {
-		//TODO When you have the user on the docker container
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Nuevo Video", propertiesFFmpeg.getProperty(VIDEO_DEMO), u1);
 		Conversion newVideo = new Conversion(ConversionType.MKV_H264360_COPY, video);
@@ -41,7 +40,6 @@ public class DataLoader implements CommandLineRunner {
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		User user = users.findByEmail(u1.getEmail());
-	
 		if (user == null) {
 			users.save(u1);
 			originalRepository.save(video);

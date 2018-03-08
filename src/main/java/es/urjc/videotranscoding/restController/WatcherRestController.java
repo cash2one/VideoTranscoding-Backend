@@ -54,37 +54,23 @@ public class WatcherRestController {
 	 */
 	@ApiOperation(value = "Watch the Original or transcode Video")
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> watchVideo(HttpServletResponse response, HttpServletRequest request, @PathVariable long id)
-			throws FFmpegException {
+	public ResponseEntity<?> watchVideo(HttpServletResponse response, HttpServletRequest request,
+			@PathVariable long id) {
 		Optional<Original> video = originalService.findOneVideo(id);
 		if (!video.isPresent()) {
-			return new ResponseEntity<>(getWatchConversion(id, request, response), HttpStatus.OK);
+			Optional<Conversion> conversion = conversionService.findOneConversion(id);
+			Conversion conversionVideo = conversion.get();
+			if (conversionVideo == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			Path p1 = Paths.get(conversionVideo.getPath());
+			FileWatcher.fromPath(p1).with(request).with(response).serveResource();
+			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			Path p1 = Paths.get(video.get().getPath());
 			FileWatcher.fromPath(p1).with(request).with(response).serveResource();
 			return new ResponseEntity<Original>(HttpStatus.OK);
 		}
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws FFmpegException
-	 */
-	private Conversion getWatchConversion(long id, HttpServletRequest request, HttpServletResponse response)
-			throws FFmpegException {
-		Optional<Conversion> video = conversionService.findOneConversion(id);
-		Conversion conversion = video.get();
-		if (conversion == null) {
-			// TODO
-			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
-		}
-		Path p1 = Paths.get(conversion.getPath());
-		FileWatcher.fromPath(p1).with(request).with(response).serveResource();
-		return conversion;
 	}
 
 }

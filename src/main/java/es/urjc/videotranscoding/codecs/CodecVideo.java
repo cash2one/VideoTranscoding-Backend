@@ -36,15 +36,15 @@ public enum CodecVideo {
 	/**
 	 * 
 	 */
-	VP9_720(" -c:v libvpx-vp9 -s 1280x720 -threads 4 -crf 30 -b:v 0"),
+	VP9_720(" -c:v libvpx-vp9 -s 1280x720 -threads 4 -crf 30 -b:v 0 "),
 	/**
 	 * 
 	 */
-	VP9_480(" -c:v libvpx-vp9 -s 640x480 -threads 4 -crf 30 -b:v 0"),
+	VP9_480(" -c:v libvpx-vp9 -s 640x480 -threads 4 -crf 30 -b:v 0 "),
 	/**
 	 * 
 	 */
-	VP9_360(" -c:v libvpx-vp9 -s 480x360 -threads 4 -crf 30 -b:v 0"),
+	VP9_360(" -c:v libvpx-vp9 -s 480x360 -threads 4 -crf 30 -b:v 0 "),
 	/**
 	 * 
 	 */

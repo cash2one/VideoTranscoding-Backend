@@ -24,9 +24,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
+
 @Component
 public class FileWatcher {
-
+//TODO 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final int DEFAULT_BUFFER_SIZE = 2048000; // ..bytes = 20KB.
@@ -303,8 +305,7 @@ public class FileWatcher {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-			// TODO: handle exception
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_IO_EXCEPTION_READ_LINE);
 		}
 	}
 

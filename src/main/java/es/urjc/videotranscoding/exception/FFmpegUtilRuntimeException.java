@@ -11,6 +11,7 @@ public class FFmpegUtilRuntimeException extends RuntimeException{
 	protected static Hashtable<Integer, String> msgErrors = new Hashtable<Integer, String>();
 	public static final int ERROR_UNKOWN = 0;
 	private static final String FJEX_NO_MSG = "Not message found";
+	
 
 
 	/**

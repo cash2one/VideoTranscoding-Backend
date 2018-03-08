@@ -81,21 +81,15 @@ public class MediaRestController {
 	public ResponseEntity<?> getOriginalVideo(@PathVariable long id) throws FFmpegException {
 		Optional<Original> video = originalService.findOneVideo(id);
 		if (!video.isPresent()) {
-			return new ResponseEntity<>(getConversionVideo(id), HttpStatus.OK);
+			Optional<Conversion> conversion = conversionService.findOneConversion(id);
+			Conversion conversionVideo = conversion.get();
+			if (conversionVideo == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(conversionVideo, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(video.get(), HttpStatus.OK);
 		}
-	}
-
-	private Conversion getConversionVideo(long id) throws FFmpegException {
-		Optional<Conversion> video = conversionService.findOneConversion(id);
-		Conversion conversion = video.get();
-		if (conversion == null) {
-			// TODO
-			throw new FFmpegException(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL);
-		}
-		return conversion;
-
 	}
 
 	@JsonView(Details.class)
@@ -107,18 +101,19 @@ public class MediaRestController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		originalService.deleteAllVideos(u);
-		return new ResponseEntity<>(u,HttpStatus.OK);
+		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
+
 	@JsonView(Details.class)
 	@ApiOperation(value = "Get videos information for id")
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> deleteVideos(Principal principal,@PathVariable long id) throws FFmpegException {
+	public ResponseEntity<?> deleteVideos(Principal principal, @PathVariable long id) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		originalService.delete(id, u);
-		return new ResponseEntity<>(u,HttpStatus.OK);
+		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
 
 	/**

@@ -2,11 +2,11 @@ package es.urjc.videotranscoding.restController;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +28,8 @@ import io.swagger.annotations.Api;
 @RequestMapping(value = "/api/user")
 @Api(tags = "User Api Operations")
 public class UserRestController {
-	public interface Details extends User.Basic, User.Details, Original.Basic, Original.Details,
-			Conversion.Basic, Conversion.Details {
+	public interface Details
+			extends User.Basic, User.Details, Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
 	}
 
 	@Autowired
@@ -57,21 +57,23 @@ public class UserRestController {
 	}
 
 	@GetMapping(value = "/execute")
-	public ResponseEntity<?> executeService() {
-		try {
-			userService.callTranscodeIfChargeIsDown();
-			return new ResponseEntity<String>("All Ok", HttpStatus.OK);
-		} catch (FFmpegException e) {
-			return new ResponseEntity<ExceptionForRest>(new ExceptionForRest(e.getCodigo(), e.getLocalizedMessage()),
-					HttpStatus.BAD_REQUEST);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public ResponseEntity<?> executeService() throws FFmpegException {
+		userService.callTranscodeIfChargeIsDown();
+		return new ResponseEntity<String>("All Ok", HttpStatus.OK);
+
+	}
+
+	/**
+	 * Handler for the exceptions
+	 * 
+	 * @param e
+	 *            exception
+	 * @return a ExceptionForRest with the exception
+	 */
+	@ExceptionHandler(FFmpegException.class)
+	public ResponseEntity<ExceptionForRest> exceptionHandler(FFmpegException e) {
+		ExceptionForRest error = new ExceptionForRest(e.getCodigo(), e.getLocalizedMessage());
+		return new ResponseEntity<ExceptionForRest>(error, HttpStatus.BAD_REQUEST);
 	}
 
 }

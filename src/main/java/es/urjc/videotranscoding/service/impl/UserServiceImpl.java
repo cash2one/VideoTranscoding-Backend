@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
 
@@ -95,7 +94,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// @Scheduled(cron = "*/10 * * * * *")
-	public void callTranscodeIfChargeIsDown() throws FFmpegException, InterruptedException, ExecutionException {
+	public void callTranscodeIfChargeIsDown() throws FFmpegException {
 		for (User user : users.findAll()) {
 			for (Original originalVideo : user.getListVideos()) {
 				if (!originalVideo.isActive() && !originalVideo.isComplete()) {

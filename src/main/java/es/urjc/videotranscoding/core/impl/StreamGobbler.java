@@ -4,22 +4,33 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.LogManager;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
 import es.urjc.videotranscoding.repository.ConversionRepository;
+import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 /**
  * @author luisca
  */
 
 public class StreamGobbler implements Runnable {
-	//TODO JAVADOC
-	private final Logger logger = LogManager.getLogger(StreamGobbler.class);
+	// TODO JAVADOC
+	private static final Logger logger = Logger.getLogger(StreamGobbler.class);
+	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
+	private static final String TRACE_STARTING_CONVERSION = "ffmpeg.conversion.start";
+	private static final String TRACE_FINISH_CONVERSION = "ffmpeg.conversion.end";
+	private static final String TRACE_IO_EXCEPTION_READ_LINE = "ffmpeg.io.exception.readLine";
 	private static Double finalTime;
 	private final String GENERAL_PATTERN = ".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits/s *speed= *(\\d+.\\d+)x.*";
 	private final String PROGRESS_VIDEO_PATTERN = "(?<=time=)[\\d:.]*";
@@ -32,8 +43,11 @@ public class StreamGobbler implements Runnable {
 	private volatile String bitrate;
 	private final String type;
 	private final Conversion conversion;
-
 	private final ConversionRepository conversionRepository;
+	@Resource
+	private Properties propertiesFicheroCore;
+	@Resource
+	private FfmpegResourceBundle ffmpegResourceBundle;
 
 	public StreamGobbler(InputStream is, String type, Conversion conversion,
 			ConversionRepository conversionRepository) {
@@ -47,13 +61,19 @@ public class StreamGobbler implements Runnable {
 		return type;
 	}
 
+	@PostConstruct
+	public void init() {
+		logger.setResourceBundle(ffmpegResourceBundle
+				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
+	}
+
 	/**
 	 * 
 	 */
 	@Override
 	public void run() {
 		try {
-			logger.info("Se va a convertir un video");
+			logger.l7dlog(Level.INFO, TRACE_STARTING_CONVERSION, new String[] { conversion.getName() }, null);
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 			Pattern durationVideoPattern = Pattern.compile(DURATION_VIDEO_PATTERN);
@@ -96,14 +116,10 @@ public class StreamGobbler implements Runnable {
 			conversion.setFinished(true);
 			conversion.setActive(false);
 			conversionRepository.save(conversion);
-			// TODO
-			// logger.l7dlog(Level.INFO, arg1,new String[]{}, null);
-			logger.info("Se ha terminado de convertir el video");
-
+			logger.l7dlog(Level.INFO, TRACE_FINISH_CONVERSION, new String[] { conversion.getName() }, null);
 		} catch (IOException e) {
-			//TODO exception
-			e.printStackTrace();
-			logger.error("IO Exception", e);
+			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_READ_LINE, null);
+			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_IO_EXCEPTION_READ_LINE);
 		}
 	}
 

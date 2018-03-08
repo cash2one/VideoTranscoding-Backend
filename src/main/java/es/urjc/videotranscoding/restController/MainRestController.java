@@ -9,16 +9,16 @@ import io.swagger.annotations.Api;
 
 @RestController
 @Api(tags = "Main Api Operations")
-public class MainRestController{
+public class MainRestController {
 	@Autowired
 	private VideoTranscodingService ffmpegTranscoding;
 
 	@GetMapping(value = "/ajaxCall")
-	public String getStatusAjax(){
-		try{
-			String progress = ffmpegTranscoding.getErrorGobbler().getProgress().replace(",",".");
+	public String getStatusAjax() {
+		try {
+			String progress = ffmpegTranscoding.getErrorGobbler().getProgress().replace(",", ".");
 			return progress;
-		}catch(NullPointerException e){
+		} catch (NullPointerException e) {
 			return "Vacio";
 		}
 	}
