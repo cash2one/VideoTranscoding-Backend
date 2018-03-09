@@ -9,19 +9,19 @@
 
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
-	<script src="http://malsup.github.com/jquery.form.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 	<script src="js/main.js"></script>
+	<script src="js/jqueryForm.js"></script>
 </head>
 
 <body>
 	<h1>VideoTranscoding</h1>
 	<a id="swagger" href="/swagger-ui.html">Api Documentation</a>
-	<h3>Upload your File and select all conversion type that you wants</h3>
+	<h3>Upload your File and select the conversion that you want.</h3>
 	<div class="container">
 		<div class="col-md-12">
-			<form id="uploadbanner" enctype="multipart/form-data" method="post" action="/uploadFile">
-				<select multiple size='6' name="conversionType" id="conversionType">
+			<form id="form" enctype="multipart/form-data" method="post" action="/uploadFile">
+				<select multiple size='4' name="conversionType" id="conversionType">
 								{{#conversionType}}
                                  <option value="{{.}}">{{.}}</option>
                                     {{/conversionType}}
@@ -30,7 +30,7 @@
 				<input class="osxbutton" id="fileupload" name="fileupload" type="file" />
 				<br>
 				<br>
-				<button class="osxbutton" type="submit">Send</button>
+				<button class="osxbutton" value="Send" id="submit" type="submit">Send</button>
 				<br>
 				<br>
 				<div class="progress">
@@ -38,7 +38,7 @@
 					<div class="percent">0%</div>
 				</div>
 				<div id="status"></div>
-			</form>
+					</form>
 		</div>
 	</div>
 </body>

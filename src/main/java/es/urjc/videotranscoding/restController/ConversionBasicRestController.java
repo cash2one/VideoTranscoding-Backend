@@ -52,7 +52,7 @@ public class ConversionBasicRestController {
 	 */
 	@GetMapping(value = "")
 	@ApiOperation(value = "Get the types of conversion")
-	public ResponseEntity<List<String>> addConversionExpert(Principal principal) throws FFmpegException {
+	public ResponseEntity<List<String>> getConversionBasic(Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -78,7 +78,7 @@ public class ConversionBasicRestController {
 	@PostMapping(value = "")
 	@ApiOperation(value = "Send the video for conversion")
 	@JsonView(Details.class)
-	public ResponseEntity<Object> addConversionExpert(@RequestParam(value = "file") MultipartFile file,
+	public ResponseEntity<Object> addConversionBasic(@RequestParam(value = "file") MultipartFile file,
 			@RequestParam(value = "conversionType") List<String> conversionList, Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {

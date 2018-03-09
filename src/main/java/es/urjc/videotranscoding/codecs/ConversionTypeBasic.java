@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class ConversionTypeBasic {
 	public enum Types {
-		WEB("web"), MOVIL("movil"), VLC("vlc"), ALL("all");
+		WEB("Web - For all Web Navigators"), MOVIL("Movil - Android and iOS"), VLC("Vlc - For Computers"), ALL("All - Web, Movil and Vlc");
 
 		private final String text;
 

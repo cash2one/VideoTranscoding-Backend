@@ -1,9 +1,5 @@
 package es.urjc.videotranscoding.codecs;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 public enum CodecAudio {
 
 	/**
@@ -23,9 +19,7 @@ public enum CodecAudio {
 	 */
 	COPY(" -c:a copy ");
 	private final String codecAudioType;
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long idAudio;
+
 
 	CodecAudio(String x) {
 		this.codecAudioType = x;

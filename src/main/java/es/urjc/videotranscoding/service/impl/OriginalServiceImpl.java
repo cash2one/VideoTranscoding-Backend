@@ -175,6 +175,7 @@ public class OriginalServiceImpl implements OriginalService {
 			try {
 				listConversion.addAll(ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, x)));
 			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
 				//TODO Log
 			}
 		});
