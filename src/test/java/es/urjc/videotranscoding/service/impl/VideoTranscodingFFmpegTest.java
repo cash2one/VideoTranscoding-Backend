@@ -166,7 +166,7 @@ public class VideoTranscodingFFmpegTest {
 	public void transcodeSucess() {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
-		Conversion newVideo = new Conversion(ConversionType.MP4_H264360_AAC, video);
+		Conversion newVideo = new Conversion(ConversionType.WEBM_VP9360_VORBIS, video);
 	//	Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY, video);
 		List<Conversion> lista = new ArrayList<>();
 		lista.add(newVideo);

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class ConversionTypeBasic {
 	public enum Types {
-		WEB("web"), MOVIL("movil"), VLC("vlc"), ALL("");
+		WEB("web"), MOVIL("movil"), VLC("vlc"), ALL("all");
 
 		private final String text;
 
@@ -24,9 +24,13 @@ public class ConversionTypeBasic {
 	}
 
 	// TODO FINAL LISTS OF CONVERSIONS
-	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MKV_H264480_COPY);
-	private static List<ConversionType> WEB = Arrays.asList(ConversionType.MKV_H264720_COPY);
-	private static List<ConversionType> VLC = Arrays.asList(ConversionType.MKV_H264360_COPY);
+	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MP4_H264360_AAC,
+			ConversionType.MP4_H264480_AAC, ConversionType.MP4_H264720_AAC, ConversionType.MP4_H2641080_AAC);
+	private static List<ConversionType> WEB = Arrays.asList(ConversionType.WEBM_VP91080_VORBIS,
+			ConversionType.WEBM_VP9360_VORBIS, ConversionType.WEBM_VP9480_VORBIS, ConversionType.WEBM_VP9720_VORBIS);
+	private static List<ConversionType> VLC = Arrays.asList(ConversionType.MKV_HEVC1080_COPY,
+			ConversionType.MKV_HEVC2160_COPY, ConversionType.MKV_HEVC720_COPY, ConversionType.MKV_HEVC480_COPY,
+			ConversionType.MKV_HEVC360_COPY);
 
 	public static List<String> getAllTypesBasic() {
 		List<String> enumNames = Stream.of(Types.values()).map(Enum::name).collect(Collectors.toList());

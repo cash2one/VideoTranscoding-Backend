@@ -175,11 +175,12 @@ public class OriginalServiceImpl implements OriginalService {
 			try {
 				listConversion.addAll(ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, x)));
 			} catch (IllegalArgumentException e) {
+				//TODO Log
 			}
 		});
 
 		if (listConversion.isEmpty()) {
-			// TODO
+			// TODO quitar fileSaved
 			throw new FFmpegException();
 		}
 		List<Conversion> conversionsVideo = new ArrayList<>();

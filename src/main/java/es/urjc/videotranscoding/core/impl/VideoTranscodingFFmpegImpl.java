@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.entities.Original;
@@ -203,7 +204,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 */
 	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, Conversion conversion) {
 		String finalPath = folderOutput
-				+ getFinalNameFile(fileInput, conversion.getConversionType().getContainerType());
+				+ getFinalNameFile(fileInput, conversion.getConversionType(),conversion.getConversionType().getContainerType());
 		conversion.setPath(finalPath);
 		conversionService.save(conversion);
 		String command = pathFFMPEG + " -i " + fileInput.toString() + conversion.getConversionType().getCodecAudioType()
@@ -216,13 +217,13 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	/**
 	 * @param fileInput
 	 *            of file to converted.
+	 * @param conversionType 
 	 * @param extension
 	 *            of the futher nameFile
 	 * @return String with the final name of the file
 	 */
-	private String getFinalNameFile(File fileInput, String extension) {
-		String sort = String.valueOf(System.currentTimeMillis());
-		return FilenameUtils.getBaseName(fileInput.getName()) + sort.substring(3, 9) + extension;
+	private String getFinalNameFile(File fileInput, ConversionType conversionType, String extension) {
+		return FilenameUtils.getBaseName(fileInput.getName()) +"_"+ conversionType + extension;
 	}
 
 	/**

@@ -12,21 +12,23 @@ RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=acc
 RUN yum -y install jdk-9.0.4_linux-x64_bin.rpm
 RUN rm jdk-9.0.4_linux-x64_bin.rpm
 #Download FFMPEG
-RUN yum -y install epel-release 
-RUN yum -y update 
-RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
-RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
-RUN yum -y install ffmpeg ffmpeg-devel -y
+#RUN yum -y install epel-release 
+#RUN yum -y update 
+#RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+#RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+#RUN yum -y install ffmpeg ffmpeg-devel -y
+COPY /installation/ffmpeg /usr/bin/ffmpeg
+
 
 #Config LOGS
 RUN mkdir -p /tmp/VideoTranscoding/logs/
 RUN chmod -R 777 /tmp/VideoTranscoding/logs/
 #RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Spring.log && \
-#   ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Spring.log
+# ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Spring.log
 #RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Core.log && \
-#   ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Core.log
+# ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Core.log
 #RUN touch /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log && \
-#   ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log    
+# ln -sf /dev/stdout /tmp/VideoTranscoding/logs/FFMPEG_Hibernate.log    
 #Config PATH to save Videos
 RUN mkdir -p /tmp/VideoTranscoding/videos/transcoded/
 RUN mkdir -p /tmp/VideoTranscoding/videos/original/
