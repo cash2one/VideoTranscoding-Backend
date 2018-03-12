@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User editUser(User u, long id) {
-		User userEdited = null;
+		User userEdited
 		userEdited.setEmail(u.getEmail());
 
 		return userEdited;
