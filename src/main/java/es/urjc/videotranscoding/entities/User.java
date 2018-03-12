@@ -22,7 +22,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -33,7 +32,10 @@ public class User {
 
 	public interface Details {
 	}
-
+	public interface None {
+	}
+	
+	@JsonView(None.class)
 	private final int WORKLOAD = 12;
 
 	/**
@@ -55,13 +57,14 @@ public class User {
 	 * User nick
 	 */
 	@JsonView(Basic.class)
-	@Column(unique = true)
+	@Column(unique = true,nullable=false)
 	private String nick;
 
 	/**
 	 * User Password
 	 */
-	@JsonIgnore
+	@JsonView(None.class)
+	@Column(nullable=false)
 	private String userPassword;
 
 	/**
@@ -81,7 +84,6 @@ public class User {
 	 * List Videos of the user
 	 */
 	@JsonView(Details.class)
-
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "userVideo")
 	private final List<Original> listOriginal = new ArrayList<>();
 

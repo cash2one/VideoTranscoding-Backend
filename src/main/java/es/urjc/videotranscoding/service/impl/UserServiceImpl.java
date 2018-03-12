@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
+import es.urjc.videotranscoding.entities.UserRoles;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.UserRepository;
 import es.urjc.videotranscoding.service.UserService;
@@ -105,6 +106,21 @@ public class UserServiceImpl implements UserService {
 
 		}
 
+	}
+
+	@Override
+	public User registerUser(User u) {
+		User newUser = new User(u.getEmail(), u.getNick(), u.getHashedPassword(), u.getPhoto(), UserRoles.USER);
+		save(newUser);
+		return newUser;
+	}
+
+	@Override
+	public User editUser(User u, long id) {
+		User userEdited = null;
+		userEdited.setEmail(u.getEmail());
+
+		return userEdited;
 	}
 
 }

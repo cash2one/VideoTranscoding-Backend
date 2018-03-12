@@ -18,10 +18,12 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("**").hasRole("USER")
 		.antMatchers("/admin/**").hasRole("ADMIN")
-		.antMatchers("/api/downloader").permitAll()
-		.antMatchers("/**").hasRole("USER");
+		.antMatchers("/api/watcher/**").permitAll()
+		.antMatchers("/api/downloader/**").permitAll()
+		.antMatchers("/api/**").hasRole("USER")
+		.antMatchers("/**").permitAll();
+
 		http.csrf().disable();
 		http.cors();
 		http.httpBasic();

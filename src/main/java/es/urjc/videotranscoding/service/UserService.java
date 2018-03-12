@@ -13,33 +13,37 @@ import es.urjc.videotranscoding.exception.FFmpegException;
 
 public interface UserService {
 
-	public User findByEmail(String email);
+	User findByEmail(String email);
 
-	public List<User> findAllUsers();
+	List<User> findAllUsers();
 
-	public Page<User> findAllUsersPage(Pageable page);
+	Page<User> findAllUsersPage(Pageable page);
 
-	public Optional<User> findOneUser(long id);
+	Optional<User> findOneUser(long id);
 
-	public User findOneUser(String nombreUsuario);
+	User findOneUser(String nombreUsuario);
 
-	public void deleteUsers(long id);
+	void deleteUsers(long id);
 
-	public boolean exists(long id);
+	boolean exists(long id);
 
-	public void isAdminVisitorLogged(Principal principal, Model m);
+	void isAdminVisitorLogged(Principal principal, Model m);
 
-	public User save(User u);
+	User save(User u);
 
-	public User userVisitor(Principal principal);
+	User userVisitor(Principal principal);
 
-	public boolean isLogged(Principal principal);
+	boolean isLogged(Principal principal);
 
-	public boolean isAdmin(Principal principal);
+	boolean isAdmin(Principal principal);
 
 	// TODO ESTE METODO ES AUTOMATICO
 	void callTranscodeIfChargeIsDown() throws FFmpegException;
 
-	public void deleteUser(User u1);
+	void deleteUser(User u1);
+
+	User registerUser(User u);
+
+	User editUser(User u, long id);
 
 }

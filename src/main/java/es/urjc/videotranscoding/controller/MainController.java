@@ -40,7 +40,11 @@ public class MainController {
 	@GetMapping(value = "/")
 	public String getIndex(Model m) {
 		List<String> typeConversionBasic = ConversionTypeBasic.getAllTypesBasic();
+		EnumSet<ConversionTypeBasic.Types> explain = EnumSet.allOf(ConversionTypeBasic.Types.class);
+
 		m.addAttribute("conversionType", typeConversionBasic);
+		m.addAttribute("explain", explain);
+
 		return "index";
 	}
 

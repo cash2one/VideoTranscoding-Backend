@@ -35,6 +35,14 @@ form {
 	margin: auto;
 	left: 48%;
 }
+li{
+	text-align: left;
+}
+select{
+	width:70%;
+}
+#explain{width:78%}
+
 
 #swagger {
 	font-size: 20px;

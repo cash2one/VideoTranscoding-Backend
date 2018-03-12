@@ -1,5 +1,6 @@
 package es.urjc.videotranscoding.restController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -60,6 +64,50 @@ public class UserRestController {
 	public ResponseEntity<?> executeService() throws FFmpegException {
 		userService.callTranscodeIfChargeIsDown();
 		return new ResponseEntity<String>("All Ok", HttpStatus.OK);
+
+	}
+
+	/**
+	 * Register the new User
+	 * 
+	 * @param u
+	 *            the user new
+	 * @param principal
+	 *            the user logged.
+	 * @return the user created
+	 */
+	@PostMapping(value = "/register")
+	@JsonView(User.Basic.class)
+	public ResponseEntity<?> registerUser(@RequestBody User u, Principal principal) {
+		if (principal.getName() == null) {
+			return new ResponseEntity<User>(userService.registerUser(u), HttpStatus.CREATED);
+		} else
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+
+	/**
+	 * Edit User
+	 * 
+	 * @param u
+	 *            params of the user that you want change
+	 * @param id
+	 *            of the user to change
+	 * @return the new user edited
+	 */
+	@PutMapping(value = "/{id}")
+	@JsonView(User.Basic.class)
+	public ResponseEntity<?> editUser(@RequestBody User u, @PathVariable long id, Principal principal) {
+		if (!userService.exists(id)) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		Optional<User> userOld = userService.findOneUser(id);
+		if (principal.getName().equals(userOld.get().getNick())) {
+			User userEdited = userService.editUser(u, id);
+			return new ResponseEntity<User>(userEdited, HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 
 	}
 
