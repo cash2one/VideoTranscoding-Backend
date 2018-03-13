@@ -63,11 +63,10 @@ public class MainController {
 	@PostMapping(value = "/uploadFile")
 	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model,
 			@RequestParam(value = "conversionType") List<String> params, Principal principal) throws FFmpegException {
-
-		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
+		if (principal == null) {
 			return "403";
 		}
+		User u = userService.findOneUser(principal.getName());
 		Original original = originalService.addOriginalBasic(u, file, params);
 		videoTranscodingService.transcodeVideo(original);
 		model.addAttribute("message",

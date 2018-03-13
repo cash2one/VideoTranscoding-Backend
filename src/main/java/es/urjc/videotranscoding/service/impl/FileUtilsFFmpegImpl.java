@@ -31,6 +31,9 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 
 	private static final String TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY = "ffmpeg.folderOuput.nullOrEmpty";
 	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS = "ffmpeg.folderOutput.notExits";
+	private static final String TRACE_VIDEO_EXISTS = "ffmpeg.fileOriginal.exists";
+	private static final String TRACE_IO_EXCEPTION_GENERAL = "ffmpeg.ioException.general";
+
 	@Resource
 	private Properties propertiesFicheroCore;
 
@@ -48,9 +51,7 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 	 */
 	@PostConstruct
 	public void init() {
-		// propertiesFicheroCore = (Properties)
-		// ApplicationContextProvider.getApplicationContext()
-		// .getBean("propertiesFicheroCore");
+
 		logger.setResourceBundle(ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
@@ -68,19 +69,21 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,
 						new String[] { folderOutputOriginalVideo });
 			}
-			// TODO COMPROBAR QUE EXISTE YA EL FICHERO
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(folderOutputOriginalVideo + file.getOriginalFilename().replace(" ", "_"));
-
+			File f = path.toFile().getAbsoluteFile();
+			if (f.exists()) {
+				logger.l7dlog(Level.ERROR, TRACE_VIDEO_EXISTS, new String[] { file.getName() }, null);
+				throw new FFmpegException(FFmpegException.EX_VIDEO_EXITS, new String[] { file.getOriginalFilename() });
+			}
 			Files.write(path, bytes);
 			return path.toFile();
 		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_GENERAL, e);
+			throw new FFmpegException(FFmpegException.EX_IO_EXCEPTION_GENERAL, e);
 		}
 	}
 
-	@Override
 	public boolean exitsFile(String file) {
 		File f = new File(file);
 		return f.exists();
@@ -91,7 +94,6 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 		return f.isDirectory();
 	}
 
-	@Override
 	public boolean deleteFile(String file) {
 		File f = new File(file);
 		if (f.exists()) {

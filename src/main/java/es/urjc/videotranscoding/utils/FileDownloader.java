@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -20,9 +19,8 @@ public class FileDownloader {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	File filepath;
-	HttpServletRequest request;
-	HttpServletResponse response;
+	private File filepath;
+	private HttpServletResponse response;
 
 	protected FileDownloader() {
 	}
@@ -34,11 +32,6 @@ public class FileDownloader {
 
 	public static FileDownloader fromFile(File file) {
 		return new FileDownloader().setFilepath(file);
-	}
-
-	public FileDownloader with(HttpServletRequest httpRequest) {
-		request = httpRequest;
-		return this;
 	}
 
 	public FileDownloader with(HttpServletResponse httpResponse) {

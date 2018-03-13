@@ -1,5 +1,6 @@
 package es.urjc.videotranscoding.entities;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,12 +54,17 @@ public class Original {
 	@JsonView(None.class)
 	@ManyToOne
 	private User userVideo;
+	/**
+	 * Filesize of the original Video
+	 */
+	@JsonView(Details.class)
+	private String fileSize;
 
 	/**
 	 * All Conversions of the video
 	 */
 	@JsonView(Basic.class)
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY,mappedBy = "parent")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "parent")
 	private List<Conversion> conversions = new ArrayList<>();
 
 	/**
@@ -156,8 +162,20 @@ public class Original {
 	public Long getOriginalId() {
 		return originalId;
 	}
+
 	public void removeConversion(Conversion c) {
 		conversions.remove(c);
+	}
+
+	public String getFileSize() {
+		return getSizeMB(new File(getPath())) + " MB";
+	}
+
+	private String getSizeMB(File f) {
+		double fileSizeInBytes = f.length();
+		double fileSizeInKB = fileSizeInBytes / 1024;
+		double fileSizeInMB = fileSizeInKB / 1024;
+		return String.format("%.2f", fileSizeInMB);
 	}
 
 }

@@ -60,13 +60,6 @@ public class UserRestController {
 		}
 	}
 
-	@GetMapping(value = "/execute")
-	public ResponseEntity<?> executeService() throws FFmpegException {
-		userService.callTranscodeIfChargeIsDown();
-		return new ResponseEntity<String>("All Ok", HttpStatus.OK);
-
-	}
-
 	/**
 	 * Register the new User
 	 * 
@@ -104,11 +97,9 @@ public class UserRestController {
 		if (principal.getName().equals(userOld.get().getNick())) {
 			User userEdited = userService.editUser(u, id);
 			return new ResponseEntity<User>(userEdited, HttpStatus.OK);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-
 	}
 
 	/**

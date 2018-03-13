@@ -17,6 +17,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.urjc.videotranscoding.codecs.ConversionType;
@@ -37,16 +38,15 @@ public class OriginalServiceImpl implements OriginalService {
 	private static final Logger logger = Logger.getLogger(OriginalServiceImpl.class);
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
 	private static final String TRACE_NO_CONVERSION_TYPE_FOUND = "ffmpeg.conversionType.notFound";
+	private static final String TRACE_ILEGAL_ARGUMENT = "ffmpeg.argument.notFound";
 	@Autowired
 	private OriginalRepository originalVideoRepository;
 	@Autowired
 	private ConversionRepository conversionRepository;
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private FileUtilsFFmpegImpl fileUtilsService;
-
 	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
 	@Resource
@@ -68,7 +68,7 @@ public class OriginalServiceImpl implements OriginalService {
 	}
 
 	public User delete(long id, User u) throws FFmpegException {
-		//TODO bien todos los deletes
+		//TODO DELETES....
 		Optional<Original> original = findOneVideo(id);
 		if (original.isPresent()) {
 			if (u.isAdmin()) {
@@ -89,10 +89,8 @@ public class OriginalServiceImpl implements OriginalService {
 				}
 			}
 			return u;
-
 		} else {
 			return deleteConversion(id, u);
-
 		}
 
 	}
@@ -103,21 +101,21 @@ public class OriginalServiceImpl implements OriginalService {
 			if (u.isAdmin()) {
 				conversion.get().getParent().removeConversion(conversion.get());
 				save(conversion.get().getParent());
-			//	fileUtilsService.deleteFile(conversion.get().getPath());
+				fileUtilsService.deleteFile(conversion.get().getPath());
 				conversionRepository.deleteByconversionId(id);
 			} else {
 				for (Original iterator : u.getListVideos()) {
 					if (iterator.getOriginalId().equals(id)) {
+						conversion.get().getParent().removeConversion(conversion.get());
+						save(conversion.get().getParent());
 						fileUtilsService.deleteFile(conversion.get().getPath());
 						conversionRepository.deleteByconversionId(id);
 					}
 				}
-
 			}
 			return u;
-			// TODO
 		}
-		throw new FFmpegException("NOT FOUNTTDD");
+		throw new FFmpegException(FFmpegException.EX_NO_VIDEO_FOUND, new String[] { String.valueOf(id) });
 
 	}
 
@@ -136,63 +134,79 @@ public class OriginalServiceImpl implements OriginalService {
 		return originalVideoRepository.findById(id);
 	}
 
-	@Override
+	@Transactional(rollbackFor = FFmpegException.class)
 	public Original addOriginalExpert(User u, MultipartFile file, List<String> params) throws FFmpegException {
-		File fileSaved = fileUtilsService.saveFile(file);
-		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
-				fileSaved.getAbsolutePath(), u);
-		List<Conversion> conversionsVideo = new ArrayList<>();
-		List<ConversionType> listConversion = new ArrayList<>();
-		params.forEach(x -> {
-			try {
-				listConversion.add(ConversionType.valueOf(x));
-			} catch (IllegalArgumentException e) {
-				// TODO LOG
+		File fileSaved = null;
+		try {
+			fileSaved = fileUtilsService.saveFile(file);
+			Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
+					fileSaved.getAbsolutePath(), u);
+			List<Conversion> conversionsVideo = new ArrayList<>();
+			List<ConversionType> listConversion = new ArrayList<>();
+			params.forEach(x -> {
+				try {
+					listConversion.add(ConversionType.valueOf(x));
+				} catch (IllegalArgumentException e) {
+					logger.l7dlog(Level.WARN, TRACE_ILEGAL_ARGUMENT, new String[] { x }, null);
+				}
+			});
+			if (listConversion.isEmpty()) {
+				throw new FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND,
+						new String[] { originalVideo.getName() });
 			}
-		});
-		listConversion.forEach(d -> {
-			Conversion x = new Conversion(d, originalVideo);
-			conversionsVideo.add(x);
-		});
-		originalVideo.setAllConversions(conversionsVideo);
-		if (originalVideo.getAllConversions().isEmpty()) {
-			logger.l7dlog(Level.ERROR, TRACE_NO_CONVERSION_TYPE_FOUND, new String[] { originalVideo.getName() }, null);
-			throw new FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND,
-					new String[] { originalVideo.getName() });
+			listConversion.forEach(d -> {
+				Conversion x = new Conversion(d, originalVideo);
+				conversionsVideo.add(x);
+			});
+			originalVideo.setAllConversions(conversionsVideo);
+			if (originalVideo.getAllConversions().isEmpty()) {
+				logger.l7dlog(Level.ERROR, TRACE_NO_CONVERSION_TYPE_FOUND, new String[] { originalVideo.getName() },
+						null);
+				throw new FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND,
+						new String[] { originalVideo.getName() });
+			}
+			originalVideoRepository.save(originalVideo);
+			return originalVideo;
+		} catch (FFmpegException e) {
+			fileUtilsService.deleteFile(fileSaved.getAbsolutePath());
+			throw e;
 		}
-		originalVideoRepository.save(originalVideo);
-		return originalVideo;
 	}
 
-	@Override
+	@Transactional(rollbackFor = FFmpegException.class)
 	public Original addOriginalBasic(User u, MultipartFile file, List<String> params) throws FFmpegException {
-		File fileSaved = fileUtilsService.saveFile(file);
-		Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
-				fileSaved.getAbsolutePath(), u);
+		File fileSaved = null;
+		try {
+			fileSaved = fileUtilsService.saveFile(file);
+			Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
+					fileSaved.getAbsolutePath(), u);
 
-		Set<ConversionType> listConversion = new HashSet<>();
-		params.forEach(x -> {
-			try {
-				listConversion.addAll(ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, x)));
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-				//TODO Log
+			Set<ConversionType> listConversion = new HashSet<>();
+			params.forEach(x -> {
+				try {
+					listConversion.addAll(ConversionTypeBasic.getConversion(Enum.valueOf(Types.class, x)));
+				} catch (IllegalArgumentException e) {
+					logger.l7dlog(Level.WARN, TRACE_ILEGAL_ARGUMENT, new String[] { x }, null);
+				}
+			});
+
+			if (listConversion.isEmpty()) {
+				throw new FFmpegException(FFmpegException.EX_NO_CONVERSION_TYPE_FOUND,
+						new String[] { originalVideo.getName() });
 			}
-		});
+			List<Conversion> conversionsVideo = new ArrayList<>();
 
-		if (listConversion.isEmpty()) {
-			// TODO quitar fileSaved
-			throw new FFmpegException();
+			listConversion.forEach(x -> {
+				Conversion y = new Conversion(x, originalVideo);
+				conversionsVideo.add(y);
+			});
+			originalVideo.setAllConversions(conversionsVideo);
+			originalVideoRepository.save(originalVideo);
+			return originalVideo;
+		} catch (FFmpegException e) {
+			fileUtilsService.deleteFile(fileSaved.getAbsolutePath());
+			throw e;
 		}
-		List<Conversion> conversionsVideo = new ArrayList<>();
-
-		listConversion.forEach(x -> {
-			Conversion y = new Conversion(x, originalVideo);
-			conversionsVideo.add(y);
-		});
-		originalVideo.setAllConversions(conversionsVideo);
-		originalVideoRepository.save(originalVideo);
-		return originalVideo;
 	}
 
 }

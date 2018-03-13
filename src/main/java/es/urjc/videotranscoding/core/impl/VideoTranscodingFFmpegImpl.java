@@ -84,7 +84,6 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	}
 
 	private String getPathOfProgram() throws FFmpegException {
-		// TODO otros casos
 		String pathFFMPEG;
 		if ((System.getProperty("os.name").equals("Mac OS X"))) {
 			pathFFMPEG = propertiesFFmpeg.getProperty(FFMPEG_INSTALLATION_MACOSX);
@@ -203,8 +202,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @return
 	 */
 	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, Conversion conversion) {
-		String finalPath = folderOutput
-				+ getFinalNameFile(fileInput, conversion.getConversionType(),conversion.getConversionType().getContainerType());
+		String finalPath = folderOutput + getFinalNameFile(fileInput, conversion.getConversionType(),
+				conversion.getConversionType().getContainerType());
 		conversion.setPath(finalPath);
 		conversionService.save(conversion);
 		String command = pathFFMPEG + " -i " + fileInput.toString() + conversion.getConversionType().getCodecAudioType()
@@ -217,13 +216,13 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	/**
 	 * @param fileInput
 	 *            of file to converted.
-	 * @param conversionType 
+	 * @param conversionType
 	 * @param extension
 	 *            of the futher nameFile
 	 * @return String with the final name of the file
 	 */
 	private String getFinalNameFile(File fileInput, ConversionType conversionType, String extension) {
-		return FilenameUtils.getBaseName(fileInput.getName()) +"_"+ conversionType + extension;
+		return FilenameUtils.getBaseName(fileInput.getName()) + "_" + conversionType + extension;
 	}
 
 	/**

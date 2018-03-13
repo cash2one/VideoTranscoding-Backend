@@ -67,10 +67,10 @@ public class Conversion {
 	/**
 	 * 
 	 */
-	
+
 	@ManyToOne
 	private Original parent;
-	
+
 	/**
 	 * Constructor for hibernate
 	 */
@@ -88,8 +88,7 @@ public class Conversion {
 	public Conversion(ConversionType conversion, Original original) {
 		this.name = original.getName() + "_" + System.currentTimeMillis();
 		this.conversionType = conversion;
-		this.parent=original;
-	
+		this.parent = original;
 
 	}
 
@@ -158,11 +157,10 @@ public class Conversion {
 		if (isActive()) {
 			return fileSize;
 		} else if (isFinished()) {
-			File f = new File(getPath());
-			return String.valueOf(f.length()) + " KB";
-		} else
-			return "0";
-	}
+			return getSizeMB(new File(getPath())) + " MB";
+		} else {
+			return "";
+	}}
 
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
@@ -176,10 +174,11 @@ public class Conversion {
 		return parent;
 	}
 
-	
-
-
-
-	
+	private String getSizeMB(File f) {
+		double fileSizeInBytes = f.length();
+		double fileSizeInKB = fileSizeInBytes / 1024;
+		double fileSizeInMB = fileSizeInKB / 1024;
+		return String.format("%.2f", fileSizeInMB);
+	}
 
 }

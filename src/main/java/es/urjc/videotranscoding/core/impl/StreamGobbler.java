@@ -37,7 +37,7 @@ public class StreamGobbler implements Runnable {
 	private final String type;
 	private final Conversion conversion;
 	private final ConversionRepository conversionRepository;
-	private  Logger logger ;
+	private final  Logger logger ;
 
 	public StreamGobbler(InputStream is, String type, Conversion conversion, ConversionRepository conversionRepository,Logger logger) {
 		this.is = is;
@@ -68,6 +68,7 @@ public class StreamGobbler implements Runnable {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				logger.l7dlog(Level.TRACE, line, null);
+				//System.out.println(line);
 				Matcher progressMatcher = progreesVideoPattern.matcher(line);
 				Matcher generalMatcher = generalPattern.matcher(line);
 				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);

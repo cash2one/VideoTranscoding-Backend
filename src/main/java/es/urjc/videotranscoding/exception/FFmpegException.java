@@ -30,9 +30,11 @@ public class FFmpegException extends FFmpegUtilException {
 	public static final int EX_ORIGINAL_VIDEO_NOT_IS_SAVE = 15005;
 	public static final int EX_EXECUTION_EXCEPTION = 15006;
 	public static final int EX_IO_EXCEPTION_BY_EXEC = 15007;
-	public static final int EX_NO_CONVERSION_TYPE_FOUND=15008;
+	public static final int EX_IO_EXCEPTION_GENERAL = 15011;
 
-
+	public static final int EX_NO_CONVERSION_TYPE_FOUND = 15008;
+	public static final int EX_VIDEO_EXITS = 15010;
+	public static final int EX_NO_VIDEO_FOUND = 15011;
 
 	/**
 	 * Default constructor
@@ -142,7 +144,8 @@ public class FFmpegException extends FFmpegUtilException {
 	 *            code for the exception
 	 * @param params
 	 *            for build the message error
-	 * @param cause of the exception
+	 * @param cause
+	 *            of the exception
 	 */
 	public FFmpegException(int code, Object[] params, Throwable cause) {
 		super(code, cause);

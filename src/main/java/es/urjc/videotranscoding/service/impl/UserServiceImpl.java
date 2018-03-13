@@ -95,32 +95,37 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// @Scheduled(cron = "*/10 * * * * *")
+	// TODO Decidir si quitar o no
 	public void callTranscodeIfChargeIsDown() throws FFmpegException {
 		for (User user : users.findAll()) {
 			for (Original originalVideo : user.getListVideos()) {
 				if (!originalVideo.isActive() && !originalVideo.isComplete()) {
 					transcode.transcodeVideo(originalVideo);
-
 				}
 			}
-
 		}
-
 	}
 
-	@Override
 	public User registerUser(User u) {
 		User newUser = new User(u.getEmail(), u.getNick(), u.getHashedPassword(), u.getPhoto(), UserRoles.USER);
 		save(newUser);
 		return newUser;
 	}
 
-	@Override
 	public User editUser(User u, long id) {
-		User userEdited
-		userEdited.setEmail(u.getEmail());
-
-		return userEdited;
+		Optional<User> userToEditedOptional = findOneUser(id);
+		User userToEdited = userToEditedOptional.get();
+		if (u.getEmail() != null) {
+			userToEdited.setEmail(u.getEmail());
+		}
+		if (u.getNick() != null) {
+			userToEdited.setNick(u.getNick());
+		}
+		if (u.getHashedPassword() != null) {
+			userToEdited.changePassword(u.getHashedPassword());
+		}
+		save(userToEdited);
+		return userToEdited;
 	}
 
 }
