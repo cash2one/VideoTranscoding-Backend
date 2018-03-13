@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.urjc.videotranscoding.entities.Conversion;
 import es.urjc.videotranscoding.entities.Original;
-import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.utils.FileWatcher;
@@ -50,7 +49,6 @@ public class WatcherRestController {
 	 * @param id
 	 *            of the original Video or Transcoded
 	 * @return
-	 * @throws FFmpegException
 	 */
 	@ApiOperation(value = "Watch the Original or transcode Video")
 	@GetMapping(value = "/{id}")
@@ -59,13 +57,14 @@ public class WatcherRestController {
 		Optional<Original> video = originalService.findOneVideo(id);
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
-			Conversion conversionVideo = conversion.get();
-			if (conversionVideo == null) {
+			if (conversion.isPresent()) {
+				Conversion conversionVideo = conversion.get();
+				Path p1 = Paths.get(conversionVideo.getPath());
+				FileWatcher.fromPath(p1).with(request).with(response).serveResource();
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			Path p1 = Paths.get(conversionVideo.getPath());
-			FileWatcher.fromPath(p1).with(request).with(response).serveResource();
-			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			Path p1 = Paths.get(video.get().getPath());
 			FileWatcher.fromPath(p1).with(request).with(response).serveResource();
