@@ -1,14 +1,11 @@
 # VideoTranscoding
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6b9cd649a14a4431882a51dd2c779e85)](https://www.codacy.com/app/luiscajl/VideoTranscoding?utm_source=github.com&utm_medium=referral&utm_content=luiscajl/VideoTranscoding&utm_campaign=badger)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a3de0e21cd574e78341e/maintainability)](https://codeclimate.com/github/luiscajl/VideoTranscoding/maintainability)
-[![codebeat badge](https://codebeat.co/badges/65eb205c-9ba9-4ebe-901f-6a4a3eac757c)](https://codebeat.co/projects/github-com-luiscajl-videotranscoding-master)
 [![Build Status](https://travis-ci.org/luiscajl/VideoTranscoding.svg?branch=master)](https://travis-ci.org/luiscajl/VideoTranscoding)
-![Version](https://img.shields.io/badge/version-0.2-brightgreen.svg?style=flat)
+![Version](https://img.shields.io/badge/version-0.5-brightgreen.svg?style=flat)
 [![License badge](https://img.shields.io/badge/license-Apache2-orange.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This application transcode a video that you send on all formats what you want and diferent resolutions. It´s build on a docker container to simplify the installation.
-#### Known errors:
-1. You can´t save your transcoded videos on your machine.
 
 ## Run it:
 1. Install [docker](https://docs.docker.com/engine/installation/) for your machine
@@ -39,9 +36,9 @@ sh /scripts/install_ffmpeg_linux.sh
 3. Now you can import the project on your ide and start SpringBoot Application or develop the project.
 
 
-## Next objectives (Release 0.5):
+## Next objectives (Release 1.0):
 - [x] Add support for more audio languages and subtitles.
-- [x] Create a full Api Rest for transcode service.
+- [x] Add an interface on Angular for the API
 
 The project is my final project of my degree. I hope to finish it on Jun´18. 
 
