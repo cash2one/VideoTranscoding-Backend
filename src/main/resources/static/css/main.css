@@ -4,6 +4,10 @@ body {
 	text-align: center;
 }
 
+#imageLogo {
+	width: 40%;
+}
+
 form {
 	display: block;
 	margin: 20px auto;
@@ -35,14 +39,18 @@ form {
 	margin: auto;
 	left: 48%;
 }
-li{
+
+li {
 	text-align: left;
 }
-select{
-	width:70%;
-}
-#explain{width:78%}
 
+select {
+	width: 70%;
+}
+
+#explain {
+	width: 78%
+}
 
 #swagger {
 	font-size: 20px;
