@@ -1,11 +1,9 @@
 package es.urjc.videotranscoding.service.impl;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
-
-import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,16 +17,21 @@ import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.entities.UserRoles;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.UserRepository;
+import es.urjc.videotranscoding.service.FileUtilsFFmpeg;
+import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-	@Resource
-	private Properties propertiesFFmpeg;
+
 	@Autowired
 	private VideoTranscodingService transcode;
 	@Autowired
 	private UserRepository users;
+	@Autowired
+	private FileUtilsFFmpeg fileUtilsService;
+	@Autowired
+	private OriginalService originalService;
 
 	public User findByEmail(String email) {
 		return users.findByEmail(email);
@@ -126,6 +129,30 @@ public class UserServiceImpl implements UserService {
 		}
 		save(userToEdited);
 		return userToEdited;
+	}
+
+	/**
+	 * This method check if the videos that his have and are on filesystem. If not
+	 * exists on filesystem, will be deleted for BBDD
+	 * 
+	 * @param User
+	 *            need for check his videos.
+	 */
+	public void checkVideos(User u) {
+		List<Original> listToRemove = new ArrayList<>();
+		for (Original video : u.getListVideos()) {
+			if (!fileUtilsService.exitsFile(video.getPath())) {
+				listToRemove.add(video);
+			}
+		}
+		listToRemove.forEach(vi -> originalService.deleteOriginal(vi, u));
+
+	}
+
+	public void checkVideosForAllUsers() {
+		for (User user : findAllUsers()) {
+			checkVideos(user);
+		}
 	}
 
 }

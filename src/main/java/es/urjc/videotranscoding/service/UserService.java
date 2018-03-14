@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import es.urjc.videotranscoding.entities.User;
 
 public interface UserService {
+	// TODO JAVADOCs
 
 	User findByEmail(String email);
 
@@ -41,5 +42,16 @@ public interface UserService {
 	User registerUser(User u);
 
 	User editUser(User u, long id);
+
+	/**
+	 * This method check if the videos that the user have are on filesystem. If not
+	 * exists on filesystem, will be deleted for BBDD
+	 * 
+	 * @param User
+	 *            need for check his videos.
+	 */
+	void checkVideos(User u2);
+
+	void checkVideosForAllUsers();
 
 }

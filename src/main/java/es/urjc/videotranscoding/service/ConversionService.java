@@ -1,16 +1,15 @@
 package es.urjc.videotranscoding.service;
 
-import es.urjc.videotranscoding.entities.Conversion;
-
 import java.util.Optional;
+
+import es.urjc.videotranscoding.entities.Conversion;
+import es.urjc.videotranscoding.entities.User;
 
 public interface ConversionService {
 
-    void save(Conversion video);
+	void save(Conversion video);
 
-    void delete(Conversion video);
+	User deleteConversion(Conversion video, User u);
 
-    void delete(long id);
-
-    Optional<Conversion> findOneConversion(long id);
+	Optional<Conversion> findOneConversion(long id);
 }

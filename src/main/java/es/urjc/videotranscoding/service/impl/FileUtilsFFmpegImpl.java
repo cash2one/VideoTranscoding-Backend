@@ -95,6 +95,9 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 	}
 
 	public boolean deleteFile(String file) {
+		if (file == null) {
+			return true;
+		}
 		File f = new File(file);
 		if (f.exists()) {
 			f.delete();

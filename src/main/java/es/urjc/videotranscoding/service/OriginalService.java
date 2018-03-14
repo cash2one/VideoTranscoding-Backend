@@ -13,9 +13,7 @@ public interface OriginalService {
 	// TODO Javadoc
 	void save(Original video);
 
-	void delete(Original video);
-
-	User delete(long id, User u) throws FFmpegException;
+	User deleteOriginal(Original original, User u);
 
 	User deleteAllVideos(User u);
 

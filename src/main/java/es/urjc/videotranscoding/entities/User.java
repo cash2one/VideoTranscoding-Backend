@@ -84,7 +84,7 @@ public class User {
 	 * List Videos of the user
 	 */
 	@JsonView(Details.class)
-	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "userVideo")
+	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "userVideo")
 	private final List<Original> listOriginal = new ArrayList<>();
 
 	protected User() {

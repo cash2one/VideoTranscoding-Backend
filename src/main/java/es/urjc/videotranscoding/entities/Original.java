@@ -64,7 +64,7 @@ public class Original {
 	 * All Conversions of the video
 	 */
 	@JsonView(Basic.class)
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "parent")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "parent")
 	private List<Conversion> conversions = new ArrayList<>();
 
 	/**

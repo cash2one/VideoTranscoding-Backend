@@ -25,7 +25,7 @@ public class StreamGobbler implements Runnable {
 	private static final String TRACE_FINISH_CONVERSION = "ffmpeg.conversion.end";
 	private static final String TRACE_IO_EXCEPTION_READ_LINE = "ffmpeg.io.exception.readLine";
 	private static Double finalTime;
-	private final String GENERAL_PATTERN = ".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits/s *speed= *(\\d+.\\d+)x.*";
+	private final String GENERAL_PATTERN = ".*size= *(\\d+)kB.*time= *(\\d\\d):(\\d\\d):(\\d\\d\\.\\d\\d).*bitrate= *(\\d+\\.\\d)+kbits\\/s.*speed=*(\\d+.\\d+)x.*";
 	private final String PROGRESS_VIDEO_PATTERN = "(?<=time=)[\\d:.]*";
 	private final String DURATION_VIDEO_PATTERN = "(?<=Duration: )[^,]*";
 	private final InputStream is;

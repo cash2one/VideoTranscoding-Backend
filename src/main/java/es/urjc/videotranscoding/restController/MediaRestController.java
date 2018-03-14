@@ -105,15 +105,27 @@ public class MediaRestController {
 	}
 
 	@JsonView(Details.class)
-	@ApiOperation(value = "Get videos information for id")
+	@ApiOperation(value = "Delete Original or conversion with the id")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> deleteVideos(Principal principal, @PathVariable long id) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		originalService.delete(id, u);
-		return new ResponseEntity<>(u, HttpStatus.OK);
+		Optional<Original> video = originalService.findOneVideo(id);
+		if (!video.isPresent()) {
+			Optional<Conversion> conversion = conversionService.findOneConversion(id);
+			if (conversion.isPresent()) {
+				Conversion conversionVideo = conversion.get();
+				conversionService.deleteConversion(conversionVideo, u);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} else {
+			originalService.deleteOriginal(video.get(), u);
+			return new ResponseEntity<Original>(HttpStatus.OK);
+		}
 	}
 
 	/**
