@@ -37,21 +37,20 @@ public class StreamGobbler implements Runnable {
 	private final String type;
 	private final Conversion conversion;
 	private final ConversionRepository conversionRepository;
-	private final  Logger logger ;
+	private final Logger logger;
 
-	public StreamGobbler(InputStream is, String type, Conversion conversion, ConversionRepository conversionRepository,Logger logger) {
+	public StreamGobbler(InputStream is, String type, Conversion conversion, ConversionRepository conversionRepository,
+			Logger logger) {
 		this.is = is;
 		this.type = type;
 		this.conversion = conversion;
 		this.conversionRepository = conversionRepository;
-		this.logger=logger;
+		this.logger = logger;
 	}
 
 	public String getType() {
 		return type;
 	}
-
-	
 
 	/**
 	 * 
@@ -68,7 +67,7 @@ public class StreamGobbler implements Runnable {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				logger.l7dlog(Level.TRACE, line, null);
-				//System.out.println(line);
+				// System.out.println(line);
 				Matcher progressMatcher = progreesVideoPattern.matcher(line);
 				Matcher generalMatcher = generalPattern.matcher(line);
 				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);
@@ -118,8 +117,12 @@ public class StreamGobbler implements Runnable {
 	 */
 	private double getDifference(Double finalTime2, String timeVariable) {
 		String matchSplit[] = timeVariable.split(":");
-		return ((Integer.parseInt(matchSplit[0]) * 3600 + Integer.parseInt(matchSplit[1]) * 60
-				+ Double.parseDouble(matchSplit[2])) / finalTime2) * 100;
+		try {
+			return ((Integer.parseInt(matchSplit[0]) * 3600 + Integer.parseInt(matchSplit[1]) * 60
+					+ Double.parseDouble(matchSplit[2])) / finalTime2) * 100;
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
 
 	/**

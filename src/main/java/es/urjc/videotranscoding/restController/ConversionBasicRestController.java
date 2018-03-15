@@ -79,7 +79,8 @@ public class ConversionBasicRestController {
 	@ApiOperation(value = "Send the video for conversion")
 	@JsonView(Details.class)
 	public ResponseEntity<Object> addConversionBasic(@RequestParam(value = "file") MultipartFile file,
-			@RequestParam(value = "conversionType") List<String> conversionList, Principal principal) throws FFmpegException {
+			@RequestParam(value = "conversionType") List<String> conversionList, Principal principal)
+			throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

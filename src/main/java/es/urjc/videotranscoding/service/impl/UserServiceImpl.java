@@ -145,8 +145,9 @@ public class UserServiceImpl implements UserService {
 				listToRemove.add(video);
 			}
 		}
+		if (!listToRemove.isEmpty()){
 		originalService.deleteVideos(u, listToRemove);
-
+		}
 	}
 
 	public void checkVideosForAllUsers() {

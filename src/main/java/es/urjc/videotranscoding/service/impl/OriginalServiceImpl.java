@@ -162,7 +162,8 @@ public class OriginalServiceImpl implements OriginalService {
 		userService.save(userWithNoVideos);
 		return userWithNoVideos;
 	}
-	public User deleteVideos(User u,List<Original> listOriginal) {
+
+	public User deleteVideos(User u, List<Original> listOriginal) {
 		listOriginal.forEach(original -> {
 			fileUtilsService.deleteFile(original.getPath());
 			original.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
