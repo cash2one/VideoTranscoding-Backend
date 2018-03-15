@@ -190,5 +190,10 @@ public class User {
 		return this;
 		
 	}
+	public User removeListVideos(List<Original> listVideos) {
+		this.listOriginal.removeAll(listVideos);
+		return this;
+		
+	}
 
 }

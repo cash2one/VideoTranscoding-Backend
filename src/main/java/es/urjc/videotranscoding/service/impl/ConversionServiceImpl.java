@@ -43,18 +43,15 @@ public class ConversionServiceImpl implements ConversionService {
 	public User deleteConversion(Original original, Conversion conversion, User u) {
 		if (u.isAdmin()) {
 			fileUtilsService.deleteFile(conversion.getPath());
-			// original.setAllConversions(new ArrayList<>());
-			// removeConversion(conversion);
-			// originalService.save(original);
-			// conversionRepository.deleteByconversionId(conversion.getConversionId());
+			original.removeConversion(conversion);
+			originalService.save(original);
+			conversionRepository.deleteByconversionId(conversion.getConversionId());
 		} else {
-			for (Original iterator : u.getListVideos()) {
-				if (iterator.getOriginalId().equals(conversion.getConversionId())) {
-					conversion.getParent().removeConversion(conversion);
-					originalService.save(conversion.getParent());
-					fileUtilsService.deleteFile(conversion.getPath());
-					conversionRepository.deleteByconversionId(conversion.getConversionId());
-				}
+			if (u.getListVideos().contains(original)) {
+				fileUtilsService.deleteFile(conversion.getPath());
+				original.removeConversion(conversion);
+				fileUtilsService.deleteFile(conversion.getPath());
+				conversionRepository.deleteByconversionId(conversion.getConversionId());
 			}
 		}
 		return u;

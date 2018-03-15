@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
 				listToRemove.add(video);
 			}
 		}
-		listToRemove.forEach(vi -> originalService.deleteOriginal(vi, u));
+		originalService.deleteVideos(u, listToRemove);
 
 	}
 

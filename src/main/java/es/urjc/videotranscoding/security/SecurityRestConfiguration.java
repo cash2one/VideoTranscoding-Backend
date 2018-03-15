@@ -21,6 +21,7 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/admin/**").hasRole("ADMIN")
 		.antMatchers("/api/watcher/**").permitAll()
 		.antMatchers("/api/downloader/**").permitAll()
+		.antMatchers("/api/user/register").permitAll()
 		.antMatchers("/api/**").hasRole("USER")//TODO CHANGE THE NEXT LINE FOR THE RELEASE 1.0
 		.antMatchers("/**").hasRole("USER");
 

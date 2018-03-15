@@ -162,22 +162,34 @@ public class OriginalServiceImpl implements OriginalService {
 		userService.save(userWithNoVideos);
 		return userWithNoVideos;
 	}
+	public User deleteVideos(User u,List<Original> listOriginal) {
+		listOriginal.forEach(original -> {
+			fileUtilsService.deleteFile(original.getPath());
+			original.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
+		});
+		User userWithNoVideos = u.removeListVideos(listOriginal);
+		originalVideoRepository.deleteAll(listOriginal);
+		userService.save(userWithNoVideos);
+		return userWithNoVideos;
+	}
 
 	public User deleteOriginal(Original video, User u) {
+		User userToSaved = null;
 		if (u.isAdmin()) {
 			fileUtilsService.deleteFile(video.getPath());
 			video.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
-			u.removeVideo(video);
+			userToSaved = u.removeVideo(video);
 			originalVideoRepository.delete(video);
+
 		} else {
 			if (u.getListVideos().contains(video)) {
 				fileUtilsService.deleteFile(video.getPath());
 				video.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
-				u.removeVideo(video);
+				userToSaved = u.removeVideo(video);
 				originalVideoRepository.delete(video);
 			}
 		}
-		userService.save(u);
+		userService.save(userToSaved);
 		return u;
 	}
 }

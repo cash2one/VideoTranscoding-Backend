@@ -16,8 +16,10 @@ public interface OriginalService {
 	User deleteOriginal(Original original, User u);
 
 	void deleteAllVideosByAdmin();
-	
+
 	User deleteAllVideos(User u);
+
+	User deleteVideos(User u, List<Original> listOriginal);
 
 	List<Original> findAllVideos();
 
