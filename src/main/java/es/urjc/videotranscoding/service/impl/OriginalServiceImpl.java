@@ -28,7 +28,6 @@ import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.OriginalRepository;
-import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
@@ -41,9 +40,6 @@ public class OriginalServiceImpl implements OriginalService {
 	private static final String TRACE_ILEGAL_ARGUMENT = "ffmpeg.argument.notFound";
 	@Autowired
 	private OriginalRepository originalVideoRepository;
-
-	@Autowired
-	private ConversionService conversionService;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -62,35 +58,6 @@ public class OriginalServiceImpl implements OriginalService {
 
 	public void save(Original video) {
 		originalVideoRepository.save(video);
-	}
-
-	public User deleteOriginal(Original video, User u) {
-		// TODO DELETES....
-		if (u.isAdmin()) {
-			fileUtilsService.deleteFile(video.getPath());
-			List<Conversion> listToRemove = new ArrayList<>();
-			video.getAllConversions().forEach(x -> listToRemove.add(x));
-			listToRemove.forEach(conversion -> conversionService.deleteConversion(conversion, u));
-			u.removeVideo(video);
-			userService.save(u);
-			originalVideoRepository.deleteById(video.getOriginalId());
-		} else {
-			for (Original iterator : u.getListVideos()) {
-				if (iterator.getOriginalId().equals(video.getOriginalId())) {
-					iterator.getAllConversions().forEach(x -> conversionService.deleteConversion(x, u));
-					fileUtilsService.deleteFile(video.getPath());
-					originalVideoRepository.delete(iterator);
-				}
-			}
-		}
-		return u;
-	}
-
-	public User deleteAllVideos(User u) {
-		u.removeAllVideos();
-		userService.save(u);
-		originalVideoRepository.deleteAll();
-		return u;
 	}
 
 	public List<Original> findAllVideos() {
@@ -142,9 +109,8 @@ public class OriginalServiceImpl implements OriginalService {
 
 	@Transactional(rollbackFor = FFmpegException.class)
 	public Original addOriginalBasic(User u, MultipartFile file, List<String> params) throws FFmpegException {
-		File fileSaved = null;
+		File fileSaved = fileUtilsService.saveFile(file);
 		try {
-			fileSaved = fileUtilsService.saveFile(file);
 			Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
 					fileSaved.getAbsolutePath(), u);
 
@@ -176,4 +142,42 @@ public class OriginalServiceImpl implements OriginalService {
 		}
 	}
 
+	public void deleteAllVideosByAdmin() {
+		List<User> users = userService.findAllUsers();
+		for (User user : users) {
+			User userWithNoVideos = user.removeAllVideos();
+			originalVideoRepository.deleteAll(user.getListVideos());
+			userService.save(userWithNoVideos);
+		}
+	}
+
+	public User deleteAllVideos(User u) {
+		List<Original> listOriginal = u.getListVideos();
+		listOriginal.forEach(original -> {
+			fileUtilsService.deleteFile(original.getPath());
+			original.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
+		});
+		User userWithNoVideos = u.removeAllVideos();
+		originalVideoRepository.deleteAll(listOriginal);
+		userService.save(userWithNoVideos);
+		return userWithNoVideos;
+	}
+
+	public User deleteOriginal(Original video, User u) {
+		if (u.isAdmin()) {
+			fileUtilsService.deleteFile(video.getPath());
+			video.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
+			u.removeVideo(video);
+			originalVideoRepository.delete(video);
+		} else {
+			if (u.getListVideos().contains(video)) {
+				fileUtilsService.deleteFile(video.getPath());
+				video.getAllConversions().forEach(x -> fileUtilsService.deleteFile(x.getPath()));
+				u.removeVideo(video);
+				originalVideoRepository.delete(video);
+			}
+		}
+		userService.save(u);
+		return u;
+	}
 }

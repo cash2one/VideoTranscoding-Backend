@@ -84,7 +84,7 @@ public class User {
 	 * List Videos of the user
 	 */
 	@JsonView(Details.class)
-	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "userVideo")
+	@OneToMany(fetch = FetchType.EAGER,orphanRemoval = true,cascade = CascadeType.ALL, mappedBy = "userVideo")
 	private final List<Original> listOriginal = new ArrayList<>();
 
 	protected User() {
@@ -181,11 +181,13 @@ public class User {
 	public int hashCode() {
 		return (int) (userId ^ (userId >>> 32));
 	}
-	public void removeVideo(Original original) {
+	public User removeVideo(Original original) {
 		this.listOriginal.remove(original);
+		return this;
 	}
-	public void removeAllVideos() {
+	public User removeAllVideos() {
 		this.listOriginal.removeAll(listOriginal);
+		return this;
 		
 	}
 

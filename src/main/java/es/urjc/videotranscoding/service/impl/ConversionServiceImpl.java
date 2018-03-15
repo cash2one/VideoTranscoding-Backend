@@ -40,21 +40,33 @@ public class ConversionServiceImpl implements ConversionService {
 		return conversionRepository.findById(id);
 	}
 
-	@Override
-	public User deleteConversion(Conversion video, User u) {
+	public User deleteConversion(Original original, Conversion conversion, User u) {
 		if (u.isAdmin()) {
-			video.getParent().removeConversion(video);
-			save(video);
-			originalService.save(video.getParent());
-			fileUtilsService.deleteFile(video.getPath());
-			conversionRepository.deleteByconversionId(video.getConversionId());
+			fileUtilsService.deleteFile(conversion.getPath());
+			// original.setAllConversions(new ArrayList<>());
+			// removeConversion(conversion);
+			// originalService.save(original);
+			// conversionRepository.deleteByconversionId(conversion.getConversionId());
 		} else {
 			for (Original iterator : u.getListVideos()) {
-				if (iterator.getOriginalId().equals(video.getConversionId())) {
-					video.getParent().removeConversion(video);
-					originalService.save(video.getParent());
-					fileUtilsService.deleteFile(video.getPath());
-					conversionRepository.deleteByconversionId(video.getConversionId());
+				if (iterator.getOriginalId().equals(conversion.getConversionId())) {
+					conversion.getParent().removeConversion(conversion);
+					originalService.save(conversion.getParent());
+					fileUtilsService.deleteFile(conversion.getPath());
+					conversionRepository.deleteByconversionId(conversion.getConversionId());
+				}
+			}
+		}
+		return u;
+	}
+
+	public User deleteCascade(Original original, Conversion conversion, User u) {
+		if (u.isAdmin()) {
+			fileUtilsService.deleteFile(conversion.getPath());
+		} else {
+			for (Original iterator : u.getListVideos()) {
+				if (iterator.getOriginalId().equals(conversion.getConversionId())) {
+					fileUtilsService.deleteFile(conversion.getPath());
 				}
 			}
 		}

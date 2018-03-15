@@ -15,6 +15,8 @@ public interface OriginalService {
 
 	User deleteOriginal(Original original, User u);
 
+	void deleteAllVideosByAdmin();
+	
 	User deleteAllVideos(User u);
 
 	List<Original> findAllVideos();

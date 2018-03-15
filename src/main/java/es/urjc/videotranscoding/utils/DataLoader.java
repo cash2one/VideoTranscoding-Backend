@@ -33,6 +33,6 @@ public class DataLoader implements CommandLineRunner {
 			userService.save(u2);
 		}
 		//TODO
-		// userService.checkVideosForAllUsers();
+		 userService.checkVideosForAllUsers();
 	}
 }

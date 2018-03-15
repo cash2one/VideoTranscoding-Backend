@@ -93,21 +93,21 @@ public class MediaRestController {
 	}
 
 	@JsonView(Details.class)
-	@ApiOperation(value = "Get videos information for id")
-	@DeleteMapping(value = "")
-	public ResponseEntity<?> deleteAllVideos(Principal principal) {
+	@ApiOperation(value = "Delete all Videos for all the Users, Only Admin")
+	@DeleteMapping(value = "/all")
+	public ResponseEntity<?> deleteAllVideosByAdmin(Principal principal) {
 		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
+		if (u == null || !u.isAdmin()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		originalService.deleteAllVideos(u);
+		originalService.deleteAllVideosByAdmin();
 		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
 
 	@JsonView(Details.class)
 	@ApiOperation(value = "Delete Original or conversion with the id")
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> deleteVideos(Principal principal, @PathVariable long id) throws FFmpegException {
+	public ResponseEntity<?> deleteVideos(Principal principal, @PathVariable long id) {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -117,7 +117,7 @@ public class MediaRestController {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
 			if (conversion.isPresent()) {
 				Conversion conversionVideo = conversion.get();
-				conversionService.deleteConversion(conversionVideo, u);
+				conversionService.deleteConversion(conversionVideo.getParent(), conversionVideo, u);
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -126,6 +126,19 @@ public class MediaRestController {
 			originalService.deleteOriginal(video.get(), u);
 			return new ResponseEntity<Original>(HttpStatus.OK);
 		}
+	}
+
+	@JsonView(Details.class)
+	@ApiOperation(value = "Delete all the videos of the user")
+	@DeleteMapping(value = "/")
+	public ResponseEntity<?> deleteAllMyVideos(Principal principal) {
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		User userToReturn = originalService.deleteAllVideos(u);
+		return new ResponseEntity<User>(userToReturn, HttpStatus.OK);
+
 	}
 
 	/**

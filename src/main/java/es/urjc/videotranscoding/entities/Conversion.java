@@ -67,7 +67,6 @@ public class Conversion {
 	/**
 	 * 
 	 */
-
 	@ManyToOne
 	private Original parent;
 

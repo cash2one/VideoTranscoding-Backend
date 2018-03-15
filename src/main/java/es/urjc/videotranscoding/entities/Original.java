@@ -164,7 +164,7 @@ public class Original {
 	}
 
 	public void removeConversion(Conversion c) {
-		conversions.remove(c);
+		this.conversions.remove(c);
 	}
 
 	public String getFileSize() {
