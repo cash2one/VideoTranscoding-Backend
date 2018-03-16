@@ -52,7 +52,7 @@ The project is my final project of my degree. I hope to finish it on Jun´18.
 
 ## Screenshots:
 <p align="center">
-  <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenIndex.png"/>
+  <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenIndexF.png"/>
 </p>
 <p align="center">
   <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenSucessfully.png"/>
@@ -67,7 +67,7 @@ The project is my final project of my degree. I hope to finish it on Jun´18.
   <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenUser.png"/>
 </p>
 <p align="center">
-  <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenConversionpng"/>
+  <img src="https://github.com/luiscajl/VideoTranscoding/blob/master/screens/screenConversion.png"/>
 </p>
 
 
