@@ -10,7 +10,6 @@ public class ConversionTypeBasic {
 	public enum Types {
 		WEB("Web - For all Web Navigators"), MOVIL("Movil - Android and iOS"), VLC("Vlc - For Computers"), ALL(
 				"All - Web, Movil and Vlc");
-
 		private final String text;
 
 		Types(String text) {
@@ -21,9 +20,7 @@ public class ConversionTypeBasic {
 		public String toString() {
 			return text;
 		}
-
 	}
-
 	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MP4_H264360_AAC,
 			ConversionType.MP4_H264480_AAC, ConversionType.MP4_H264720_AAC, ConversionType.MP4_H2641080_AAC);
 	private static List<ConversionType> WEB = Arrays.asList(ConversionType.WEBM_VP91080_VORBIS,

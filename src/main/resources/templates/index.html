@@ -32,11 +32,11 @@
 						<li>{{.}}</li> {{/explain}}
 					</ul>
 				</div>
-				<select multiple size='4' name="conversionType" id="conversionType">
-					{{#conversionType}}
+				<select multiple size='4' name="conversionType" id="conversionType"
+					required="true"> {{#conversionType}}
 					<option value="{{.}}">{{.}}</option> {{/conversionType}}
 				</select> <br> <br> <input class="osxbutton" id="fileupload"
-					name="fileupload" type="file" /> <br> <br>
+					name="fileupload" required="true" type="file" /> <br> <br>
 				<button class="osxbutton" value="Send" id="submit" type="submit">Send</button>
 				<br> <br>
 				<div class="progress">

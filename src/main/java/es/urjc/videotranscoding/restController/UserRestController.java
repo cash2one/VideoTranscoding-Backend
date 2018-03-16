@@ -27,6 +27,7 @@ import es.urjc.videotranscoding.exception.ExceptionForRest;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -40,6 +41,7 @@ public class UserRestController {
 	private UserService userService;
 
 	@JsonView(User.Basic.class)
+	@ApiOperation(value = "Get all the users")
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<List<User>> getUsers() {
@@ -48,9 +50,9 @@ public class UserRestController {
 	}
 
 	@JsonView(Details.class)
+	@ApiOperation(value = "Get one user with full details by id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<User> getSingleUser(@PathVariable long id) {
-
 		Optional<User> u = userService.findOneUser(id);
 
 		if (u != null) {
@@ -70,6 +72,7 @@ public class UserRestController {
 	 * @return the user created
 	 */
 	@PostMapping(value = "/register")
+	@ApiOperation(value = "Register a new user")
 	@JsonView(User.Basic.class)
 	public ResponseEntity<?> registerUser(@RequestBody User u, Principal principal) {
 		if (principal.getName() == null) {
@@ -89,6 +92,7 @@ public class UserRestController {
 	 */
 	@PatchMapping(value = "/{id}")
 	@JsonView(User.Basic.class)
+	@ApiOperation(value = "Edit the user by id")
 	public ResponseEntity<?> editUser(@RequestBody User u, @PathVariable long id, Principal principal) {
 		if (!userService.exists(id)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

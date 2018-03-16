@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -73,9 +72,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	private ConversionService conversionService;
 	@Autowired
 	private StreamGobblerFactory streamGobblerPersistentFactory;
-	// @Autowired
-	// private OriginalVideoService originalVideoService;
-	// TODO JAVADOC, LOGGER, EXCEPTS
+
 
 	@PostConstruct
 	public void init() {
@@ -83,6 +80,12 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
 
+	/**
+	 * Chack the SO and return the path of the installation of ffmpeg
+	 * 
+	 * @return the path of the ffmpeg
+	 * @throws FFmpegException
+	 */
 	private String getPathOfProgram() throws FFmpegException {
 		String pathFFMPEG;
 		if ((System.getProperty("os.name").equals("Mac OS X"))) {
@@ -101,13 +104,19 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 		return pathFFMPEG;
 	}
 
+	/**
+	 * Get the path for save the video of ffmpeg
+	 * 
+	 * @return the path
+	 * @throws FFmpegException
+	 */
 	private String getPathToSaveFiles() throws FFmpegException {
 		String folderOutput = propertiesFFmpeg.getProperty(DEFAULT_UPLOAD_FILES);
 		if (StringUtils.isBlank(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
 			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 		}
-		if (!fileUtilsService.exitsPath(folderOutput)) {
+		if (!fileUtilsService.exitsDirectory(folderOutput)) {
 			logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutput }, null);
 			throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, new String[] { folderOutput });
 		}
@@ -115,8 +124,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	}
 
 	/**
-	 * @throws InterruptedException
-	 * @throws ExecutionException
+	 * 
 	 * @see
 	 */
 	public void transcodeVideo(Original original) throws FFmpegException {
@@ -150,10 +158,13 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	}
 
 	/**
+	 * Call to ffmpeg to convert the video on realtime
 	 * 
 	 * @param command
+	 *            to send ffmpeg
 	 * @param video
-	 * @throws FFmpegException
+	 *            for convert it
+	 * @throws FFmpegRuntimeException
 	 */
 	private void conversionFinal(String command, Conversion video) throws FFmpegRuntimeException {
 		try {
@@ -194,12 +205,17 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	}
 
 	/**
+	 * Get the command for ffmpeg on bash
 	 * 
 	 * @param pathFFMPEG
+	 *            installation of ffmpeg
 	 * @param fileInput
+	 *            the file to convert. Needs the name
 	 * @param folderOutput
+	 *            where save the video
 	 * @param conversion
-	 * @return
+	 *            for the type of conversion
+	 * @return the command ready to send it
 	 */
 	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, Conversion conversion) {
 		String finalPath = folderOutput + getFinalNameFile(fileInput, conversion.getConversionType(),
@@ -214,6 +230,8 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	}
 
 	/**
+	 * Get the final name for the command
+	 * 
 	 * @param fileInput
 	 *            of file to converted.
 	 * @param conversionType

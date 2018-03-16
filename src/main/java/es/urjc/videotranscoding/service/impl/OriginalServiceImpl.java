@@ -48,7 +48,6 @@ public class OriginalServiceImpl implements OriginalService {
 	private FfmpegResourceBundle ffmpegResourceBundle;
 	@Resource
 	private Properties propertiesFicheroCore;
-	// TODO JAVADOC, LOGGER, EXCEPTS
 
 	@PostConstruct
 	public void init() {

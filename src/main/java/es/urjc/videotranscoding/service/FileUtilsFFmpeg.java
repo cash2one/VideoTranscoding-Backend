@@ -7,34 +7,42 @@ import org.springframework.web.multipart.MultipartFile;
 import es.urjc.videotranscoding.exception.FFmpegException;
 
 public interface FileUtilsFFmpeg {
-	// TODO JAVADOC
 
 	/**
+	 * Check if the file exits
 	 * 
 	 * @param file
-	 * @return
+	 *            with the path of the file
+	 * @return boolean.
 	 */
 	boolean exitsFile(String file);
 
 	/**
+	 * Check if the path exits on fileSystem
 	 * 
 	 * @param path
-	 * @return
+	 *            with the path of the directory
+	 * @return boolean.
 	 */
-	boolean exitsPath(String path);
+	boolean exitsDirectory(String path);
 
 	/**
+	 * Save a multipart on the fileSystem. The path is predefined and can be change
+	 * on properties
+	 * 
 	 * @param file
-	 * @param folderOutput
-	 * @return
+	 *            that contains the video.
+	 * @return the video saved.
 	 * @throws FFmpegException
 	 */
 	File saveFile(MultipartFile file) throws FFmpegException;
 
 	/**
+	 * Delete a file
 	 * 
 	 * @param file
-	 * @return
+	 *            that will be deleted
+	 * @return boolean.
 	 */
 	boolean deleteFile(String file);
 }

@@ -9,16 +9,25 @@ import java.net.URLConnection;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
+import es.urjc.videotranscoding.core.impl.VideoTranscodingFFmpegImpl;
+import es.urjc.videotranscoding.exception.FFmpegException;
+
+/**
+ * This Class is used for downloading the file
+ * 
+ * @author luisca
+ * @since 0.5
+ */
 @Component
 public class FileDownloader {
+	private static final String TRACE_IO_EXCEPTION_GENERAL = "ffmpeg.ioException.general";
 
-	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	protected final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
 	private File filepath;
 	private HttpServletResponse response;
 
@@ -39,7 +48,7 @@ public class FileDownloader {
 		return this;
 	}
 
-	public void serveResource() {
+	public void serveResource() throws FFmpegException {
 		try {
 			String mimeType = URLConnection.guessContentTypeFromName(filepath.getName());
 			if (mimeType == null) {
@@ -51,8 +60,8 @@ public class FileDownloader {
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(filepath));
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
 		} catch (IOException e) {
-			// TODO
-			e.printStackTrace();
+			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_GENERAL, e);
+			throw new FFmpegException(FFmpegException.EX_IO_EXCEPTION_GENERAL);
 		}
 
 	}

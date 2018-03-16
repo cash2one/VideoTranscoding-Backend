@@ -33,7 +33,6 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/api/expert")
 @Api(tags = "Conversion Expert Operations")
 public class ConversionExpertRestController {
-	// TODO JAVADOC
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -51,7 +50,7 @@ public class ConversionExpertRestController {
 	 *            logged user
 	 * @return All types of conversion for the api expert
 	 */
-	@ApiOperation(value = "Types of conversions for the api expert")
+	@ApiOperation(value = "Get types of conversions for the api expert")
 	@GetMapping(value = "")
 	public ResponseEntity<List<ConversionType>> getAllVideoConversionsType(Principal principal) {
 		User u = userService.findOneUser(principal.getName());

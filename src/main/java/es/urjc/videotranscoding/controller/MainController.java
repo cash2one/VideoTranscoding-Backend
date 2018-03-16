@@ -25,41 +25,56 @@ import es.urjc.videotranscoding.service.UserService;
 
 @Controller
 public class MainController {
-	// TODO JAVADOC
-
 	@Autowired
 	private VideoTranscodingService videoTranscodingService;
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private OriginalService originalService;
-
 	@Resource
 	private Properties propertiesFFmpeg;
 
+	/**
+	 * Index page
+	 * 
+	 * @param m
+	 *            for fill the index page
+	 * @return the template of the index page
+	 */
 	@GetMapping(value = "/")
 	public String getIndex(Model m) {
 		List<String> typeConversionBasic = ConversionTypeBasic.getAllTypesBasic();
 		EnumSet<ConversionTypeBasic.Types> explain = EnumSet.allOf(ConversionTypeBasic.Types.class);
-
 		m.addAttribute("conversionType", typeConversionBasic);
 		m.addAttribute("explain", explain);
 
 		return "index";
 	}
 
-	@GetMapping(value = "/up")
-	public String getIndex2(Model m) {
-		EnumSet<ConversionTypeBasic.Types> conversionType = EnumSet.allOf(ConversionTypeBasic.Types.class);
-		m.addAttribute("conversionType", conversionType);
-		return "upload";
-	}
-
+	/**
+	 * Status page
+	 * 
+	 * @return the template with the status page
+	 */
 	@GetMapping(value = "/status")
-	public String getStatus(Model m) {
+	public String getStatus() {
 		return "status";
 	}
 
+	/**
+	 * Uploaded page
+	 * 
+	 * @param file
+	 *            with the file to convert it
+	 * @param model
+	 *            for fill the fields on the template
+	 * @param params
+	 *            with the list of conversion types
+	 * @param principal
+	 *            the user logged
+	 * @return the template with the page of file uploaded
+	 * @throws FFmpegException
+	 */
 	@PostMapping(value = "/uploadFile")
 	public String singleFileUpload(@RequestParam("fileupload") MultipartFile file, Model model,
 			@RequestParam(value = "conversionType") List<String> params, Principal principal) throws FFmpegException {

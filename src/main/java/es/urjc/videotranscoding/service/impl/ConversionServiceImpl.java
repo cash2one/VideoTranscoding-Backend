@@ -23,22 +23,16 @@ public class ConversionServiceImpl implements ConversionService {
 	@Autowired
 	private OriginalService originalService;
 
+
 	public void save(Conversion video) {
 		conversionRepository.save(video);
 	}
 
-	public void delete(Conversion video) {
-		conversionRepository.delete(video);
-	}
 
-	public void delete(long id) {
-		conversionRepository.deleteById(id);
-	}
-
-	@Override
 	public Optional<Conversion> findOneConversion(long id) {
 		return conversionRepository.findById(id);
 	}
+
 
 	public User deleteConversion(Original original, Conversion conversion, User u) {
 		if (u.isAdmin()) {
@@ -52,19 +46,6 @@ public class ConversionServiceImpl implements ConversionService {
 				original.removeConversion(conversion);
 				fileUtilsService.deleteFile(conversion.getPath());
 				conversionRepository.deleteByconversionId(conversion.getConversionId());
-			}
-		}
-		return u;
-	}
-
-	public User deleteCascade(Original original, Conversion conversion, User u) {
-		if (u.isAdmin()) {
-			fileUtilsService.deleteFile(conversion.getPath());
-		} else {
-			for (Original iterator : u.getListVideos()) {
-				if (iterator.getOriginalId().equals(conversion.getConversionId())) {
-					fileUtilsService.deleteFile(conversion.getPath());
-				}
 			}
 		}
 		return u;

@@ -9,13 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.entities.UserRoles;
-import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.UserRepository;
 import es.urjc.videotranscoding.service.FileUtilsFFmpeg;
 import es.urjc.videotranscoding.service.OriginalService;
@@ -25,88 +22,61 @@ import es.urjc.videotranscoding.service.UserService;
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private VideoTranscodingService transcode;
-	@Autowired
-	private UserRepository users;
+	private UserRepository userService;
 	@Autowired
 	private FileUtilsFFmpeg fileUtilsService;
 	@Autowired
 	private OriginalService originalService;
 
 	public User findByEmail(String email) {
-		return users.findByEmail(email);
+		return userService.findByEmail(email);
 	}
 
 	public List<User> findAllUsers() {
-		return users.findAll();
+		return userService.findAll();
 	}
 
 	public Page<User> findAllUsersPage(Pageable page) {
-		return users.findAll(page);
+		return userService.findAll(page);
 	}
 
 	public Optional<User> findOneUser(long id) {
-		return users.findById(id);
+		return userService.findById(id);
 	}
 
 	public User findOneUser(String nombreUsuario) {
-		return users.findByNick(nombreUsuario);
+		return userService.findByNick(nombreUsuario);
 	}
 
 	public void deleteUsers(long id) {
-		users.deleteById(id);
+		userService.deleteById(id);
 	}
 
 	public void deleteUser(User u1) {
-		users.delete(u1);
+		userService.delete(u1);
 	}
 
 	public boolean exists(long id) {
-		return users.existsById(id);
+		return userService.existsById(id);
 	}
 
-	public void isAdminVisitorLogged(Principal principal, Model m) {
-		boolean isLogged = principal != null;
-		User visitor = (isLogged) ? users.findByEmail(principal.getName()) : null;
-		m.addAttribute("visitor", visitor);
-		m.addAttribute("isLogged", isLogged);
-		m.addAttribute("isAdmin", (visitor != null && visitor.isAdmin()));
-	}
-
-	public User save(User u) {
-		return users.save(u);
-	}
-
-	public User userVisitor(Principal principal) {
-		User user = users.findByEmail(principal.getName());
-		return user;
+	public void save(User u) {
+		userService.save(u);
 	}
 
 	public boolean isLogged(Principal principal) {
 		if (principal == null)
 			return false;
-		return !(users.findByEmail(principal.getName()) == null);
+		return !(userService.findByEmail(principal.getName()) == null);
 	}
 
 	public boolean isAdmin(Principal principal) {
 		if (principal == null)
 			return false;
-		User u = users.findByEmail(principal.getName());
+		User u = userService.findByEmail(principal.getName());
 		if (u == null)
 			return false;
 		return u.isAdmin();
-	}
-
-	// @Scheduled(cron = "*/10 * * * * *")
-	// TODO Decidir si quitar o no
-	public void callTranscodeIfChargeIsDown() throws FFmpegException {
-		for (User user : users.findAll()) {
-			for (Original originalVideo : user.getListVideos()) {
-				if (!originalVideo.isActive() && !originalVideo.isComplete()) {
-					transcode.transcodeVideo(originalVideo);
-				}
-			}
-		}
 	}
 
 	public User registerUser(User u) {
@@ -131,13 +101,6 @@ public class UserServiceImpl implements UserService {
 		return userToEdited;
 	}
 
-	/**
-	 * This method check if the videos that his have and are on filesystem. If not
-	 * exists on filesystem, will be deleted for BBDD
-	 * 
-	 * @param User
-	 *            need for check his videos.
-	 */
 	public void checkVideos(User u) {
 		List<Original> listToRemove = new ArrayList<>();
 		for (Original video : u.getListVideos()) {
@@ -145,8 +108,8 @@ public class UserServiceImpl implements UserService {
 				listToRemove.add(video);
 			}
 		}
-		if (!listToRemove.isEmpty()){
-		originalService.deleteVideos(u, listToRemove);
+		if (!listToRemove.isEmpty()) {
+			originalService.deleteVideos(u, listToRemove);
 		}
 	}
 

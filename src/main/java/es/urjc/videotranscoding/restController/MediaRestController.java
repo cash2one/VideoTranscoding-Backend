@@ -31,8 +31,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/api/media")
 @Api(tags = "Media Api Operations")
 public class MediaRestController {
-	// TODO quitar todos los User UNAUTHORIZED
-
+	// TODO quitar todos los User UNAUTHORIZED, ya que ya estan autorizados
 	@Autowired
 	private OriginalService originalService;
 	@Autowired

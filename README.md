@@ -9,15 +9,15 @@ This application transcode a video that you send on all formats what you want an
 
 ## Run it:
 1. Install [docker](https://docs.docker.com/engine/installation/) for your machine
-
-2. Run this command on your terminal
+2. Download [the docker-compose.yml](https://raw.githubusercontent.com/luiscajl/VideoTranscoding/master/docker-compose.yml).
+3. Run this command on your terminal on the path of docker-compose.
 ```sh
-docker run -d -p 8080:8080 --name videotranscoding luiscajl/videotranscoding:Release-0.1
+sudo docker-compose up 
 ```
-3. Visit [localhost](http://localhost:8080/) on your web browser
-4. Stop docker container when you finished
+4. Visit [localhost](http://localhost:8443/) on your web browser
+5. Stop docker compose when you finished
 ```sh
-docker stop videotranscoding
+ctrl+c
 ```
 
 ## Develop it:
@@ -33,7 +33,8 @@ or this for linux
 ```sh
 sh /scripts/install_ffmpeg_linux.sh
 ```
-3. Now you can import the project on your ide and start SpringBoot Application or develop the project.
+3. Download and install [mysql-CE](https://dev.mysql.com/downloads/).
+4. Now you can import the project on your ide and start SpringBoot Application or develop the project after change on the application.properties (src/main/resources) the user and password for your mysql configuration.
 
 
 ## Next objectives (Release 1.0):

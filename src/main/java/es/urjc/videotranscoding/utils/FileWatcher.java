@@ -26,11 +26,12 @@ import org.springframework.util.StringUtils;
 
 import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
 
+/**
+ * This class is for the the watcher the video on real streaming.
+ **/
 @Component
 public class FileWatcher {
-//TODO 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	private static final int DEFAULT_BUFFER_SIZE = 2048000; // ..bytes = 20KB.
 	private static final long DEFAULT_EXPIRE_TIME = 60480000000L; // ..Ms = 1
 	private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
@@ -364,16 +365,6 @@ public class FileWatcher {
 	}
 
 	private static class HttpUtils {
-
-		/**
-		 * Returns true if the given accept header accepts the given value.
-		 * 
-		 * @param acceptHeader
-		 *            The accept header.
-		 * @param toAccept
-		 *            The value to be accepted.
-		 * @return True if the given accept header accepts the given value.
-		 */
 
 		/**
 		 * Returns true if the given match header matches the given value.

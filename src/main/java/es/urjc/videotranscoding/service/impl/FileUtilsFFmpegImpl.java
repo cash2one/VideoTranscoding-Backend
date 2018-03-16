@@ -17,41 +17,29 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.urjc.videotranscoding.core.impl.VideoTranscodingFFmpegImpl;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.FileUtilsFFmpeg;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
 
 @Service
 public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
-
-	private static final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
-
+	private static final Logger logger = Logger.getLogger(FileUtilsFFmpegImpl.class);
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
-
 	private static final String TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY = "ffmpeg.folderOuput.nullOrEmpty";
 	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS = "ffmpeg.folderOutput.notExits";
 	private static final String TRACE_VIDEO_EXISTS = "ffmpeg.fileOriginal.exists";
 	private static final String TRACE_IO_EXCEPTION_GENERAL = "ffmpeg.ioException.general";
+	private static final String FOLDER_OUPUT_ORIGINAL = "path.folder.original";
 
 	@Resource
 	private Properties propertiesFicheroCore;
-
 	@Resource
 	private Properties propertiesFFmpeg;
-	private final static String FOLDER_OUPUT_ORIGINAL = "path.folder.original";
-
 	@Resource
 	private FfmpegResourceBundle ffmpegResourceBundle;
 
-	/**
-	 * @param file
-	 * @param folderOutput
-	 * @return
-	 */
 	@PostConstruct
 	public void init() {
-
 		logger.setResourceBundle(ffmpegResourceBundle
 				.getFjResourceBundle(propertiesFicheroCore.getProperty(FICH_TRAZAS), Locale.getDefault()));
 	}
@@ -63,12 +51,13 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 				logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY, null);
 				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL);
 			}
-			if (!exitsPath(folderOutputOriginalVideo)) {
+			if (!exitsDirectory(folderOutputOriginalVideo)) {
 				logger.l7dlog(Level.ERROR, TRACE_FOLDER_OUPUT_NOT_EXISTS, new String[] { folderOutputOriginalVideo },
 						null);
 				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,
 						new String[] { folderOutputOriginalVideo });
 			}
+			// TODO CHECK if not is video
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(folderOutputOriginalVideo + file.getOriginalFilename().replace(" ", "_"));
 			File f = path.toFile().getAbsoluteFile();
@@ -89,7 +78,7 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 		return f.exists();
 	}
 
-	public boolean exitsPath(String path) {
+	public boolean exitsDirectory(String path) {
 		File f = new File(path);
 		return f.isDirectory();
 	}

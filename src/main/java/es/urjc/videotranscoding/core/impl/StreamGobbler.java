@@ -19,8 +19,6 @@ import es.urjc.videotranscoding.repository.ConversionRepository;
  */
 
 public class StreamGobbler implements Runnable {
-	// TODO JAVADOC
-
 	private static final String TRACE_STARTING_CONVERSION = "ffmpeg.conversion.start";
 	private static final String TRACE_FINISH_CONVERSION = "ffmpeg.conversion.end";
 	private static final String TRACE_IO_EXCEPTION_READ_LINE = "ffmpeg.io.exception.readLine";
@@ -39,6 +37,20 @@ public class StreamGobbler implements Runnable {
 	private final ConversionRepository conversionRepository;
 	private final Logger logger;
 
+	/**
+	 * Constructor by the factory
+	 * 
+	 * @param is
+	 *            the type of inputstream
+	 * @param type
+	 *            of conversion
+	 * @param conversion
+	 *            the conversion
+	 * @param conversionRepository
+	 *            to save the video on real time
+	 * @param logger
+	 *            the logger for logs started.
+	 */
 	public StreamGobbler(InputStream is, String type, Conversion conversion, ConversionRepository conversionRepository,
 			Logger logger) {
 		this.is = is;
@@ -48,12 +60,16 @@ public class StreamGobbler implements Runnable {
 		this.logger = logger;
 	}
 
+	/**
+	 * 
+	 * @return the type of StreamGobbler
+	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * 
+	 * The run of the command from VideoTranscodingImpl
 	 */
 	@Override
 	public void run() {
@@ -111,6 +127,8 @@ public class StreamGobbler implements Runnable {
 	}
 
 	/**
+	 * Return the time that fault of the video to finish them.
+	 * 
 	 * @param finalTime2
 	 * @param timeVariable
 	 * @return
@@ -126,6 +144,8 @@ public class StreamGobbler implements Runnable {
 	}
 
 	/**
+	 * The duration of the video
+	 * 
 	 * @param group
 	 * @return
 	 */

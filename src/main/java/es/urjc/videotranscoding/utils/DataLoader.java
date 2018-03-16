@@ -12,6 +12,12 @@ import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.entities.UserRoles;
 import es.urjc.videotranscoding.service.UserService;
 
+/**
+ * To charge the users at started the service
+ * 
+ * @author luisca
+ *
+ */
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -32,7 +38,6 @@ public class DataLoader implements CommandLineRunner {
 		if (user2 == null) {
 			userService.save(u2);
 		}
-		//TODO
-		 userService.checkVideosForAllUsers();
+		userService.checkVideosForAllUsers();
 	}
 }

@@ -27,10 +27,23 @@ public class StreamGobblerFactory {
 	@Resource
 	private Properties propertiesFicheroCore;
 
+	/**
+	 * Factory for stream Globber
+	 * 
+	 * @param is
+	 *            the inputstream of the command line
+	 * @param type
+	 *            type of input stream
+	 * @param conversion
+	 *            on ffmpeg
+	 * @return streamglobber object with all parmams initizalize and with the
+	 *         context of spring
+	 */
 	public StreamGobbler getStreamGobblerPersistent(InputStream is, String type, Conversion conversion) {
 		return new StreamGobbler(is, type, conversion, conversionRepository, logger);
 
 	}
+
 	@PostConstruct
 	public void init() {
 		logger.setResourceBundle(ffmpegResourceBundle
