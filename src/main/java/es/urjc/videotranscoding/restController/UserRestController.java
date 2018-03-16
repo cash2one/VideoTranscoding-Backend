@@ -55,7 +55,7 @@ public class UserRestController {
 	public ResponseEntity<User> getSingleUser(@PathVariable long id) {
 		Optional<User> u = userService.findOneUser(id);
 
-		if (u != null) {
+		if (u.isPresent()) {
 			return new ResponseEntity<>(u.get(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
