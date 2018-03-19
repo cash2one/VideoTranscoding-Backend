@@ -6,11 +6,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=lavanda
       - MYSQL_DATABASE=videotranscoding
- 
-  spring-repository:
+  spring-backend:
     depends_on:
       - mysql
-    image: luiscajl/videotranscoding:latest
+    image: luiscajl/videotranscoding:0.5
     container_name: videotranscoding-backend
     ports:
       - 8443:8443
@@ -18,4 +17,5 @@ services:
       - mysql:mysql
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/videotranscoding
-      - JVM_OPTS=-Xmx12g -Xms12g -XX:MaxPermSize=1024m
+      - JVM_OPTS=-Xmx4g -Xms4g -XX:MaxPermSize=1024m
+#  angular-frontend:

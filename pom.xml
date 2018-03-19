@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>URJC</groupId>
-	<artifactId>VideoTranscoding</artifactId>
-	<version>-BETA-0.2</version>
+	<artifactId>VideoTranscoding-Backend</artifactId>
+	<version>BETA-0.5</version>
 	<packaging>jar</packaging>
 
-	<name>VideoTranscoding</name>
+	<name>VideoTranscoding-Backend</name>
 	<url>https://urjc.videotranscoding.es</url>
 
 	<parent>

@@ -37,6 +37,6 @@ RUN chmod -R 777 /tmp/VideoTranscoding/videos/transcoded/
 
 
 #Config APP
-COPY VideoTranscoding--BETA-0.2.jar app.jar
+COPY VideoTranscoding-Backend-BETA-0.5.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
