@@ -24,7 +24,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/watcher")
+@RequestMapping(value = "/watcher")
 @Api(tags = "Watcher Api Operations")
 public class WatcherRestController {
 

@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/expert")
+@RequestMapping(value = "/expert")
 @Api(tags = "Conversion Expert Operations")
 public class ConversionExpertRestController {
 	@Autowired

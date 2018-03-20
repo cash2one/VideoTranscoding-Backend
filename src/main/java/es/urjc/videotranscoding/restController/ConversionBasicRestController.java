@@ -29,7 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/basic")
+@RequestMapping(value = "/basic")
 @Api(tags = "Conversion Basic Operations")
 public class ConversionBasicRestController {
 	@Autowired

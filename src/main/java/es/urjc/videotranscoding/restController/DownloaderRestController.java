@@ -26,7 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/downloader")
+@RequestMapping(value = "/downloader")
 @Api(tags = "Downloads Api Operations")
 public class DownloaderRestController {
 	@Autowired
