@@ -10,7 +10,7 @@ install:
 - sudo apt-get update
 - sudo apt-get install ffmpeg
 - mvn clean package 
-- mv $TRAVIS_BUILD_DIR/target/VideoTranscoding-Backend-BETA-0.5.jar VideoTranscoding-Backend-BETA-0.5.jar
-- docker build -t luiscajl/videotranscoding:0.5 .
-- docker push luiscajl/videotranscoding:0.5
+- mv $TRAVIS_BUILD_DIR/target/VideoTranscoding-Backend-1.0.0.RELEASE.jar VideoTranscoding-Backend-1.0.0.RELEASE.jar
+- docker build -t luiscajl/videotranscoding:latest .
+- docker push luiscajl/videotranscoding:latest
 

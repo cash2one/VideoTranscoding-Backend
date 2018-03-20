@@ -4,11 +4,11 @@
 
 	<groupId>URJC</groupId>
 	<artifactId>VideoTranscoding-Backend</artifactId>
-	<version>BETA-0.5</version>
+	<version>1.0.0.RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>VideoTranscoding-Backend</name>
-	<url>https://urjc.videotranscoding.es</url>
+	<url>https://api.videotranscoding.es</url>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

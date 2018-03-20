@@ -9,7 +9,7 @@ services:
   spring-backend:
     depends_on:
       - mysql
-    image: luiscajl/videotranscoding:0.5
+    image: luiscajl/videotranscoding:latest
     container_name: videotranscoding-backend
     ports:
       - 8443:8443
