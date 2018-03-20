@@ -7,7 +7,7 @@
 
 This application transcode a video that you send on all formats what you want and diferent resolutions. It´s build on a docker container to simplify the installation.
 ## Test it:
-1. Visit [Urjc VideoTranscoding](https://urjc.videotranscoding.es). user/pass for the user authentication.
+1. Visit [Api VideoTranscoding](https://api.videotranscoding.es). user/pass for the user authentication.
 ## Run it:
 1. Install [docker](https://docs.docker.com/engine/installation/) for your machine.
 2. Download [the docker-compose.yml](https://raw.githubusercontent.com/luiscajl/VideoTranscoding/master/docker-compose.yml).
