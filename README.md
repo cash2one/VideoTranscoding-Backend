@@ -1,4 +1,4 @@
-  <img src="https://github.com/luiscajl/VideoTranscoding-Backend/src/main/resources/static/images/VideoTranscoding_logo.png"/>
+  <p align="center"><img src="https://github.com/luiscajl/VideoTranscoding-Backend/src/main/resources/static/images/VideoTranscoding_logo.png"/></p>
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6b9cd649a14a4431882a51dd2c779e85)](https://www.codacy.com/app/luiscajl/VideoTranscoding?utm_source=github.com&utm_medium=referral&utm_content=luiscajl/VideoTranscoding&utm_campaign=badger)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a3de0e21cd574e78341e/maintainability)](https://codeclimate.com/github/luiscajl/VideoTranscoding/maintainability)
 [![Build Status](https://travis-ci.org/luiscajl/VideoTranscoding.svg?branch=master)](https://travis-ci.org/luiscajl/VideoTranscoding)
