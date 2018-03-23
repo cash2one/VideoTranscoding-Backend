@@ -3,7 +3,6 @@ package es.urjc.videotranscoding.service.impl;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,8 +39,8 @@ public class UserServiceImpl implements UserService {
 		return userService.findAll(page);
 	}
 
-	public Optional<User> findOneUser(long id) {
-		return userService.findById(id);
+	public User findOneUser(long id) {
+		return userService.getOne(id);
 	}
 
 	public User findOneUser(String nombreUsuario) {
@@ -86,8 +85,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User editUser(User u, long id) {
-		Optional<User> userToEditedOptional = findOneUser(id);
-		User userToEdited = userToEditedOptional.get();
+		User userToEdited = findOneUser(id);
 		if (u.getEmail() != null) {
 			userToEdited.setEmail(u.getEmail());
 		}

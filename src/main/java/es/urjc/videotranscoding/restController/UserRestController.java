@@ -2,13 +2,11 @@ package es.urjc.videotranscoding.restController;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,14 +47,22 @@ public class UserRestController {
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
-	@JsonView(Details.class)
-	@ApiOperation(value = "Get one user with full details by id")
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<User> getSingleUser(@PathVariable long id) {
-		Optional<User> u = userService.findOneUser(id);
-
-		if (u.isPresent()) {
-			return new ResponseEntity<>(u.get(), HttpStatus.OK);
+ﬁ∫	@JsonView(Details.class)
+	@ApiOperation(value = "Get one user with full details by id and by name")
+	@RequestMapping(value = "/{id:.*}", method = RequestMethod.GET)
+	public ResponseEntity<User> getSingleUser(@PathVariable String id) {
+		boolean isEmail = false;
+		long idd = 0;
+		try {
+			idd = Long.parseLong(id);
+		} catch (NumberFormatException e) {
+			isEmail = true;
+		}
+		User u = isEmail
+				? userService.findOneUser(id)
+				: userService.findOneUser(idd);
+		if (u != null) {
+			return new ResponseEntity<>(u, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -97,8 +103,8 @@ public class UserRestController {
 		if (!userService.exists(id)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		Optional<User> userOld = userService.findOneUser(id);
-		if (principal.getName().equals(userOld.get().getNick())) {
+		User userOld = userService.findOneUser(id);
+		if (principal.getName().equals(userOld.getNick())) {
 			User userEdited = userService.editUser(u, id);
 			return new ResponseEntity<User>(userEdited, HttpStatus.OK);
 		} else {

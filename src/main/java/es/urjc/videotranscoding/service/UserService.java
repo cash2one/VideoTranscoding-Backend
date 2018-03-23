@@ -2,7 +2,6 @@ package es.urjc.videotranscoding.service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +41,7 @@ public interface UserService {
 	 *            need for the search
 	 * @return the optional that can contains the user or no
 	 */
-	Optional<User> findOneUser(long id);
+	User findOneUser(long id);
 
 	/**
 	 * Find a user with the nameUser(nick)
