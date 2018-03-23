@@ -162,16 +162,18 @@ public class VideoTranscodingFFmpegTest {
 	// }
 
 	@Test
-
+	@Ignore
 	public void transcodeSucess() {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-			Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
-		//Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/video.mp4", u1);
+		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
+		// Original video = new Original("Perico",
+		// "/tmp/VideoTranscoding/videos/original/video.mp4", u1);
 		Conversion newVideo = new Conversion(ConversionType.MKV_H264360_COPY, video);
-	//	Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY, video);
+		// Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY,
+		// video);
 		List<Conversion> lista = new ArrayList<>();
 		lista.add(newVideo);
-	//	lista.add(newVideo2);
+		// lista.add(newVideo2);
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		userService.save(u1);
@@ -195,7 +197,8 @@ public class VideoTranscodingFFmpegTest {
 	@Ignore
 	public void allTypeTranscode() throws InterruptedException {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-	//	Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
+		// Original video = new Original("Perico",
+		// "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
 		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/video.mp4", u1);
 
 		for (ConversionType iterable_element : EnumSet.allOf(ConversionType.class)) {
