@@ -47,7 +47,7 @@ public class UserRestController {
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
-ﬁ∫	@JsonView(Details.class)
+	@JsonView(Details.class)
 	@ApiOperation(value = "Get one user with full details by id and by name")
 	@RequestMapping(value = "/{id:.*}", method = RequestMethod.GET)
 	public ResponseEntity<User> getSingleUser(@PathVariable String id) {
