@@ -26,7 +26,7 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/**").hasRole("USER");
 
 		http.csrf().disable();
-		http.cors();
+		http.cors().disable();
 		http.httpBasic();
 		// Do not redirect when logout
 		http.logout().logoutSuccessHandler((rq, rs, a) -> {
