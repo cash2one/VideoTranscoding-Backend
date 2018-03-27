@@ -6,9 +6,9 @@ jdk:
 - oraclejdk9
 install:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
-- sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
-- sudo apt-get update
-- sudo apt-get install ffmpeg
+#- sudo add-apt-repository -y ppa:jonathonf/ffmpeg-3
+#- sudo apt-get update
+#- sudo apt-get install ffmpeg
 - mvn clean package 
 - mv $TRAVIS_BUILD_DIR/target/VideoTranscoding-Backend-1.0.0.RELEASE.jar VideoTranscoding-Backend-1.0.0.RELEASE.jar
 - docker build -t luiscajl/videotranscoding:latest .
