@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Order(1)
 @EnableWebSecurity()
 public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter implements Filter {
+
 	@Autowired
 	public UserRepositoryAuthenticationProvider userRepoAuthProvider;
 
@@ -33,11 +34,14 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter impl
 				.antMatchers("/**").hasRole("USER");
 
 		http.csrf().disable();
+		http.cors().disable();
 		http.httpBasic();
 		http.logout().logoutSuccessHandler((rq, rs, a) -> {
 		});
 	}
 
+
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(userRepoAuthProvider);
