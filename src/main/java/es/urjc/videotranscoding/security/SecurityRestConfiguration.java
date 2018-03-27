@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,13 +29,16 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter impl
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").antMatchers("/api/watcher/**").permitAll()
-				.antMatchers("/api/downloader/**").permitAll().antMatchers("/api/user/register").permitAll()
-				.antMatchers("/api/**").hasRole("USER")// TODO CHANGE THE NEXT LINE FOR THE RELEASE 1.0
-				.antMatchers("/**").hasRole("USER");
+		http.authorizeRequests()
+			.antMatchers(HttpMethod.OPTIONS).permitAll()
+			.antMatchers("/admin/**").hasRole("ADMIN").antMatchers("/api/watcher/**").permitAll()
+			.antMatchers("/api/downloader/**").permitAll().antMatchers("/api/user/register").permitAll()
+			.antMatchers("/api/**").hasRole("USER")
+			// TODO CHANGE THE NEXT LINE FOR THE RELEASE 1.0
+			.antMatchers("/**").hasRole("USER");
 
 		http.csrf().disable();
-		http.cors().disable();
+		//.cors().
 		http.httpBasic();
 		http.logout().logoutSuccessHandler((rq, rs, a) -> {
 		});
@@ -54,7 +58,7 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter impl
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
 		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type, authorization");
+		response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type, authorization, strict-transport-security");
 		chain.doFilter(req, res);
 	}
 
