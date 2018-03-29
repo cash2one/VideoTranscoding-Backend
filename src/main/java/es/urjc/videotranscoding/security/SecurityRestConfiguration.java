@@ -31,14 +31,11 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter impl
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
-			.antMatchers("/admin/**").hasRole("ADMIN").antMatchers("/api/watcher/**").permitAll()
-			.antMatchers("/api/downloader/**").permitAll().antMatchers("/api/user/register").permitAll()
-			.antMatchers("/api/**").hasRole("USER")
-			// TODO CHANGE THE NEXT LINE FOR THE RELEASE 1.0
-			.antMatchers("/**").hasRole("USER");
-
+			.antMatchers("/watcher/**").permitAll()
+			.antMatchers("/downloader/**").permitAll()
+			.antMatchers("/user/register").permitAll()
+			.antMatchers("**").hasRole("USER");
 		http.csrf().disable();
-		//.cors().
 		http.httpBasic();
 		http.logout().logoutSuccessHandler((rq, rs, a) -> {
 		});

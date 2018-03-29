@@ -82,7 +82,7 @@ public class UserRestController {
 	@ApiOperation(value = "Register a new user")
 	@JsonView(User.Basic.class)
 	public ResponseEntity<?> registerUser(@RequestBody User u, Principal principal) {
-		if (principal.getName() == null) {
+		if (principal == null) {
 			return new ResponseEntity<User>(userService.registerUser(u), HttpStatus.CREATED);
 		} else
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
