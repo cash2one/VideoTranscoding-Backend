@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/media")
 @Api(tags = "Media Api Operations")
+@CrossOrigin(origins = "*")
 public class MediaRestController {
 	// TODO quitar todos los User UNAUTHORIZED, ya que ya estan autorizados
 	@Autowired

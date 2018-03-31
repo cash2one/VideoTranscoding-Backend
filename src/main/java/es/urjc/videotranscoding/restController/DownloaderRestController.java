@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/downloader")
 @Api(tags = "Downloads Api Operations")
+@CrossOrigin(origins = "*")
 public class DownloaderRestController {
 	@Autowired
 	private OriginalService originalService;

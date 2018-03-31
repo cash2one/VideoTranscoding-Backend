@@ -1,6 +1,7 @@
 package es.urjc.videotranscoding.restController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Api(tags = "Main Api Operations")
+@CrossOrigin(origins = "*")
 public class MainRestController {
 	@Autowired
 	private VideoTranscodingService ffmpegTranscoding;
