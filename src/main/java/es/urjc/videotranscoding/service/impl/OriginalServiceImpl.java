@@ -144,9 +144,7 @@ public class OriginalServiceImpl implements OriginalService {
 	public void deleteAllVideosByAdmin() {
 		List<User> users = userService.findAllUsers();
 		for (User user : users) {
-			User userWithNoVideos = user.removeAllVideos();
-			originalVideoRepository.deleteAll(user.getListVideos());
-			userService.save(userWithNoVideos);
+			deleteAllVideos(user);
 		}
 	}
 
