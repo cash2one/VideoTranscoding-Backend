@@ -57,25 +57,25 @@ public class Original {
 	/**
 	 * Filesize of the original Video
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private String fileSize;
 
 	/**
 	 * All Conversions of the video
 	 */
-	@JsonView(Basic.class)
+	@JsonView(Details.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "parent")
 	private List<Conversion> conversions = new ArrayList<>();
 
 	/**
 	 * If all conversions are complete true, EOC false
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private boolean complete;
 	/**
 	 * If any conversion is active this is active;
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private boolean active;
 
 	/**

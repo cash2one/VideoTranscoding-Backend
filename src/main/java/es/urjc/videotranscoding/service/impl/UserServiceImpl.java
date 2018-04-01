@@ -21,58 +21,58 @@ import es.urjc.videotranscoding.service.UserService;
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private UserRepository userService;
+	private UserRepository userRepository;
 	@Autowired
 	private FileUtilsFFmpeg fileUtilsService;
 	@Autowired
 	private OriginalService originalService;
 
 	public User findByEmail(String email) {
-		return userService.findByEmail(email);
+		return userRepository.findByEmail(email);
 	}
 
 	public List<User> findAllUsers() {
-		return userService.findAll();
+		return userRepository.findAll();
 	}
 
 	public Page<User> findAllUsersPage(Pageable page) {
-		return userService.findAll(page);
+		return userRepository.findAll(page);
 	}
 
 	public User findOneUser(long id) {
-		return userService.getOne(id);
+		return userRepository.getOne(id);
 	}
 
 	public User findOneUser(String nombreUsuario) {
-		return userService.findByNick(nombreUsuario);
+		return userRepository.findByNick(nombreUsuario);
 	}
 
 	public void deleteUsers(long id) {
-		userService.deleteById(id);
+		userRepository.deleteById(id);
 	}
 
 	public void deleteUser(User u1) {
-		userService.delete(u1);
+		userRepository.delete(u1);
 	}
 
 	public boolean exists(long id) {
-		return userService.existsById(id);
+		return userRepository.existsById(id);
 	}
 
 	public void save(User u) {
-		userService.save(u);
+		userRepository.save(u);
 	}
 
 	public boolean isLogged(Principal principal) {
 		if (principal == null)
 			return false;
-		return !(userService.findByEmail(principal.getName()) == null);
+		return !(userRepository.findByEmail(principal.getName()) == null);
 	}
 
 	public boolean isAdmin(Principal principal) {
 		if (principal == null)
 			return false;
-		User u = userService.findByEmail(principal.getName());
+		User u = userRepository.findByEmail(principal.getName());
 		if (u == null)
 			return false;
 		return u.isAdmin();
@@ -115,6 +115,17 @@ public class UserServiceImpl implements UserService {
 		for (User user : findAllUsers()) {
 			checkVideos(user);
 		}
+	}
+
+	@Override
+	public void deleteAllUsers() {
+		List<User> users=userRepository.findAll();
+		for (User user : users) {
+			if (!user.isAdmin()) {
+				userRepository.delete(user);
+			}
+		}
+		
 	}
 
 }

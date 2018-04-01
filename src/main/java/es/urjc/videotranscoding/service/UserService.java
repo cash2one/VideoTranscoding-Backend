@@ -127,8 +127,8 @@ public interface UserService {
 	 * This method check if the videos that the user have are on filesystem. If not
 	 * exists on filesystem, will be deleted for BBDD
 	 * 
-	 * @param u2 User
-	 *            need for check his videos.
+	 * @param u2
+	 *            User need for check his videos.
 	 */
 	void checkVideos(User u2);
 
@@ -136,5 +136,10 @@ public interface UserService {
 	 * Check all the videos for all the users.
 	 */
 	void checkVideosForAllUsers();
+
+	/**
+	 * Delete all users for clean the BBDD
+	 */
+	void deleteAllUsers();
 
 }

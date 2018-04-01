@@ -121,7 +121,7 @@ public class Conversion {
 	}
 
 	public String getProgress() {
-		return progress;
+		return progress.replace(",", ".");
 	}
 
 	public void setProgress(String progress) {
