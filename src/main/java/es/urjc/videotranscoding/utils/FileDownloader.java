@@ -26,7 +26,6 @@ import es.urjc.videotranscoding.exception.FFmpegException;
 @Component
 public class FileDownloader {
 	private static final String TRACE_IO_EXCEPTION_GENERAL = "ffmpeg.ioException.general";
-
 	protected final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
 	private File filepath;
 	private HttpServletResponse response;
