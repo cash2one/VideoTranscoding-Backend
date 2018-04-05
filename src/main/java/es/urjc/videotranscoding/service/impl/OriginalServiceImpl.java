@@ -72,7 +72,7 @@ public class OriginalServiceImpl implements OriginalService {
 		File fileSaved = null;
 		try {
 			fileSaved = fileUtilsService.saveFile(file);
-			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getName()),
+			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getOriginalFilename()),
 					fileSaved.getAbsolutePath(), u);
 			List<Conversion> conversionsVideo = new ArrayList<>();
 			List<ConversionType> listConversion = new ArrayList<>();
@@ -110,7 +110,7 @@ public class OriginalServiceImpl implements OriginalService {
 	public Original addOriginalBasic(User u, MultipartFile file, List<String> params) throws FFmpegException {
 		File fileSaved = fileUtilsService.saveFile(file);
 		try {
-			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getName()),
+			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getOriginalFilename()),
 					fileSaved.getAbsolutePath(), u);
 
 			Set<ConversionType> listConversion = new HashSet<>();

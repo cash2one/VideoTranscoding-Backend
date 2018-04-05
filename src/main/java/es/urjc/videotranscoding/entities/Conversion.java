@@ -85,7 +85,7 @@ public class Conversion {
 	 *            of the master video
 	 */
 	public Conversion(ConversionType conversion, Original original) {
-		this.name = original.getName() + "_" + System.currentTimeMillis();
+		this.name = original.getName() + "-" + System.currentTimeMillis();
 		this.conversionType = conversion;
 		this.parent = original;
 
