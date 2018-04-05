@@ -95,7 +95,7 @@ public class Original {
 	 *            user for the video
 	 */
 	public Original(String name, String path, User user) {
-		this.name = name.replace(" ", "_");
+		this.name = name;
 		this.path = path;
 		this.userVideo = user;
 
