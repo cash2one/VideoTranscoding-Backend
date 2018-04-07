@@ -3,6 +3,8 @@ package es.urjc.videotranscoding.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.urjc.videotranscoding.entities.Original;
@@ -56,13 +58,6 @@ public interface OriginalService {
 	User deleteVideos(User u, List<Original> listOriginal);
 
 	/**
-	 * Find ALL the videos on BBDD
-	 * 
-	 * @return the list with the all the videos
-	 */
-	List<Original> findAllVideos();
-
-	/**
 	 * Add an original video and his conversions
 	 * 
 	 * @param u
@@ -98,5 +93,26 @@ public interface OriginalService {
 	 * @return an optional that can contains the original or no.
 	 */
 	Optional<Original> findOneVideo(long id);
+
+	/**
+	 * Pageable original videos
+	 * 
+	 * @param pageable
+	 *            the page of the request
+	 * @param u
+	 *            user for the request. All for admin.
+	 * @return the pageable with original videos;
+	 */
+	public Page<Original> findAllByPageAndUser(Pageable pageable, User u);
+
+	/**
+	 * Pageable original videos
+	 * 
+	 * @param pageable
+	 *            the page of the request
+	 * 
+	 * @return the pageable with original videos;
+	 */
+	public Page<Original> findAll(Pageable pageable);
 
 }

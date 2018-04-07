@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -57,16 +59,16 @@ public class MediaRestController {
 	@ApiOperation(value = "All OriginalVideos on the Api with their conversions")
 	@GetMapping(value = "")
 	@JsonView(Basic.class)
-	public ResponseEntity<List<Original>> getAllVideoConversions(Principal principal) {
+	public ResponseEntity<List<Original>> getAllVideoConversions(Principal principal, Pageable pageable) {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		List<Original> allOriginalVideos = originalService.findAllVideos();
-		if (allOriginalVideos.isEmpty()) {
+		Page<Original> allOriginalVideos = originalService.findAllByPageAndUser(pageable, u);
+		if (allOriginalVideos == null || allOriginalVideos.getContent().size()==0) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<List<Original>>(allOriginalVideos, HttpStatus.OK);
+		return new ResponseEntity<List<Original>>(allOriginalVideos.getContent(), HttpStatus.OK);
 
 	}
 
@@ -79,17 +81,27 @@ public class MediaRestController {
 	@ApiOperation(value = "Get videos information for id")
 	@GetMapping(value = "/{id}")
 	@JsonView(Details.class)
-	public ResponseEntity<?> getOriginalVideo(@PathVariable long id) throws FFmpegException {
+	public ResponseEntity<?> getOriginalVideo(@PathVariable long id, Principal principal) throws FFmpegException {
 		Optional<Original> video = originalService.findOneVideo(id);
+		User u = userService.findOneUser(principal.getName());
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
 			Conversion conversionVideo = conversion.get();
 			if (conversionVideo == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<>(conversionVideo, HttpStatus.OK);
+			if (conversionVideo.getParent().getUserVideo().getNick().equals(u.getNick())) {
+				return new ResponseEntity<>(conversionVideo, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+
 		} else {
-			return new ResponseEntity<>(video.get(), HttpStatus.OK);
+			if (video.get().getUserVideo().getNick().equals(u.getNick())) {
+				return new ResponseEntity<>(video.get(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
 		}
 	}
 

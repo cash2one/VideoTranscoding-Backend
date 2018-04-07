@@ -16,6 +16,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,19 +61,14 @@ public class OriginalServiceImpl implements OriginalService {
 		originalVideoRepository.save(video);
 	}
 
-	public List<Original> findAllVideos() {
-		return originalVideoRepository.findAll();
-	}
-
 	public Optional<Original> findOneVideo(long id) {
 		return originalVideoRepository.findById(id);
 	}
 
 	@Transactional(rollbackFor = FFmpegException.class)
 	public Original addOriginalExpert(User u, MultipartFile file, List<String> params) throws FFmpegException {
-		File fileSaved = null;
+		File fileSaved = fileUtilsService.saveFile(file);
 		try {
-			fileSaved = fileUtilsService.saveFile(file);
 			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getOriginalFilename()),
 					fileSaved.getAbsolutePath(), u);
 			List<Conversion> conversionsVideo = new ArrayList<>();
@@ -190,4 +187,18 @@ public class OriginalServiceImpl implements OriginalService {
 		userService.save(userToSaved);
 		return u;
 	}
+
+	@Override
+	public Page<Original> findAllByPageAndUser(Pageable pageable, User u) {
+		if (u.isAdmin()) {
+			return originalVideoRepository.findAll(pageable);
+		} else {
+			return null;
+		}
+	}
+
+	public Page<Original> findAll(Pageable pageable) {
+		return originalVideoRepository.findAll(pageable);
+	}
+
 }
