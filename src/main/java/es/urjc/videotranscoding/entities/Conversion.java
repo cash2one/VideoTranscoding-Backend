@@ -154,9 +154,9 @@ public class Conversion {
 
 	public String getFileSize() {
 		if (isActive()) {
-			return fileSize;
+			return fileSize.replace(",", ".");
 		} else if (isFinished()) {
-			return getSizeMB(new File(getPath())) + " MB";
+			return (getSizeMB(new File(getPath())) + " MB").replace(",", ".");
 		} else {
 			return "";
 	}}

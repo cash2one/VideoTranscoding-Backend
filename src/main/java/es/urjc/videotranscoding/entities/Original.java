@@ -46,7 +46,7 @@ public class Original {
 	 * Path of the video
 	 */
 	@Column(unique = true)
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private String path;
 	/**
 	 * User of the video
@@ -77,6 +77,8 @@ public class Original {
 	 */
 	@JsonView(Basic.class)
 	private boolean active;
+	
+	
 
 	/**
 	 * Constructor protected for hibernate.
@@ -168,7 +170,7 @@ public class Original {
 	}
 
 	public String getFileSize() {
-		return getSizeMB(new File(getPath())) + " MB";
+		return (getSizeMB(new File(getPath())) + " MB").replace(",", ".");
 	}
 
 	private String getSizeMB(File f) {
