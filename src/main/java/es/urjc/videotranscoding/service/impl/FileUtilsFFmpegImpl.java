@@ -2,7 +2,7 @@ package es.urjc.videotranscoding.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -11,6 +11,7 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -58,14 +59,14 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 						new String[] { folderOutputOriginalVideo });
 			}
 			// TODO CHECK if not is video
-			byte[] bytes = file.getBytes();
 			Path path = Paths.get(folderOutputOriginalVideo + file.getOriginalFilename().replace(" ", "_"));
 			File f = path.toFile().getAbsoluteFile();
 			if (f.exists()) {
 				logger.l7dlog(Level.ERROR, TRACE_VIDEO_EXISTS, new String[] { file.getName() }, null);
 				throw new FFmpegException(FFmpegException.EX_VIDEO_EXITS, new String[] { file.getOriginalFilename() });
 			}
-			Files.write(path, bytes);
+			InputStream fileStream = file.getInputStream();
+			FileUtils.copyInputStreamToFile(fileStream, f);
 			return path.toFile();
 		} catch (IOException e) {
 			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_GENERAL, e);

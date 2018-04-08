@@ -31,10 +31,10 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter impl
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
-			.antMatchers("/**").hasRole("USER")
 			.antMatchers("/watcher/**").permitAll()
 			.antMatchers("/downloader/**").permitAll()
-			.antMatchers("/user/register").permitAll();
+			.antMatchers("/user/register").permitAll()
+			.antMatchers("/**").hasRole("USER");
 		http.csrf().disable();
 		http.httpBasic();
 		http.logout().logoutSuccessHandler((rq, rs, a) -> {

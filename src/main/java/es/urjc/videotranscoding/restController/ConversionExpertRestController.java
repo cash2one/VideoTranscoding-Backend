@@ -42,6 +42,7 @@ public class ConversionExpertRestController {
 	@Autowired
 	private VideoTranscodingService videoTranscodingService;
 
+
 	public interface Details extends Original.Basic, Original.Details, Conversion.Basic, Conversion.Details {
 	}
 
@@ -79,9 +80,9 @@ public class ConversionExpertRestController {
 	 */
 	@PostMapping(value = "")
 	@ApiOperation(value = "Send the video(file) and the type of conversions(conversionType) for the video")
-	@JsonView(Details.class)
+	@JsonView(Details.class)	
 	public ResponseEntity<?> addConversionExpert(@RequestParam(value="conversionType") List<String> params,
-			@RequestParam(value = "file") MultipartFile file, Principal principal) throws FFmpegException {
+			@RequestParam(value = "file") MultipartFile file,Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
