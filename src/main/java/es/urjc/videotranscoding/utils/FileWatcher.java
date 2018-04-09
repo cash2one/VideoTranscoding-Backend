@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import es.urjc.videotranscoding.exception.FFmpegRuntimeException;
-
 /**
  * This class is for the the watcher the video on real streaming.
  **/
@@ -262,7 +260,7 @@ public class FileWatcher {
 				}
 			}
 		} catch (IOException e) {
-			throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_IO_EXCEPTION_READ_LINE);
+			//throw new FFmpegRuntimeException(FFmpegRuntimeException.EX_IO_EXCEPTION_READ_LINE);
 		}
 	}
 
