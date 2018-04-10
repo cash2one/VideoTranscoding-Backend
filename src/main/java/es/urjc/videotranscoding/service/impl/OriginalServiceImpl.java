@@ -30,6 +30,7 @@ import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.OriginalRepository;
+import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
@@ -42,6 +43,8 @@ public class OriginalServiceImpl implements OriginalService {
 	private static final String TRACE_ILEGAL_ARGUMENT = "ffmpeg.argument.notFound";
 	@Autowired
 	private OriginalRepository originalVideoRepository;
+	@Autowired
+	private ConversionService conversionServiceImpl;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -61,8 +64,28 @@ public class OriginalServiceImpl implements OriginalService {
 		originalVideoRepository.save(video);
 	}
 
-	public Optional<Original> findOneVideo(long id) {
-		return originalVideoRepository.findById(id);
+	public Object findOneVideo(long id, User u) {
+		if (u.isAdmin()) {
+			Optional<Original> optionalOriginal = originalVideoRepository.findById(id);
+			if (optionalOriginal.isPresent()) {
+				return optionalOriginal.get();
+			} else {
+				Optional<Conversion> optionalConversion = conversionServiceImpl.findOneConversion(id);
+				if (optionalConversion.isPresent()) {
+					return optionalConversion.get();
+				} else {
+					return null;
+				}
+			}
+		} else {
+			Original originalVideo = u.getListVideos().stream().filter(original -> original.getOriginalId() == id)
+					.findAny().get();
+			if (originalVideo == null) {
+				return null;
+			} else {
+				return originalVideo;
+			}
+		}
 	}
 
 	@Transactional(rollbackFor = FFmpegException.class)
@@ -199,6 +222,11 @@ public class OriginalServiceImpl implements OriginalService {
 
 	public Page<Original> findAll(Pageable pageable) {
 		return originalVideoRepository.findAll(pageable);
+	}
+
+	@Override
+	public Optional<Original> findOneVideoWithoutSecurity(long id) {
+		return originalVideoRepository.findById(id);
 	}
 
 }

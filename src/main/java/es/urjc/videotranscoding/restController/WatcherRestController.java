@@ -56,7 +56,7 @@ public class WatcherRestController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> watchVideo(HttpServletResponse response, HttpServletRequest request,
 			@PathVariable long id) {
-		Optional<Original> video = originalService.findOneVideo(id);
+		Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
 			if (conversion.isPresent()) {

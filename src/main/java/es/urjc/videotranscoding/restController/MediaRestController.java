@@ -82,27 +82,16 @@ public class MediaRestController {
 	@GetMapping(value = "/{id}")
 	@JsonView(Details.class)
 	public ResponseEntity<?> getOriginalVideo(@PathVariable long id, Principal principal) throws FFmpegException {
-		Optional<Original> video = originalService.findOneVideo(id);
+		if (principal == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		User u = userService.findOneUser(principal.getName());
-		if (!video.isPresent()) {
-			Optional<Conversion> conversion = conversionService.findOneConversion(id);
-			Conversion conversionVideo = conversion.get();
-			if (conversionVideo == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			if(u.isAdmin()) {}
-			if (conversionVideo.getParent().getUserVideo().getNick().equals(u.getNick())) {
-				return new ResponseEntity<>(conversionVideo, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			}
+		Object video = originalService.findOneVideo(id,u);
+		if (video == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		} else {
-			if (video.get().getUserVideo().getNick().equals(u.getNick())) {
-				return new ResponseEntity<>(video.get(), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			}
+			return new ResponseEntity<>(video, HttpStatus.OK);
 		}
 	}
 
@@ -126,7 +115,7 @@ public class MediaRestController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		User u = userService.findOneUser(principal.getName());
-		Optional<Original> video = originalService.findOneVideo(id);
+		Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
 			if (conversion.isPresent()) {

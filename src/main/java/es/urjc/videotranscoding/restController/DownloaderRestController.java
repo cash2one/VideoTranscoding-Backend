@@ -48,7 +48,7 @@ public class DownloaderRestController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> downloadDirectFilm(HttpServletResponse response, @PathVariable long id)
 			throws FFmpegException {
-		Optional<Original> video = originalService.findOneVideo(id);
+		Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
 			if (conversion.isPresent()) {
