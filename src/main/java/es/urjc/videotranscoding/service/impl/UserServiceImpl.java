@@ -119,14 +119,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteAllUsers() {
-		List<User> users=userRepository.findAll();
+		List<User> users = userRepository.findAll();
 		for (User user : users) {
 			if (!user.isAdmin()) {
 				originalService.deleteAllVideos(user);
 				userRepository.delete(user);
 			}
 		}
-		
+
 	}
 
 }

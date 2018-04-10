@@ -1,5 +1,11 @@
 package es.urjc.videotranscoding.codecs;
 
+/**
+ * Video codecs with qualities
+ * 
+ * @author luisca
+ *
+ */
 public enum CodecVideo {
 	/**
 	 * 

@@ -1,7 +1,6 @@
 package es.urjc.videotranscoding.restController;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,12 +36,14 @@ public class DownloaderRestController {
 	private ConversionService conversionService;
 
 	/**
-	 * @param response
-	 * @param id
-	 * @return
-	 * @throws FFmpegException
+	 * Search a OriginalVideo or Conversion and get it on Download
 	 * 
-	 * @throws IOException
+	 * @param response
+	 *            for the servlet
+	 * @param id
+	 *            for search the video
+	 * @return the download on servletResponse
+	 * @throws FFmpegException
 	 */
 	@ApiOperation(value = "Download the Original or transcode Video")
 	@GetMapping(value = "/{id}")

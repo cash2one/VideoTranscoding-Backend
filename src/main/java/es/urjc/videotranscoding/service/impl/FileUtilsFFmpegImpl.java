@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -12,12 +13,14 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.urjc.videotranscoding.codecs.Container;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.FileUtilsFFmpeg;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
@@ -28,6 +31,7 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 	private static final String FICH_TRAZAS = "fichero.mensajes.trazas";
 	private static final String TRACE_FOLDER_OUTPUT_NULL_OR_EMPTY = "ffmpeg.folderOuput.nullOrEmpty";
 	private static final String TRACE_FOLDER_OUPUT_NOT_EXISTS = "ffmpeg.folderOutput.notExits";
+	private static final String TRACE_NOT_VIDEO_FILE = "ffmpeg.noVideoFile";
 	private static final String TRACE_VIDEO_EXISTS = "ffmpeg.fileOriginal.exists";
 	private static final String TRACE_IO_EXCEPTION_GENERAL = "ffmpeg.ioException.general";
 	private static final String FOLDER_OUPUT_ORIGINAL = "path.folder.original";
@@ -58,7 +62,11 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 				throw new FFmpegException(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS,
 						new String[] { folderOutputOriginalVideo });
 			}
-			// TODO CHECK if not is video
+			if (!isVideoFile(file)) {
+				logger.l7dlog(Level.ERROR, TRACE_NOT_VIDEO_FILE, new String[] { file.getOriginalFilename() }, null);
+				throw new FFmpegException(FFmpegException.EX_NOT_VIDEO_FILE,
+						new String[] { file.getOriginalFilename() });
+			}
 			Path path = Paths.get(folderOutputOriginalVideo + file.getOriginalFilename().replace(" ", "_"));
 			File f = path.toFile().getAbsoluteFile();
 			if (f.exists()) {
@@ -72,6 +80,14 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 			logger.l7dlog(Level.ERROR, TRACE_IO_EXCEPTION_GENERAL, e);
 			throw new FFmpegException(FFmpegException.EX_IO_EXCEPTION_GENERAL, e);
 		}
+	}
+
+	private boolean isVideoFile(MultipartFile file) {
+		String nameExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+		if (Arrays.asList(Container.values()).stream().anyMatch(x -> nameExtension.contains(x.toString()))) {
+			return true;
+		}
+		return false;
 	}
 
 	public boolean exitsFile(String file) {

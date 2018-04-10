@@ -1,5 +1,11 @@
 package es.urjc.videotranscoding.codecs;
 
+/**
+ * Codec Audio for videos
+ * 
+ * @author luisca
+ *
+ */
 public enum CodecAudio {
 
 	/**
@@ -19,7 +25,6 @@ public enum CodecAudio {
 	 */
 	COPY(" -c:a copy ");
 	private final String codecAudioType;
-
 
 	CodecAudio(String x) {
 		this.codecAudioType = x;

@@ -83,34 +83,22 @@ public class StreamGobbler implements Runnable {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				logger.l7dlog(Level.TRACE, line, null);
-				// System.out.println(line);
 				Matcher progressMatcher = progreesVideoPattern.matcher(line);
 				Matcher generalMatcher = generalPattern.matcher(line);
 				Matcher durationVideoMatcher = durationVideoPattern.matcher(line);
 				while (progressMatcher.find()) {
 					double diference = getDifference(finalTime, progressMatcher.group(0));
-					// System.out.print("Progress conversion: " +
-					// String.format("%.2f",diference) + "%");
 					setProgress(String.format("%.2f", diference));
 					conversion.setProgress(String.format("%.2f", diference));
 				}
 				while (durationVideoMatcher.find()) {
-					// System.out.println(durationVideoMatcher.group(0));
 					finalTime = getDuration(durationVideoMatcher.group(0));
-					// System.out.println("Duration time Video : " + finalTime +
-					// " Secs");
 					setDuration(String.valueOf(finalTime));
 				}
 				while (generalMatcher.find()) {
 					setFileSize(generalMatcher.group(1));
 					setSpeed(generalMatcher.group(6));
 					setBitrate(generalMatcher.group(5));
-					// System.out.print(" // File Size: " +
-					// generalMatcher.group(1) + "kB");
-					// System.out.print(" // Speed: " + generalMatcher.group(6)
-					// + "x");
-					// System.out.println(" // Bitrate: " +
-					// generalMatcher.group(5) + "kbits/s");
 					conversion.setFileSize(generalMatcher.group(1) + " KB");
 				}
 				conversionRepository.save(conversion);

@@ -35,7 +35,6 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "Media Api Operations")
 @CrossOrigin(origins = "*")
 public class MediaRestController {
-	// TODO quitar todos los User UNAUTHORIZED, ya que ya estan autorizados
 	@Autowired
 	private OriginalService originalService;
 	@Autowired

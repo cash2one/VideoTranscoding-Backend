@@ -23,16 +23,13 @@ public class ConversionServiceImpl implements ConversionService {
 	@Autowired
 	private OriginalService originalService;
 
-
 	public void save(Conversion video) {
 		conversionRepository.save(video);
 	}
 
-
 	public Optional<Conversion> findOneConversion(long id) {
 		return conversionRepository.findById(id);
 	}
-
 
 	public User deleteConversion(Original original, Conversion conversion, User u) {
 		if (u.isAdmin()) {

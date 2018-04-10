@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 
+ * @author luisca
+ *
+ */
 public class ConversionTypeBasic {
 	public enum Types {
 		WEB("Web - For all Web Navigators"), MOVIL("Movil - Android and iOS"), VLC("Vlc - For Computers"), ALL(
@@ -21,13 +26,14 @@ public class ConversionTypeBasic {
 			return text;
 		}
 	}
+
 	private static List<ConversionType> MOVIL = Arrays.asList(ConversionType.MP4_H264360_AAC,
 			ConversionType.MP4_H264480_AAC, ConversionType.MP4_H264720_AAC, ConversionType.MP4_H2641080_AAC);
-	private static List<ConversionType> WEB = Arrays.asList(ConversionType.WEBM_VP91080_VORBIS,
-			ConversionType.WEBM_VP9360_VORBIS, ConversionType.WEBM_VP9480_VORBIS, ConversionType.WEBM_VP9720_VORBIS);
-	private static List<ConversionType> VLC = Arrays.asList(ConversionType.MKV_HEVC1080_COPY,
-			ConversionType.MKV_HEVC2160_COPY, ConversionType.MKV_HEVC720_COPY, ConversionType.MKV_HEVC480_COPY,
-			ConversionType.MKV_HEVC360_COPY);
+	private static List<ConversionType> WEB = Arrays.asList(ConversionType.WEBM_VP9360_VORBIS,
+			ConversionType.WEBM_VP9480_VORBIS, ConversionType.WEBM_VP9720_VORBIS, ConversionType.WEBM_VP91080_VORBIS);
+	private static List<ConversionType> VLC = Arrays.asList(ConversionType.MKV_HEVC360_COPY,
+			ConversionType.MKV_HEVC480_COPY, ConversionType.MKV_HEVC720_COPY, ConversionType.MKV_HEVC1080_COPY,
+			ConversionType.MKV_HEVC2160_COPY);
 
 	public static List<String> getAllTypesBasic() {
 		List<String> enumNames = Stream.of(Types.values()).map(Enum::name).collect(Collectors.toList());

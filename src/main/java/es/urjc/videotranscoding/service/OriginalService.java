@@ -57,7 +57,6 @@ public interface OriginalService {
 	 */
 	User deleteVideos(User u, List<Original> listOriginal);
 
-	// TODO JAVADOC
 	/**
 	 * Add an original video and his conversions
 	 * 
@@ -95,9 +94,15 @@ public interface OriginalService {
 	 */
 	Object findOneVideo(long id, User u);
 
-	// TODO JAVADOC
+	/**
+	 * Find one original Video
+	 * 
+	 * @param id
+	 *            for the optional video;
+	 * 
+	 * @return the optional with the video;
+	 */
 	Optional<Original> findOneVideoWithoutSecurity(long id);
-	// TODO JAVADOC
 
 	/**
 	 * Pageable original videos

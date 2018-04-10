@@ -1,6 +1,8 @@
 package es.urjc.videotranscoding.codecs;
 
 /**
+ * Container Types for videos
+ * 
  * @author luisca
  */
 public enum Container {
