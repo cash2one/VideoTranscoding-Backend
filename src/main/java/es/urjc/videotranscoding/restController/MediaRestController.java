@@ -60,12 +60,12 @@ public class MediaRestController {
 	@GetMapping(value = "")
 	@JsonView(Basic.class)
 	public ResponseEntity<List<Original>> getAllVideoConversions(Principal principal, Pageable pageable) {
-		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
+		if (principal == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+		User u = userService.findOneUser(principal.getName());
 		Page<Original> allOriginalVideos = originalService.findAllByPageAndUser(pageable, u);
-		if (allOriginalVideos == null || allOriginalVideos.getContent().size()==0) {
+		if (allOriginalVideos == null || allOriginalVideos.getContent().size() == 0) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<Original>>(allOriginalVideos.getContent(), HttpStatus.OK);
@@ -90,6 +90,7 @@ public class MediaRestController {
 			if (conversionVideo == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
+			if(u.isAdmin()) {}
 			if (conversionVideo.getParent().getUserVideo().getNick().equals(u.getNick())) {
 				return new ResponseEntity<>(conversionVideo, HttpStatus.OK);
 			} else {
@@ -121,10 +122,10 @@ public class MediaRestController {
 	@ApiOperation(value = "Delete Original or conversion with the id")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> deleteVideos(Principal principal, @PathVariable long id) {
-		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
+		if (principal == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+		User u = userService.findOneUser(principal.getName());
 		Optional<Original> video = originalService.findOneVideo(id);
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);

@@ -193,7 +193,7 @@ public class OriginalServiceImpl implements OriginalService {
 		if (u.isAdmin()) {
 			return originalVideoRepository.findAll(pageable);
 		} else {
-			return null;
+			return originalVideoRepository.findAllByUserVideo(pageable, u);
 		}
 	}
 
