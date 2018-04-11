@@ -84,7 +84,11 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 
 	private boolean isVideoFile(MultipartFile file) {
 		String nameExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-		if (Arrays.asList(Container.values()).stream().anyMatch(x -> nameExtension.contains(x.toString()))) {
+		if (nameExtension == "")
+			return false;
+		boolean exists = Arrays.asList(Container.values()).stream()
+				.anyMatch(container -> container.toString().contains(nameExtension));
+		if (exists) {
 			return true;
 		}
 		return false;
