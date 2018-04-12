@@ -98,7 +98,7 @@ public class UserRestController {
 	 */
 	@PostMapping(value = "/register")
 	@ApiOperation(value = "Register a new user")
-	@JsonView(User.Basic.class)
+	@JsonView(Details.class)
 	public ResponseEntity<?> registerUser(@RequestBody User u, Principal principal) {
 		if (principal == null) {
 			return new ResponseEntity<User>(userService.registerUser(u), HttpStatus.CREATED);
@@ -116,7 +116,7 @@ public class UserRestController {
 	 * @return the new user edited
 	 */
 	@PatchMapping(value = "/{id}")
-	@JsonView(User.Basic.class)
+	@JsonView(Details.class)
 	@ApiOperation(value = "Edit the user by id")
 	public ResponseEntity<?> editUser(@RequestBody User u, @PathVariable long id, Principal principal) {
 		if (!userService.exists(id)) {
