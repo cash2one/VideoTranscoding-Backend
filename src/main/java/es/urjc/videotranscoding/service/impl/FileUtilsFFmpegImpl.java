@@ -83,7 +83,7 @@ public class FileUtilsFFmpegImpl implements FileUtilsFFmpeg {
 	}
 
 	private boolean isVideoFile(MultipartFile file) {
-		String nameExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+		String nameExtension = FilenameUtils.getExtension(file.getOriginalFilename().toLowerCase());
 		if (nameExtension == "")
 			return false;
 		boolean exists = Arrays.asList(Container.values()).stream()
