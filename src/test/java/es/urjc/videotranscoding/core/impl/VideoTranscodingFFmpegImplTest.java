@@ -1,4 +1,4 @@
-package es.urjc.videotranscoding.service.impl;
+package es.urjc.videotranscoding.core.impl;
 
 import static org.assertj.core.api.Assertions.fail;
 
@@ -40,7 +40,8 @@ import es.urjc.videotranscoding.service.UserService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/xml/ffmpeg-config-test.xml" })
 @EnableJpaRepositories
-public class VideoTranscodingFFmpegTest {
+public class VideoTranscodingFFmpegImplTest {
+
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private final String VIDEO_DEMO = "path.video.demo";
@@ -246,5 +247,4 @@ public class VideoTranscodingFFmpegTest {
 			fail("No should fail");
 		}
 	}
-
 }

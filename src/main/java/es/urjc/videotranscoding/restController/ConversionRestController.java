@@ -1,6 +1,7 @@
 package es.urjc.videotranscoding.restController;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import es.urjc.videotranscoding.codecs.ConversionType;
 import es.urjc.videotranscoding.codecs.ConversionTypeBasic;
 import es.urjc.videotranscoding.core.VideoTranscodingService;
 import es.urjc.videotranscoding.entities.Conversion;
@@ -30,10 +32,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/basic")
-@Api(tags = "Conversion Basic Operations")
+@RequestMapping(value = "/conversion")
+@Api(tags = "Conversion Operations")
 @CrossOrigin(origins = "*")
-public class ConversionBasicRestController {
+public class ConversionRestController {
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -52,8 +54,8 @@ public class ConversionBasicRestController {
 	 * @return the list of conversion basic
 	 * @throws FFmpegException
 	 */
-	@GetMapping(value = "")
-	@ApiOperation(value = "Get the types of conversion")
+	@GetMapping(value = "/basic")
+	@ApiOperation(value = "Get types basic of conversion")
 	public ResponseEntity<List<String>> getConversionBasic(Principal principal) throws FFmpegException {
 		User u = userService.findOneUser(principal.getName());
 		if (u == null) {
@@ -77,8 +79,8 @@ public class ConversionBasicRestController {
 	 * @return the original video with conversionVideos for the video / exception
 	 * @throws FFmpegException
 	 */
-	@PostMapping(value = "")
-	@ApiOperation(value = "Send the video for conversion")
+	@PostMapping(value = "/basic")
+	@ApiOperation(value = "Send the video for conversion basic")
 	@JsonView(Details.class)
 	public ResponseEntity<Object> addConversionBasic(@RequestParam(value = "file") MultipartFile file,
 			@RequestParam(value = "conversionType") List<String> conversionList, Principal principal)
@@ -90,6 +92,53 @@ public class ConversionBasicRestController {
 		Original original = originalService.addOriginalBasic(u, file, conversionList);
 		videoTranscodingService.transcodeVideo(original);
 		return new ResponseEntity<>(original, HttpStatus.CREATED);
+	}
+
+	/**
+	 * Types of conversions for the api expert
+	 * 
+	 * @param principal
+	 *            logged user
+	 * @return All types of conversion for the api expert
+	 */
+	@ApiOperation(value = "Get types expert of conversions")
+	@GetMapping(value = "/expert")
+	public ResponseEntity<List<ConversionType>> getAllVideoConversionsType(Principal principal) {
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		List<ConversionType> conversionTypes = Arrays.asList(ConversionType.values());
+		return new ResponseEntity<List<ConversionType>>(conversionTypes, HttpStatus.OK);
+	}
+
+	/**
+	 * Take a MultipartFile and create an original video and her conversions with
+	 * the multivaluemap
+	 * 
+	 * 
+	 * @param params
+	 *            with the types of conversion(conversionType) videos ready for
+	 *            converter
+	 * @param file
+	 *            with the file to converter
+	 * @param principal
+	 *            user Logged
+	 * @return the original video with conversionVideos for the video / exception
+	 * @throws FFmpegException
+	 */
+	@PostMapping(value = "/expert")
+	@ApiOperation(value = "Send the video(file) and the type of conversions(conversionType) for the video")
+	@JsonView(Details.class)
+	public ResponseEntity<?> addConversionExpert(@RequestParam(value = "conversionType") List<String> params,
+			@RequestParam(value = "file") MultipartFile file, Principal principal) throws FFmpegException {
+		User u = userService.findOneUser(principal.getName());
+		if (u == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Original original = originalService.addOriginalExpert(u, file, params);
+		videoTranscodingService.transcodeVideo(original);
+		return new ResponseEntity<Original>(original, HttpStatus.CREATED);
 	}
 
 	/**

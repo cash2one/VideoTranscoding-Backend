@@ -1,8 +1,11 @@
 package es.urjc.videotranscoding.restController;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -27,6 +31,7 @@ import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
+import es.urjc.videotranscoding.utils.FileDownloader;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -85,7 +90,7 @@ public class MediaRestController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		User u = userService.findOneUser(principal.getName());
-		Object video = originalService.findOneVideo(id,u);
+		Object video = originalService.findOneVideo(id, u);
 		if (video == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -142,6 +147,75 @@ public class MediaRestController {
 		return new ResponseEntity<User>(userToReturn, HttpStatus.OK);
 
 	}
+
+	/**
+	 * Search a OriginalVideo or Conversion and get it on Download
+	 * 
+	 * @param response
+	 *            for the servlet
+	 * @param id
+	 *            for search the video
+	 * @return the download on servletResponse
+	 * @throws FFmpegException
+	 */
+	@ApiOperation(value = "Download the Original or transcode Video")
+	@GetMapping(value = "/{id}/content")
+	public ResponseEntity<?> downloadDirectFilm(@RequestParam(value = "forceSave") String forceSave,
+			HttpServletResponse response, @PathVariable long id) throws FFmpegException {
+		if (forceSave != null) {
+
+		} else {
+		}
+		Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
+		if (!video.isPresent()) {
+			Optional<Conversion> conversion = conversionService.findOneConversion(id);
+			if (conversion.isPresent()) {
+				Conversion conversionVideo = conversion.get();
+				File filepath = new File(conversionVideo.getPath());
+				FileDownloader.fromFile(filepath).with(response).serveResource();
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} else {
+			File filepath = new File(video.get().getPath());
+			FileDownloader.fromFile(filepath).with(response).serveResource();
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+	}
+
+	/**
+	 * With this method you can see the video transcoded or the original
+	 *
+	 * @param response
+	 *            for the video
+	 * @param request
+	 *            for the video
+	 * @param id
+	 *            of the original Video or Transcoded
+	 * @return
+	 */
+//	@ApiOperation(value = "Watch the Original or transcode Video")
+//	@GetMapping(value = "/{id}/content")
+//	public ResponseEntity<?> watchVideo(HttpServletResponse response, HttpServletRequest request,
+//			@PathVariable long id) {
+//		Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
+//		if (!video.isPresent()) {
+//			Optional<Conversion> conversion = conversionService.findOneConversion(id);
+//			if (conversion.isPresent()) {
+//				Conversion conversionVideo = conversion.get();
+//				Path p1 = Paths.get(conversionVideo.getPath());
+//				FileWatcher.fromPath(p1).with(request).with(response).serveResource();
+//				return new ResponseEntity<>(HttpStatus.OK);
+//			} else {
+//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//			}
+//		} else {
+//			Path p1 = Paths.get(video.get().getPath());
+//			FileWatcher.fromPath(p1).with(request).with(response).serveResource();
+//			return new ResponseEntity<Original>(HttpStatus.OK);
+//		}
+//	}
 
 	/**
 	 * Handler for the exceptions
