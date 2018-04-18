@@ -31,8 +31,7 @@ public class SecurityRestConfiguration extends WebSecurityConfigurerAdapter impl
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
-			.antMatchers("/watcher/**").permitAll()
-			.antMatchers("/downloader/**").permitAll()
+			.antMatchers("/media/**/content").permitAll()
 			.antMatchers("/user/register").permitAll()
 			.antMatchers("/**").hasRole("USER");
 		http.csrf().disable();

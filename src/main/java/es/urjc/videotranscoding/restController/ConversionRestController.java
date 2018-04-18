@@ -80,7 +80,7 @@ public class ConversionRestController {
 	 * @throws FFmpegException
 	 */
 	@PostMapping(value = "/basic")
-	@ApiOperation(value = "Send the video for conversion basic")
+	@ApiOperation(value = "Send the video for conversion basic with his conversion type")
 	@JsonView(Details.class)
 	public ResponseEntity<Object> addConversionBasic(@RequestParam(value = "file") MultipartFile file,
 			@RequestParam(value = "conversionType") List<String> conversionList, Principal principal)
@@ -101,7 +101,7 @@ public class ConversionRestController {
 	 *            logged user
 	 * @return All types of conversion for the api expert
 	 */
-	@ApiOperation(value = "Get types expert of conversions")
+	@ApiOperation(value = "Get types expert of conversion")
 	@GetMapping(value = "/expert")
 	public ResponseEntity<List<ConversionType>> getAllVideoConversionsType(Principal principal) {
 		User u = userService.findOneUser(principal.getName());
@@ -128,7 +128,7 @@ public class ConversionRestController {
 	 * @throws FFmpegException
 	 */
 	@PostMapping(value = "/expert")
-	@ApiOperation(value = "Send the video(file) and the type of conversions(conversionType) for the video")
+	@ApiOperation(value = "Send the video for conversion expert with his conversion type")
 	@JsonView(Details.class)
 	public ResponseEntity<?> addConversionExpert(@RequestParam(value = "conversionType") List<String> params,
 			@RequestParam(value = "file") MultipartFile file, Principal principal) throws FFmpegException {
