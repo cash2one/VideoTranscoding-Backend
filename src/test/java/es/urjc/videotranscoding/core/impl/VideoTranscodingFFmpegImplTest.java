@@ -91,90 +91,14 @@ public class VideoTranscodingFFmpegImplTest {
 		tempFolderOuput.delete();
 	}
 
-	// @Test
-	// public void ffmpegPathIsNull() {
-	// try {
-	// transcoding.transcodeVideo(null, null, null);
-	// fail("No should fail for null ffmpeg file");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_FFMPEG_EMPTY_OR_NULL, e.getCodigo());
-	// }
-	// }
-	//
-	// @Test
-	// public void transcodeFailOnFakeFFMPEGFile() {
-	// try {
-	// transcoding.transcodeVideo("FAKE", null, null);
-	// fail("No should fail for fake ffmpeg file");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_FFMPEG_NOT_FOUND, e.getCodigo());
-	// }
-	// }
-	//
-	// @Test
-	// public void transcodeFailOnNullFolderPath() {
-	// try {
-	// transcoding.transcodeVideo(FFMPEG_PATH, null, null);
-	// fail("No should fail for fake input file");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
-	// }
-	// }
-	//
-	// @Test
-	// public void transcodeFailOnFakeFolderOuput() {
-	// try {
-	// transcoding.transcodeVideo(FFMPEG_PATH, "FAKE", null);
-	// fail("No should fail for fake folder output");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_FOLDER_OUTPUT_NOT_EXITS, e.getCodigo());
-	// }
-	// }
-	//
-	// @Test
-	// public void transcodeFailOnNullFolderOuput() {
-	// try {
-	// transcoding.transcodeVideo(FFMPEG_PATH, null, null);
-	// fail("No should fail for null folder ouput");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_FOLDER_OUTPUT_EMPTY_OR_NULL, e.getCodigo());
-	// }
-	// }
-	//
-	// @Test
-	// public void transcodeFailOnNullParams() {
-	// try {
-	// transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), null);
-	// fail("No should fail for null params");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NULL, e.getCodigo());
-	// }
-	// }
-	//
-	// @Test
-	// public void transcodeFailOnEmptyParams() {
-	// try {
-	// transcoding.transcodeVideo(FFMPEG_PATH, FOLDER_OUTPUT_REAL.toString(), new
-	// OriginalVideo("", "", null));
-	// fail("No should empty params");
-	// } catch (FFmpegException e) {
-	// assertEquals(FFmpegException.EX_ORIGINAL_VIDEO_NOT_IS_SAVE, e.getCodigo());
-	// }
-	// }
-
 	@Test
 	@Ignore
 	public void transcodeSucess() {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
-		// Original video = new Original("Perico",
-		// "/tmp/VideoTranscoding/videos/original/video.mp4", u1);
+		Original video = new Original("Perico", "/src/main/resources/resources/big_buck_bunny.mp4", u1);
 		Conversion newVideo = new Conversion(ConversionType.MKV_H264360_COPY, video);
-		// Conversion newVideo2 = new Conversion(ConversionType.MKV_H264480_COPY,
-		// video);
 		List<Conversion> lista = new ArrayList<>();
 		lista.add(newVideo);
-		// lista.add(newVideo2);
 		video.setAllConversions(lista);
 		u1.addVideo(video);
 		userService.save(u1);
@@ -198,8 +122,6 @@ public class VideoTranscodingFFmpegImplTest {
 	@Ignore
 	public void allTypeTranscode() throws InterruptedException {
 		u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
-		// Original video = new Original("Perico",
-		// "/tmp/VideoTranscoding/videos/original/StarWars13.mp4", u1);
 		Original video = new Original("Perico", "/tmp/VideoTranscoding/videos/original/video.mp4", u1);
 
 		for (ConversionType iterable_element : EnumSet.allOf(ConversionType.class)) {
@@ -219,8 +141,8 @@ public class VideoTranscodingFFmpegImplTest {
 
 	}
 
-	@Ignore
 	@Test
+	@Ignore
 	public void transcodeTypeBasicMovil() {
 		User u1 = new User("patio@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
 		Original video = new Original("Perico", propertiesFFmpegTest.getProperty(VIDEO_DEMO), u1);

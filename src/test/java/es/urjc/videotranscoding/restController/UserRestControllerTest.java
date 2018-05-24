@@ -113,4 +113,15 @@ public class UserRestControllerTest {
 		assertEquals(expected.getNick(), "newAdmin");
 		assertEquals(expected.getEmail(), "email@gmail.com");
 	}
+
+	@Test
+	public void deleteUser() throws Exception {
+		User newUser = new User("email@gmail.com", "newAdmin", "12345678", "", UserRoles.USER);
+		userService.deleteUser(newUser);
+		String URL_DELETE_USER = "/user";
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(URL_DELETE_USER)
+				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content("{}");
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		assertEquals(result.getResponse().getStatus(), 401);
+	}
 }
