@@ -18,4 +18,3 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/videotranscoding
       - JVM_OPTS=-Xmx4g -Xms4g -XX:MaxPermSize=1024m
-#  angular-frontend:
