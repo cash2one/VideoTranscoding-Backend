@@ -10,7 +10,8 @@
 
 This application transcode a video that you send on all formats what you want and diferent resolutions. It´s build on a docker container to simplify the installation.
 ## Test it:
-1. Visit [Api VideoTranscoding](https://api.videotranscoding.es). user/pass for the user authentication.
+1. Visit [Api VideoTranscoding](https://api.videotranscoding.es) user/pass for the user authentication.
+2. You can see the methods on [Api Documentation](https://api.videotranscoding.es/swagger-ui.html)
 ## Run it:
 1. Install [docker](https://docs.docker.com/engine/installation/) for your machine.
 2. Download [the docker-compose.yml](https://raw.githubusercontent.com/luiscajl/VideoTranscoding/master/docker-compose.yml).
@@ -18,7 +19,7 @@ This application transcode a video that you send on all formats what you want an
 ```sh
 sudo docker-compose up 
 ```
-4. Visit [localhost](https://localhost:8443/) on your web browser.
+4. Visit [https://localhost:8443](https://localhost:8443) on your web browser.
 5. You can navigate to the api documentation and throw the methods. user/pass are the users for loggin by basic auth
 6. Stop docker compose when you finished
 ```sh
