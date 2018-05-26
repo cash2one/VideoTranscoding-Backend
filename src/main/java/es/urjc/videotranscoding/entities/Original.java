@@ -46,7 +46,7 @@ public class Original {
 	 * Path of the video
 	 */
 	@Column(unique = true)
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private String path;
 	/**
 	 * User of the video
@@ -57,26 +57,28 @@ public class Original {
 	/**
 	 * Filesize of the original Video
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private String fileSize;
 
 	/**
 	 * All Conversions of the video
 	 */
-	@JsonView(Basic.class)
+	@JsonView(Details.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "parent")
 	private List<Conversion> conversions = new ArrayList<>();
 
 	/**
 	 * If all conversions are complete true, EOC false
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private boolean complete;
 	/**
 	 * If any conversion is active this is active;
 	 */
-	@JsonView(Details.class)
+	@JsonView(Basic.class)
 	private boolean active;
+	
+	
 
 	/**
 	 * Constructor protected for hibernate.
@@ -95,7 +97,7 @@ public class Original {
 	 *            user for the video
 	 */
 	public Original(String name, String path, User user) {
-		this.name = name.replace(" ", "_");
+		this.name = name;
 		this.path = path;
 		this.userVideo = user;
 
@@ -168,7 +170,7 @@ public class Original {
 	}
 
 	public String getFileSize() {
-		return getSizeMB(new File(getPath())) + " MB";
+		return (getSizeMB(new File(getPath())) + " MB").replace(",", ".");
 	}
 
 	private String getSizeMB(File f) {

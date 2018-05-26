@@ -28,7 +28,7 @@ public class DataLoader implements CommandLineRunner {
 	private Properties propertiesFFmpeg;
 
 	public void run(String... strings) throws Exception {
-		User u1 = new User("admin@gmail.com", "admin", "pass", "", UserRoles.ADMIN, UserRoles.USER);
+		User u1 = new User("admin@gmail.com", "admin", "newpass", "", UserRoles.ADMIN, UserRoles.USER);
 		User u2 = new User("user@gmail.com", "user", "pass", "", UserRoles.USER);
 		User user1 = userService.findOneUser(u1.getNick());
 		User user2 = userService.findOneUser(u2.getNick());

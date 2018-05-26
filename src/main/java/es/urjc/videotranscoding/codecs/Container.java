@@ -1,6 +1,8 @@
 package es.urjc.videotranscoding.codecs;
 
 /**
+ * Container Types for videos
+ * 
  * @author luisca
  */
 public enum Container {
@@ -23,7 +25,11 @@ public enum Container {
 	/**
 	 * Flv extension
 	 */
-	FLV(".flv");
+	FLV(".flv"),
+	/**
+	 * Mov extension
+	 */
+	MOV(".mov");
 	final String containerType;
 
 	Container(String x) {

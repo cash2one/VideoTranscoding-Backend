@@ -18,7 +18,6 @@ import es.urjc.videotranscoding.entities.UserComponent;
 import es.urjc.videotranscoding.entities.UserRoles;
 import es.urjc.videotranscoding.repository.UserRepository;
 
-
 @Component
 public class UserRepositoryAuthenticationProvider implements AuthenticationProvider {
 

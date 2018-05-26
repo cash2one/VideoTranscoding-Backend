@@ -2,7 +2,6 @@ package es.urjc.videotranscoding.service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +41,7 @@ public interface UserService {
 	 *            need for the search
 	 * @return the optional that can contains the user or no
 	 */
-	Optional<User> findOneUser(long id);
+	User findOneUser(long id);
 
 	/**
 	 * Find a user with the nameUser(nick)
@@ -128,8 +127,8 @@ public interface UserService {
 	 * This method check if the videos that the user have are on filesystem. If not
 	 * exists on filesystem, will be deleted for BBDD
 	 * 
-	 * @param u2 User
-	 *            need for check his videos.
+	 * @param u2
+	 *            User need for check his videos.
 	 */
 	void checkVideos(User u2);
 
@@ -137,5 +136,10 @@ public interface UserService {
 	 * Check all the videos for all the users.
 	 */
 	void checkVideosForAllUsers();
+
+	/**
+	 * Delete all users for clean the BBDD
+	 */
+	void deleteAllUsers();
 
 }

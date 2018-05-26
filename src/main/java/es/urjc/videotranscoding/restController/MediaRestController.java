@@ -1,17 +1,27 @@
 package es.urjc.videotranscoding.restController;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -24,14 +34,16 @@ import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
+import es.urjc.videotranscoding.utils.FileDownloader;
+import es.urjc.videotranscoding.utils.FileWatcher;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/media")
+@RequestMapping(value = "/media")
 @Api(tags = "Media Api Operations")
+@CrossOrigin(origins = "*")
 public class MediaRestController {
-	// TODO quitar todos los User UNAUTHORIZED, ya que ya estan autorizados
 	@Autowired
 	private OriginalService originalService;
 	@Autowired
@@ -55,16 +67,16 @@ public class MediaRestController {
 	@ApiOperation(value = "All OriginalVideos on the Api with their conversions")
 	@GetMapping(value = "")
 	@JsonView(Basic.class)
-	public ResponseEntity<List<Original>> getAllVideoConversions(Principal principal) {
-		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
+	public ResponseEntity<List<Original>> getAllVideoConversions(Principal principal, Pageable pageable) {
+		if (principal == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		List<Original> allOriginalVideos = originalService.findAllVideos();
-		if (allOriginalVideos.isEmpty()) {
+		User u = userService.findOneUser(principal.getName());
+		Page<Original> allOriginalVideos = originalService.findAllByPageAndUser(pageable, u);
+		if (allOriginalVideos == null || allOriginalVideos.getContent().size() == 0) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<List<Original>>(allOriginalVideos, HttpStatus.OK);
+		return new ResponseEntity<List<Original>>(allOriginalVideos.getContent(), HttpStatus.OK);
 
 	}
 
@@ -77,17 +89,17 @@ public class MediaRestController {
 	@ApiOperation(value = "Get videos information for id")
 	@GetMapping(value = "/{id}")
 	@JsonView(Details.class)
-	public ResponseEntity<?> getOriginalVideo(@PathVariable long id) throws FFmpegException {
-		Optional<Original> video = originalService.findOneVideo(id);
-		if (!video.isPresent()) {
-			Optional<Conversion> conversion = conversionService.findOneConversion(id);
-			Conversion conversionVideo = conversion.get();
-			if (conversionVideo == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			return new ResponseEntity<>(conversionVideo, HttpStatus.OK);
+	public ResponseEntity<?> getOriginalVideo(@PathVariable long id, Principal principal) throws FFmpegException {
+		if (principal == null) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		User u = userService.findOneUser(principal.getName());
+		Object video = originalService.findOneVideo(id, u);
+		if (video == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
 		} else {
-			return new ResponseEntity<>(video.get(), HttpStatus.OK);
+			return new ResponseEntity<>(video, HttpStatus.OK);
 		}
 	}
 
@@ -107,11 +119,11 @@ public class MediaRestController {
 	@ApiOperation(value = "Delete Original or conversion with the id")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> deleteVideos(Principal principal, @PathVariable long id) {
-		User u = userService.findOneUser(principal.getName());
-		if (u == null) {
+		if (principal == null) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		Optional<Original> video = originalService.findOneVideo(id);
+		User u = userService.findOneUser(principal.getName());
+		Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
 		if (!video.isPresent()) {
 			Optional<Conversion> conversion = conversionService.findOneConversion(id);
 			if (conversion.isPresent()) {
@@ -137,6 +149,59 @@ public class MediaRestController {
 		}
 		User userToReturn = originalService.deleteAllVideos(u);
 		return new ResponseEntity<User>(userToReturn, HttpStatus.OK);
+
+	}
+
+	/**
+	 * Search a OriginalVideo or Conversion and get it on Download or for watch this
+	 * 
+	 * @param response
+	 *            for the servlet
+	 * @param id
+	 *            for search the video
+	 * @return the download on servletResponse
+	 * @throws FFmpegException
+	 */
+	@ApiOperation(value = "Download or watch the Original or conversion Video")
+	@GetMapping(value = "/{id}/content")
+	public ResponseEntity<?> downloadDirectFilm(@RequestParam(value = "forceSave", required = true) boolean forceSave,
+			HttpServletResponse response, HttpServletRequest request, @PathVariable long id) throws FFmpegException {
+		if (forceSave) {
+			Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
+			if (!video.isPresent()) {
+				Optional<Conversion> conversion = conversionService.findOneConversion(id);
+				if (conversion.isPresent()) {
+					Conversion conversionVideo = conversion.get();
+					File filepath = new File(conversionVideo.getPath());
+					FileDownloader.fromFile(filepath).with(response).serveResource();
+					return new ResponseEntity<>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
+			} else {
+				File filepath = new File(video.get().getPath());
+				FileDownloader.fromFile(filepath).with(response).serveResource();
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+
+		} else {
+			Optional<Original> video = originalService.findOneVideoWithoutSecurity(id);
+			if (!video.isPresent()) {
+				Optional<Conversion> conversion = conversionService.findOneConversion(id);
+				if (conversion.isPresent()) {
+					Conversion conversionVideo = conversion.get();
+					Path p1 = Paths.get(conversionVideo.getPath());
+					FileWatcher.fromPath(p1).with(request).with(response).serveResource();
+					return new ResponseEntity<>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
+			} else {
+				Path p1 = Paths.get(video.get().getPath());
+				FileWatcher.fromPath(p1).with(request).with(response).serveResource();
+				return new ResponseEntity<Original>(HttpStatus.OK);
+			}
+		}
 
 	}
 

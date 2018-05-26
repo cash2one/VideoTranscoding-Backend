@@ -15,10 +15,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig{
 	private final String TITLE = "VideoTranscoding Api DOC";
-	private final String DESCRIPTION = "Documentation for urjc.videotranscoding.es/api/";
+	private final String DESCRIPTION = "Documentation for api of urjc.videotranscoding.es.";
 	private final String LICENSE = "Apache 2.0";
 	private final String LICENSE_URL = "http://www.apache.org/licenses/LICENSE-2.0";
-	private final String VERSION = "0.5";
+	private final String VERSION = "1.0";
 	private final String BASE_PACKAGE = "es.urjc.videotranscoding.restController";
 	private final String TERMS_OF_SERVICE = "github";
 

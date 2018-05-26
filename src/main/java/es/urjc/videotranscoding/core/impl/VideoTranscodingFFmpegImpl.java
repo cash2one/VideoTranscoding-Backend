@@ -73,7 +73,6 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	@Autowired
 	private StreamGobblerFactory streamGobblerPersistentFactory;
 
-
 	@PostConstruct
 	public void init() {
 		logger.setResourceBundle(ffmpegResourceBundle
@@ -218,6 +217,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 	 * @return the command ready to send it
 	 */
 	private String getCommand(String pathFFMPEG, File fileInput, String folderOutput, Conversion conversion) {
+
 		String finalPath = folderOutput + getFinalNameFile(fileInput, conversion.getConversionType(),
 				conversion.getConversionType().getContainerType());
 		conversion.setPath(finalPath);
@@ -227,6 +227,7 @@ public class VideoTranscodingFFmpegImpl implements VideoTranscodingService {
 
 		logger.l7dlog(Level.DEBUG, TRACE_COMMAND_TO_SEND, new String[] { command }, null);
 		return command;
+
 	}
 
 	/**

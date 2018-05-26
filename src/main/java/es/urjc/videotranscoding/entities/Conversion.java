@@ -85,7 +85,7 @@ public class Conversion {
 	 *            of the master video
 	 */
 	public Conversion(ConversionType conversion, Original original) {
-		this.name = original.getName() + "_" + conversion;
+		this.name = original.getName() + "-" + System.currentTimeMillis();
 		this.conversionType = conversion;
 		this.parent = original;
 
@@ -121,7 +121,7 @@ public class Conversion {
 	}
 
 	public String getProgress() {
-		return progress;
+		return progress.replace(",", ".");
 	}
 
 	public void setProgress(String progress) {
@@ -154,9 +154,9 @@ public class Conversion {
 
 	public String getFileSize() {
 		if (isActive()) {
-			return fileSize;
+			return fileSize.replace(",", ".");
 		} else if (isFinished()) {
-			return getSizeMB(new File(getPath())) + " MB";
+			return (getSizeMB(new File(getPath())) + " MB").replace(",", ".");
 		} else {
 			return "";
 	}}

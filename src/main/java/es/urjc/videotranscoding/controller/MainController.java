@@ -33,6 +33,8 @@ public class MainController {
 	private OriginalService originalService;
 	@Resource
 	private Properties propertiesFFmpeg;
+	@Autowired
+	private VideoTranscodingService ffmpegTranscoding;
 
 	/**
 	 * Index page
@@ -47,7 +49,6 @@ public class MainController {
 		EnumSet<ConversionTypeBasic.Types> explain = EnumSet.allOf(ConversionTypeBasic.Types.class);
 		m.addAttribute("conversionType", typeConversionBasic);
 		m.addAttribute("explain", explain);
-
 		return "index";
 	}
 
@@ -87,5 +88,20 @@ public class MainController {
 		model.addAttribute("message",
 				"You successfully uploaded '" + file.getOriginalFilename() + "' and your file is being transcode");
 		return "fileUploaded";
+	}
+
+	/**
+	 * Call for see the status of the progress
+	 * 
+	 * @return the string with the % progress
+	 */
+	@GetMapping(value = "/ajaxCall")
+	public String getStatusAjax() {
+		try {
+			String progress = ffmpegTranscoding.getErrorGobbler().getProgress().replace(",", ".");
+			return progress;
+		} catch (NullPointerException e) {
+			return "Vacio";
+		}
 	}
 }

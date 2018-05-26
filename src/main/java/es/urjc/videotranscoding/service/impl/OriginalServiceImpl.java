@@ -16,6 +16,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,7 @@ import es.urjc.videotranscoding.entities.Original;
 import es.urjc.videotranscoding.entities.User;
 import es.urjc.videotranscoding.exception.FFmpegException;
 import es.urjc.videotranscoding.repository.OriginalRepository;
+import es.urjc.videotranscoding.service.ConversionService;
 import es.urjc.videotranscoding.service.OriginalService;
 import es.urjc.videotranscoding.service.UserService;
 import es.urjc.videotranscoding.wrapper.FfmpegResourceBundle;
@@ -40,6 +43,8 @@ public class OriginalServiceImpl implements OriginalService {
 	private static final String TRACE_ILEGAL_ARGUMENT = "ffmpeg.argument.notFound";
 	@Autowired
 	private OriginalRepository originalVideoRepository;
+	@Autowired
+	private ConversionService conversionServiceImpl;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -59,20 +64,35 @@ public class OriginalServiceImpl implements OriginalService {
 		originalVideoRepository.save(video);
 	}
 
-	public List<Original> findAllVideos() {
-		return originalVideoRepository.findAll();
-	}
-
-	public Optional<Original> findOneVideo(long id) {
-		return originalVideoRepository.findById(id);
+	public Object findOneVideo(long id, User u) {
+		if (u.isAdmin()) {
+			Optional<Original> optionalOriginal = originalVideoRepository.findById(id);
+			if (optionalOriginal.isPresent()) {
+				return optionalOriginal.get();
+			} else {
+				Optional<Conversion> optionalConversion = conversionServiceImpl.findOneConversion(id);
+				if (optionalConversion.isPresent()) {
+					return optionalConversion.get();
+				} else {
+					return null;
+				}
+			}
+		} else {
+			Original originalVideo = u.getListVideos().stream().filter(original -> original.getOriginalId() == id)
+					.findAny().get();
+			if (originalVideo == null) {
+				return null;
+			} else {
+				return originalVideo;
+			}
+		}
 	}
 
 	@Transactional(rollbackFor = FFmpegException.class)
 	public Original addOriginalExpert(User u, MultipartFile file, List<String> params) throws FFmpegException {
-		File fileSaved = null;
+		File fileSaved = fileUtilsService.saveFile(file);
 		try {
-			fileSaved = fileUtilsService.saveFile(file);
-			Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
+			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getOriginalFilename()),
 					fileSaved.getAbsolutePath(), u);
 			List<Conversion> conversionsVideo = new ArrayList<>();
 			List<ConversionType> listConversion = new ArrayList<>();
@@ -110,7 +130,7 @@ public class OriginalServiceImpl implements OriginalService {
 	public Original addOriginalBasic(User u, MultipartFile file, List<String> params) throws FFmpegException {
 		File fileSaved = fileUtilsService.saveFile(file);
 		try {
-			Original originalVideo = new Original(FilenameUtils.removeExtension(fileSaved.getName()),
+			Original originalVideo = new Original(FilenameUtils.removeExtension(file.getOriginalFilename()),
 					fileSaved.getAbsolutePath(), u);
 
 			Set<ConversionType> listConversion = new HashSet<>();
@@ -144,9 +164,7 @@ public class OriginalServiceImpl implements OriginalService {
 	public void deleteAllVideosByAdmin() {
 		List<User> users = userService.findAllUsers();
 		for (User user : users) {
-			User userWithNoVideos = user.removeAllVideos();
-			originalVideoRepository.deleteAll(user.getListVideos());
-			userService.save(userWithNoVideos);
+			deleteAllVideos(user);
 		}
 	}
 
@@ -192,4 +210,23 @@ public class OriginalServiceImpl implements OriginalService {
 		userService.save(userToSaved);
 		return u;
 	}
+
+	@Override
+	public Page<Original> findAllByPageAndUser(Pageable pageable, User u) {
+		if (u.isAdmin()) {
+			return originalVideoRepository.findAll(pageable);
+		} else {
+			return originalVideoRepository.findAllByUserVideo(pageable, u);
+		}
+	}
+
+	public Page<Original> findAll(Pageable pageable) {
+		return originalVideoRepository.findAll(pageable);
+	}
+
+	@Override
+	public Optional<Original> findOneVideoWithoutSecurity(long id) {
+		return originalVideoRepository.findById(id);
+	}
+
 }

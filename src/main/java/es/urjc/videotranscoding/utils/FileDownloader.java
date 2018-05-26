@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLConnection;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +25,6 @@ import es.urjc.videotranscoding.exception.FFmpegException;
 @Component
 public class FileDownloader {
 	private static final String TRACE_IO_EXCEPTION_GENERAL = "ffmpeg.ioException.general";
-
 	protected final Logger logger = Logger.getLogger(VideoTranscodingFFmpegImpl.class);
 	private File filepath;
 	private HttpServletResponse response;
@@ -50,10 +48,7 @@ public class FileDownloader {
 
 	public void serveResource() throws FFmpegException {
 		try {
-			String mimeType = URLConnection.guessContentTypeFromName(filepath.getName());
-			if (mimeType == null) {
-				mimeType = "application/octet-stream";
-			}
+			String mimeType = "notDefined/octet-stream";
 			response.setContentType(mimeType);
 			response.setHeader("Content-Disposition", String.format("inline; filename=\"" + filepath.getName() + "\""));
 			response.setHeader("Content-Length", String.valueOf(filepath.length()));

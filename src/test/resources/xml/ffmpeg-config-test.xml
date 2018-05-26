@@ -18,6 +18,8 @@
 	<context:component-scan base-package="es.urjc.videotranscoding.core" />
 	<context:component-scan base-package="es.urjc.videotranscoding.repository" />
 	<context:component-scan base-package="es.urjc.videotranscoding.service" />
+	<context:component-scan base-package="es.urjc.videotranscoding.restController" />
+	
 
 	<import resource="classpath:/xml/hibernate-config-test.xml" />
 	<import resource="classpath:/xml/excepcion-config.xml" />

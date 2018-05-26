@@ -9,7 +9,7 @@ services:
   spring-backend:
     depends_on:
       - mysql
-    image: luiscajl/videotranscoding:0.5
+    image: luiscajl/videotranscoding:latest
     container_name: videotranscoding-backend
     ports:
       - 8443:8443
@@ -18,4 +18,3 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/videotranscoding
       - JVM_OPTS=-Xmx4g -Xms4g -XX:MaxPermSize=1024m
-#  angular-frontend:
